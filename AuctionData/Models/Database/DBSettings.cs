@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace AuctionData.Models
+namespace AuctionData.Models.Database
 {
     public class DbSettings
     {
