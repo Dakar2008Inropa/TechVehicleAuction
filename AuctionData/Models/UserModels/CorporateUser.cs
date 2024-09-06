@@ -1,8 +1,8 @@
-﻿using AuctionData.Models.User.ValidationAttributes;
+﻿using AuctionData.Models.UserModels.ValidationAttributes;
 
-namespace AuctionData.Models.User;
+namespace AuctionData.Models.UserModels;
 
-public class CorporateUser
+public class CorporateUser : User
 {
     public long Credit { get; set; }
     public string? CvrNumber { get; set; }

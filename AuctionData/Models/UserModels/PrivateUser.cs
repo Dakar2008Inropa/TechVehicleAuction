@@ -1,9 +1,9 @@
-﻿using AuctionData.Models.User.Generators;
-using AuctionData.Models.User.ValidationAttributes;
+﻿using AuctionData.Models.UserModels.Generators;
+using AuctionData.Models.UserModels.ValidationAttributes;
 
-namespace AuctionData.Models.User;
+namespace AuctionData.Models.UserModels;
 
-public class PrivateUser
+public class PrivateUser : User
 {
     public string CPRNumber { get; private set; }
 

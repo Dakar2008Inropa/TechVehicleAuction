@@ -1,4 +1,4 @@
-﻿namespace AuctionData.Models.Vehicle
+﻿namespace AuctionData.Models.VehicleModels
 {
     public enum EnergyClass
     {

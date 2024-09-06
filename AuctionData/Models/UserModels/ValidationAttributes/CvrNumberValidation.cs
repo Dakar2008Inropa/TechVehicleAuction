@@ -1,4 +1,4 @@
-﻿namespace AuctionData.Models.User.ValidationAttributes;
+﻿namespace AuctionData.Models.UserModels.ValidationAttributes;
 
 public static class CvrNumberValidation
 {

@@ -22,10 +22,16 @@
   <ItemGroup>
     <AvaloniaXaml Remove="Assets\AuctionStyle.axaml" />
     <AvaloniaXaml Remove="Assets\LoginStyle.axaml" />
+    <AvaloniaXaml Remove="Assets\ShowAuctionStyle.axaml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Assets\LogoIco.ico" />
+    <None Remove="Assets\TestImages\image01.jpg" />
+    <None Remove="Assets\TestImages\image02.jpg" />
+    <None Remove="Assets\TestImages\image03.jpg" />
+    <None Remove="Assets\TestImages\image04.jpg" />
+    <None Remove="Assets\TestImages\image05.jpg" />
     <None Remove="Assets\vehiclePlaceholder.png" />
   </ItemGroup>
 
@@ -51,6 +57,9 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Update="Assets\LoginStyle.axaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\ShowAuctionStyle.axaml">
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />

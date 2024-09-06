@@ -1,13 +1,12 @@
-﻿namespace AuctionData.Models.Vehicle
+﻿namespace AuctionData.Models.VehicleModels
 {
     public class Truck : HeavyVehicle
     {
         public int LoadCapacity { get; set; }
 
-        protected Truck()
+        public Truck()
         {
             LicenseType = GetLicenseType();
-            EngineSize = GetEngineSize();
         }
 
         public new LicenseType GetLicenseType()

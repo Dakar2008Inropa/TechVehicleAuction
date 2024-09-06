@@ -7,7 +7,7 @@ namespace AuctionData.Models.Database
     {
         public static class Auction
         {
-            public static void CreateAuction(string VehicleId, double AskingPrice)
+            public static void CreateAuction(int vehicleId, int userId, double askingPrice)
             {
                 using (SqlConnection con = new SqlConnection(Instance.GetConnectionString(Instance.Settings!)))
                 {
@@ -16,9 +16,9 @@ namespace AuctionData.Models.Database
                         cmd.CommandType = CommandType.StoredProcedure;
                         con.Open();
 
-                        cmd.Parameters.AddWithValue("@VehicleId", SqlDbType.NVarChar).Value = VehicleId;
-                        cmd.Parameters.AddWithValue("@SellerId", SqlDbType.NVarChar).Value = User.User.user.Id;
-                        cmd.Parameters.AddWithValue("@AskingPrice", SqlDbType.Decimal).Value = AskingPrice;
+                        cmd.Parameters.AddWithValue("@VehicleId", SqlDbType.NVarChar).Value = vehicleId;
+                        cmd.Parameters.AddWithValue("@SellerId", SqlDbType.NVarChar).Value = userId;
+                        cmd.Parameters.AddWithValue("@AskingPrice", SqlDbType.Decimal).Value = askingPrice;
 
                         cmd.ExecuteNonQuery();
                         con.Close();

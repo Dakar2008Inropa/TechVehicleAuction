@@ -1,4 +1,4 @@
-﻿namespace AuctionData.Models.User.Generators;
+﻿namespace AuctionData.Models.UserModels.Generators;
 
 public static class CprGenerator
 {

@@ -1,0 +1,49 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.PreviewWith>
+
+        <Border Padding="20">
+            <StackPanel Spacing="10">
+                <TextBlock Classes="BigBold" Text="BMW M5 (2010)" />
+                <TextBlock Classes="BigNormal" Text="Closing 12-12-2022" />
+                <Button HorizontalAlignment="Stretch"
+                 Classes="GreenBtn"
+                 Content="Login" />
+            </StackPanel>
+        </Border>
+
+    </Design.PreviewWith>
+
+    <Style Selector="TextBlock.BigBold">
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style Selector="TextBlock.BigNormal">
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="22" />
+    </Style>
+
+    <Style Selector="Button.GreenBtn">
+        <Setter Property="Background" Value="#128715" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.GreenBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#1da91d" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+</Styles>

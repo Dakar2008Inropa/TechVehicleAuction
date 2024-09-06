@@ -1,4 +1,4 @@
-﻿namespace AuctionData.Models.Vehicle
+﻿namespace AuctionData.Models.VehicleModels
 {
     public class Bus : HeavyVehicle
     {
@@ -6,10 +6,9 @@
         public int SleepingCapacity { get; set; }
         public bool Toilet { get; set; }
 
-        protected Bus()
+        public Bus()
         {
             LicenseType = GetLicenseType();
-            EngineSize = GetEngineSize();
         }
 
         public new LicenseType GetLicenseType()
