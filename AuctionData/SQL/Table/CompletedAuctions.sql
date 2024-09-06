@@ -1,0 +1,6 @@
+﻿CREATE TABLE CompletedTransactions (
+		Id INT PRIMARY KEY IDENTITY(1,1),
+		BuyerId INT NOT NULL,
+		SellerId INT NOT NULL,
+		Price DECIMAL,
+		Date DATETIME2 DEFAULT SYSDATETIME() );

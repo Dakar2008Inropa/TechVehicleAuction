@@ -1,0 +1,55 @@
+<Window
+    x:Class="TechAuction.SplashScreen"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="SplashScreen"
+    Width="550"
+    Height="550"
+    d:DesignHeight="550"
+    d:DesignWidth="550"
+    CanResize="False"
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaTitleBarHeightHint="0"
+    ExtendClientAreaToDecorationsHint="True"
+    Topmost="True"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <Border BorderBrush="#000" BorderThickness="1">
+
+        <Panel Background="#ccc">
+
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="20">
+
+                <Image
+                    Width="250"
+                    Height="250"
+                    Source="/Assets/Logo.png" />
+
+                <ProgressBar
+                    Name="LoadingProgressBar"
+                    Height="25"
+                    MaxWidth="275"
+                    Margin="0,10,0,0"
+                    BorderBrush="#494949"
+                    BorderThickness="1"
+                    Foreground="#7b0100" />
+
+                <TextBlock
+                    Name="LoadingText"
+                    HorizontalAlignment="Center"
+                    FontSize="20"
+                    Foreground="Black"
+                    Text="Loading..." />
+
+            </StackPanel>
+
+        </Panel>
+
+    </Border>
+
+</Window>

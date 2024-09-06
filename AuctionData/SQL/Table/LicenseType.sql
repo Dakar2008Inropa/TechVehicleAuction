@@ -1,0 +1,1 @@
+﻿CREATE TABLE LicenseType ( Id INT PRIMARY KEY, Type NVARCHAR(20))

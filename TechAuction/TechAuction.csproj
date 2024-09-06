@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationIcon>LogoIco.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaXaml Remove="Assets\LoginStyle.axaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\LogoIco.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="LogoIco.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.0-beta1" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.2.0-beta1" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.0-beta1" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.0-beta1" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.0-beta1" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.0-beta1" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.0-beta1" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.0-beta1" />
+    <PackageReference Include="FluentAvaloniaUI" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Update="Assets\LoginStyle.axaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AuctionData\AuctionData.csproj" />
+  </ItemGroup>
+</Project>

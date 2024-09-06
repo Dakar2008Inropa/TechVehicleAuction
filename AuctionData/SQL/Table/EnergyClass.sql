@@ -1,0 +1,1 @@
+﻿CREATE TABLE EnergyClass ( Id INT Primary Key, Type NVARCHAR(10) );

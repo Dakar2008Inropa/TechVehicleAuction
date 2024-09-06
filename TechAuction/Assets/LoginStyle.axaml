@@ -1,0 +1,130 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+
+        <Border Padding="20"
+         HorizontalAlignment="Center"
+         VerticalAlignment="Center">
+
+            <StackPanel HorizontalAlignment="Center"
+             VerticalAlignment="Center"
+             Spacing="15">
+
+                <Button HorizontalAlignment="Stretch"
+                 Classes="GreenBtn"
+                 Content="Login" />
+
+                <Button HorizontalAlignment="Stretch"
+                 Classes="GreyBtn"
+                 Content="Cancel" />
+
+                <TextBox Width="250"
+                 Classes="LoginFormTextbox"
+                 TabIndex="0"
+                 Watermark="Username" />
+
+                <HyperlinkButton Name="CreateNewUserLink"
+                 Padding="5,0"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"
+                 VerticalContentAlignment="Center"
+                 Classes="CreateNewUserLink"
+                 Content="Create user"
+                 TabIndex="2" />
+
+                <TextBlock Name="LoginErrorText"
+                 Classes="ErrorText"
+                 Text="! Username or Password was not correct !" />
+
+                <RadioButton Margin="0,0,35,0"
+                 Classes="DefaultRadio"
+                 Content="Corporate"
+                 GroupName="UserType"
+                 TabIndex="3" />
+
+            </StackPanel>
+
+        </Border>
+
+    </Design.PreviewWith>
+
+    <Style Selector="Button.GreenBtn">
+        <Setter Property="Background" Value="#128715" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.GreenBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#1da91d" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.GreyBtn">
+        <Setter Property="Background" Value="#bcbcbc" />
+        <Setter Property="Foreground" Value="#000" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.GreyBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#cecece" />
+        <Setter Property="Foreground" Value="#000" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="HyperlinkButton.CreateNewUserLink">
+        <Setter Property="Foreground" Value="#408feb" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style Selector="HyperlinkButton.CreateNewUserLink:pointerover /template/ ContentPresenter">
+        <Setter Property="Foreground" Value="#c10200" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="TextBlock.ErrorText">
+        <Setter Property="Foreground" Value="Red" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style Selector="TextBox.LoginFormTextbox">
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBlock.DefaultText">
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style Selector="RadioButton.DefaultRadio">
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+</Styles>

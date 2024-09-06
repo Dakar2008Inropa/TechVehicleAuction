@@ -1,0 +1,87 @@
+<UserControl x:Class="TechAuction.Views.CreateUserView"
+ xmlns="https://github.com/avaloniaui"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:vm="using:TechAuction.ViewModels"
+ d:DesignHeight="600"
+ d:DesignWidth="800"
+ x:DataType="vm:CreateUserViewModel"
+ mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Assets/LoginStyle.axaml" />
+    </UserControl.Styles>
+
+    <Design.DataContext>
+        <vm:CreateUserViewModel />
+    </Design.DataContext>
+
+    <StackPanel HorizontalAlignment="Center"
+     VerticalAlignment="Center"
+     Spacing="15">
+
+        <Image Width="250"
+         Height="250"
+         Source="/Assets/Logo.png" />
+
+        <TextBlock FontFamily="Verdana"
+         FontSize="25"
+         TabIndex="10"
+         Text="Create user" />
+
+        <TextBox Name="Usernamefield"
+         Width="250"
+         AttachedToVisualTree="Usernamefield_AttachedToVisualTree"
+         Classes="LoginFormTextbox"
+         TabIndex="0"
+         Watermark="Username" />
+
+        <TextBox Name="Passwordfield"
+         Width="250"
+         Classes="LoginFormTextbox"
+         PasswordChar="*"
+         TabIndex="1"
+         Watermark="Password" />
+
+        <TextBox Name="ConfirmPasswordfield"
+         Width="250"
+         Classes="LoginFormTextbox"
+         PasswordChar="*"
+         TabIndex="2"
+         Watermark="Password again" />
+
+        <WrapPanel HorizontalAlignment="Center">
+
+            <RadioButton Margin="0,0,35,0"
+             Classes="DefaultRadio"
+             Content="Corporate"
+             GroupName="UserType"
+             TabIndex="3" />
+
+            <RadioButton Classes="DefaultRadio"
+             Content="Private"
+             GroupName="UserType"
+             TabIndex="4" />
+
+        </WrapPanel>
+
+        <WrapPanel HorizontalAlignment="Center">
+
+            <Button Width="110"
+             Margin="0,0,10,0"
+             Classes="GreyBtn"
+             Command="{Binding LoginPageCmd}"
+             Content="Cancel"
+             TabIndex="6" />
+
+            <Button Width="110"
+             Classes="GreenBtn"
+             Content="Create"
+             TabIndex="5" />
+
+        </WrapPanel>
+
+    </StackPanel>
+
+</UserControl>
