@@ -3,23 +3,26 @@ using System.Data;
 
 namespace AuctionData.Models
 {
-    internal class Database
+    public partial class Database
     {
-        private readonly string? connectionString;
         private readonly SqlConnection conn;
+
+
+        public static Database Instance { get; } = new Database();
+
+        private DbSettings? Settings { get; set; }
+
+
         public Database()
         {
-            SqlConnectionStringBuilder sb = new();
-            sb.Clear();
-            sb.DataSource = "";
-            sb.InitialCatalog = "";
-            sb.UserID = "";
-            sb.Password = "";
-            connectionString = sb.ToString();
-            conn = new SqlConnection(connectionString);
+            Settings = DbSettings.LoadSettings();
+
+            conn = new SqlConnection(GetConnectionString(Settings));
         }
 
-        public void CreateAuction(string VehicleId, double AskingPrice)
+
+
+        private void CreateAuction(string VehicleId, double AskingPrice)
         {
             using (SqlCommand cmd = new("CreateAuction", conn))
             {
@@ -33,6 +36,17 @@ namespace AuctionData.Models
                 cmd.ExecuteNonQuery();
                 conn.Close();
             }
+        }
+
+        private string GetConnectionString(DbSettings settings)
+        {
+            SqlConnectionStringBuilder sb = new();
+            sb.Clear();
+            sb.DataSource = settings.Hostname;
+            sb.InitialCatalog = settings.Database;
+            sb.UserID = settings.Username;
+            sb.Password = settings.Password;
+            return sb.ToString();
         }
     }
 }
