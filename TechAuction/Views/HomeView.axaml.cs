@@ -40,10 +40,10 @@ public partial class HomeView : UserControl
                     IconSource = new SymbolIconSource { Symbol = Symbol.Save },
                     FooterVisibility = TaskDialogFooterVisibility.Never,
                     Buttons =
-                    {
-                        TaskDialogButton.YesButton,
-                        TaskDialogButton.NoButton
-                    }
+                {
+                    TaskDialogButton.YesButton,
+                    TaskDialogButton.NoButton
+                }
                 };
 
                 td.XamlRoot = (Avalonia.Visual?)VisualRoot;
@@ -62,13 +62,25 @@ public partial class HomeView : UserControl
 
                 return;
             }
-            var page = $"TechAuction.Views.{nvi.Tag}";
+
+            var page = $"TechAuction.Views.{nvi.Tag}View";
             var type = Type.GetType(page);
             if (type != null)
             {
                 var pg = Activator.CreateInstance(type);
+
                 if (pg != null && sender is NavigationView navigationView)
                 {
+                    if (pg is UserControl userControl)
+                    {
+                        var viewModelType = Type.GetType($"TechAuction.ViewModels.{nvi.Tag}ViewModel");
+                        if (viewModelType != null)
+                        {
+                            var viewModel = Activator.CreateInstance(viewModelType);
+                            userControl.DataContext = viewModel;
+                        }
+                    }
+
                     navigationView.Content = pg;
                 }
             }

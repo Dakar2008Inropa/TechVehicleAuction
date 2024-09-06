@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-
-namespace AuctionData.Models.Vehicle
+﻿namespace AuctionData.Models.Vehicle
 {
     public abstract class Vehicle : Base
     {
         private double _engineSize;
 
+
         public string? Maker { get; set; }
         public string? Model { get; set; }
-        public int Odometer { get; set; }
+        public int Mileage { get; set; }
         public string? LicensePlate { get; set; }
         public int ModelYear { get; set; }
         public bool Towinghitch { get; set; }
@@ -26,6 +25,9 @@ namespace AuctionData.Models.Vehicle
         public int FuelEconomy { get; set; }
         public int FuelCapacity { get; set; }
         public EnergyClass EnergyClass { get; set; }
+        public List<VehicleImage>? Images { get; set; }
+
+
 
         public override string ToString()
         {

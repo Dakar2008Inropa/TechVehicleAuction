@@ -14,31 +14,70 @@
         <vm:AuctionViewModel />
     </Design.DataContext>
 
-    <Grid Margin="10" RowDefinitions="* *">
+    <Grid Margin="10" RowDefinitions="Auto,*,Auto,*">
 
-        <StackPanel Grid.Row="0" Spacing="10">
+        <TextBlock Grid.Row="0"
+         Margin="0,0,0,5"
+         Text="Your Auctions" />
 
-            <TextBlock Text="Your Auctions" />
+        <DataGrid Grid.Row="1"
+         Margin="0,0,0,5"
+         BorderBrush="Black"
+         BorderThickness="1"
+         IsReadOnly="True"
+         ItemsSource="{Binding YourAuctions}"
+         VerticalScrollBarVisibility="Auto">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Image">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Width="48"
+                             Height="48"
+                             Source="/Assets/vehiclePlaceholder.png" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-            <DataGrid IsReadOnly="True" ItemsSource="{Binding Vehicles}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Width="*"
-                     Binding="{Binding Maker}"
-                     Header="Maker" />
-                    <DataGridTextColumn Width="*"
-                     Binding="{Binding Model}"
-                     Header="Model" />
-                    <DataGridTextColumn Binding="{Binding ModelYear}" Header="Year" />
-                </DataGrid.Columns>
-            </DataGrid>
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding Maker}"
+                 Header="Maker" />
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding Model}"
+                 Header="Model" />
+                <DataGridTextColumn Binding="{Binding ModelYear}" Header="Year" />
+            </DataGrid.Columns>
+        </DataGrid>
 
-        </StackPanel>
+        <TextBlock Grid.Row="2"
+         Margin="0,0,0,5"
+         Text="Current Auctions" />
 
-        <StackPanel Grid.Row="1" Spacing="10">
+        <DataGrid Grid.Row="3"
+         BorderBrush="Black"
+         BorderThickness="1"
+         IsReadOnly="True"
+         ItemsSource="{Binding Auctions}"
+         VerticalScrollBarVisibility="Auto">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Image">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Width="48"
+                             Height="48"
+                             Source="/Assets/vehiclePlaceholder.png" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-            <TextBlock Text="Current Auctions" />
-
-        </StackPanel>
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding Maker}"
+                 Header="Maker" />
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding Model}"
+                 Header="Model" />
+                <DataGridTextColumn Binding="{Binding ModelYear}" Header="Year" />
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 

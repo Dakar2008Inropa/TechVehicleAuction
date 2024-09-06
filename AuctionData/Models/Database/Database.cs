@@ -4,30 +4,60 @@ namespace AuctionData.Models.Database
 {
     public partial class Database
     {
+        private DbSettings Settings { get; set; }
+
+        private readonly SqlConnection Sqlcon;
+
         public static Database Instance { get; } = new Database();
 
-        private DbSettings Settings { get; set; }
 
 
         public Database()
         {
             Settings = DbSettings.LoadSettings();
+            Sqlcon = new SqlConnection(GetConnectionString(Settings!));
+        }
+
+        public void OpenConnection()
+        {
+            Sqlcon.Open();
+        }
+
+        public async Task OpenConnectionAsync()
+        {
+            await Sqlcon.OpenAsync();
+        }
+
+        public void CloseConnection()
+        {
+            Sqlcon.Close();
+        }
+
+        public async Task CloseConnectionAsync()
+        {
+            await Sqlcon.CloseAsync();
+        }
+
+        public SqlConnection GetConnection()
+        {
+            return Sqlcon;
         }
 
         public bool TestConnection()
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(GetConnectionString(Settings!)))
-                {
-                    con.Open();
-                    return true;
-                }
+                OpenConnection();
+                return true;
             }
             catch (SqlException ex)
             {
                 Console.WriteLine(ex.Message);
                 return false;
+            }
+            finally
+            {
+                CloseConnection();
             }
         }
 

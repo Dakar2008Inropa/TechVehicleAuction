@@ -34,19 +34,19 @@
              Content="Auctions"
              Cursor="Hand"
              IconSource="StarEmphasisFilled"
-             Tag="AuctionView" />
+             Tag="Auction" />
 
             <ui:NavigationViewItem Name="SetForSaleMenuItem"
              Content="Set For Sale"
              Cursor="Hand"
              IconSource="ImportantFilled"
-             Tag="SetForSaleView" />
+             Tag="SetForSale" />
 
             <ui:NavigationViewItem Name="UserProfileMenuItem"
              Content="User Profile"
              Cursor="Hand"
              IconSource="PeopleFilled"
-             Tag="UserProfileView" />
+             Tag="UserProfile" />
 
             <ui:NavigationViewItem Name="LogoutMenuItem"
              Content="Logout"
