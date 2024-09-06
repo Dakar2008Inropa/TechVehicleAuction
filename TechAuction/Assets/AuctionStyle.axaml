@@ -1,0 +1,34 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.PreviewWith>
+        <Border Padding="20">
+
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="TextBlock.Header">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style Selector="DataGridColumnHeader">
+        <Setter Property="Background" Value="#005b9e" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="0 0 0 1" />
+    </Style>
+
+    <Style Selector="DataGridRow:selected">
+        <Setter Property="Background" Value="#2d3a43" />
+        <Setter Property="Foreground" Value="#FFF" />
+    </Style>
+
+    <Style Selector="DataGridRow:pointerover">
+        <Setter Property="Background" Value="#2d3a43" />
+        <Setter Property="Foreground" Value="#FFF" />
+    </Style>
+
+</Styles>

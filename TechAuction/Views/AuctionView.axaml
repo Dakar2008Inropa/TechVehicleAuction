@@ -14,10 +14,15 @@
         <vm:AuctionViewModel />
     </Design.DataContext>
 
+    <UserControl.Styles>
+        <StyleInclude Source="/Assets/AuctionStyle.axaml" />
+    </UserControl.Styles>
+
     <Grid Margin="10" RowDefinitions="Auto,*,Auto,*">
 
         <TextBlock Grid.Row="0"
          Margin="0,0,0,5"
+         Classes="Header"
          Text="Your Auctions" />
 
         <DataGrid Grid.Row="1"
@@ -26,6 +31,7 @@
          BorderThickness="1"
          IsReadOnly="True"
          ItemsSource="{Binding YourAuctions}"
+         SelectionMode="Single"
          VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Image">
@@ -50,6 +56,7 @@
 
         <TextBlock Grid.Row="2"
          Margin="0,0,0,5"
+         Classes="Header"
          Text="Current Auctions" />
 
         <DataGrid Grid.Row="3"
@@ -57,6 +64,7 @@
          BorderThickness="1"
          IsReadOnly="True"
          ItemsSource="{Binding Auctions}"
+         SelectionMode="Single"
          VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Image">

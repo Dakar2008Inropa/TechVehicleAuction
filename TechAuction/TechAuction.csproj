@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaXaml Remove="Assets\AuctionStyle.axaml" />
     <AvaloniaXaml Remove="Assets\LoginStyle.axaml" />
   </ItemGroup>
 
@@ -46,6 +47,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Update="Assets\AuctionStyle.axaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
     <AvaloniaResource Update="Assets\LoginStyle.axaml">
       <SubType>Designer</SubType>
     </AvaloniaResource>
