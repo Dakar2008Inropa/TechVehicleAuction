@@ -29,6 +29,22 @@ namespace TechAuction.Utilities
                 }
             }
 
+            public static void UploadImageToDatabase(string imagePath)
+            {
+                Database.Instance.OpenConnection();
+
+                byte[] imageData = File.ReadAllBytes(imagePath);
+
+                string query = "INSERT INTO ImagesTable (ImageData) VALUES (@ImageData)";
+                using (SqlCommand cmd = new SqlCommand(query, Database.Instance.GetConnection()))
+                {
+                    cmd.Parameters.AddWithValue("@ImageData", imageData);
+                    cmd.ExecuteNonQuery();
+                }
+
+                Database.Instance.CloseConnection();
+            }
+
             private static Bitmap GetPlaceholderBitmap()
             {
                 var uri = new Uri("avares://TechAuction/Assets/vehiclePlaceholder.png");
