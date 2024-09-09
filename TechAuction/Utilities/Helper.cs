@@ -13,7 +13,7 @@ namespace TechAuction.Utilities
             public static Bitmap? DownloadImageFromDB(int imageId)
             {
                 Database.Instance.OpenConnection();
-                var cmd = new SqlCommand("SELECT Image FROM VehicleImages WHERE Id = @Id", Database.Instance.GetConnection());
+                var cmd = new SqlCommand($"SELECT Image FROM {DatabaseTables.VehicleImages} WHERE Id = @Id", Database.Instance.GetConnection());
                 cmd.Parameters.AddWithValue("@Id", imageId);
 
                 byte[] imageData = (byte[])cmd.ExecuteScalar();
@@ -33,12 +33,12 @@ namespace TechAuction.Utilities
             {
                 Database.Instance.OpenConnection();
 
-                byte[] imageData = File.ReadAllBytes(imagePath);
+                byte[] image = File.ReadAllBytes(imagePath);
 
-                string query = "INSERT INTO ImagesTable (ImageData) VALUES (@ImageData)";
+                string query = $"INSERT INTO {DatabaseTables.VehicleImages} (Image) VALUES (@Image)";
                 using (SqlCommand cmd = new SqlCommand(query, Database.Instance.GetConnection()))
                 {
-                    cmd.Parameters.AddWithValue("@ImageData", imageData);
+                    cmd.Parameters.AddWithValue("@Image", image);
                     cmd.ExecuteNonQuery();
                 }
 
