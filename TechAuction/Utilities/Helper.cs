@@ -29,16 +29,29 @@ namespace TechAuction.Utilities
                 }
             }
 
-            public static void UploadImageToDatabase(string imagePath)
+            public static void UploadImageToDatabase(string imagePath, string desc)
             {
                 Database.Instance.OpenConnection();
 
                 byte[] image = File.ReadAllBytes(imagePath);
 
-                string query = $"INSERT INTO {DatabaseTables.VehicleImages} (Image) VALUES (@Image)";
+                int imageWidth = 0;
+                int imageHeight = 0;
+
+                using(MemoryStream ms = new MemoryStream(image))
+                {
+                    Bitmap bitmapImage = new Bitmap(ms);
+                    imageWidth = bitmapImage.PixelSize.Width;
+                    imageHeight = bitmapImage.PixelSize.Height;
+                }
+
+                string query = $"INSERT INTO {DatabaseTables.VehicleImages} (Image, Description, ImageWidth, ImageHeight) VALUES (@Image, @Description, @ImageWidth, @ImageHeight)";
                 using (SqlCommand cmd = new SqlCommand(query, Database.Instance.GetConnection()))
                 {
                     cmd.Parameters.AddWithValue("@Image", image);
+                    cmd.Parameters.AddWithValue("@Description", desc);
+                    cmd.Parameters.AddWithValue("@ImageWidth", imageWidth);
+                    cmd.Parameters.AddWithValue("@ImageHeight", imageHeight);
                     cmd.ExecuteNonQuery();
                 }
 
