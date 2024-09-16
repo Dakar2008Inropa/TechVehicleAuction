@@ -2,6 +2,8 @@
 using Avalonia.Media.Imaging;
 using Microsoft.Data.SqlClient;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
 
 namespace TechAuction.Utilities
@@ -10,26 +12,37 @@ namespace TechAuction.Utilities
     {
         public static class Vehicle
         {
-            public static Bitmap? DownloadImageFromDB(int imageId)
+            public static List<Bitmap?> DownloadImagesFromDB(int vehicleId)
             {
                 Database.Instance.OpenConnection();
-                var cmd = new SqlCommand($"SELECT Image FROM {DatabaseTables.VehicleImages} WHERE Id = @Id", Database.Instance.GetConnection());
-                cmd.Parameters.AddWithValue("@Id", imageId);
+                string query = $"SELECT Image FROM {DatabaseTables.VehicleImages} WHERE VehicleId = {vehicleId}";
 
-                byte[] imageData = (byte[])cmd.ExecuteScalar();
-
-                Database.Instance.CloseConnection();
-
-                if (imageData == null)
-                    return GetPlaceholderBitmap();
-
-                using (MemoryStream ms = new MemoryStream(imageData))
+                using (SqlDataAdapter adapter = new SqlDataAdapter(query, Database.Instance.GetConnection()))
                 {
-                    return new Bitmap(ms);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    List<Bitmap?> bitmaps = new List<Bitmap?>();
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        var row = dt.Rows[i];
+                        byte[] imageData = (byte[])row["Image"];
+                        using (MemoryStream ms = new MemoryStream(imageData))
+                        {
+                            bitmaps.Add(new Bitmap(ms));
+                        }
+                    }
+                    Database.Instance.CloseConnection();
+
+                    if (bitmaps.Count == 0)
+                    {
+                        bitmaps.Add(GetPlaceholderBitmap());
+                    }
+
+                    return bitmaps;
                 }
             }
 
-            public static void UploadImageToDatabase(string imagePath, string desc)
+            public static void UploadImageToDatabase(string imagePath, string desc, int vehicleId)
             {
                 Database.Instance.OpenConnection();
 
@@ -38,20 +51,22 @@ namespace TechAuction.Utilities
                 int imageWidth = 0;
                 int imageHeight = 0;
 
-                using(MemoryStream ms = new MemoryStream(image))
+                using (MemoryStream ms = new MemoryStream(image))
                 {
                     Bitmap bitmapImage = new Bitmap(ms);
                     imageWidth = bitmapImage.PixelSize.Width;
                     imageHeight = bitmapImage.PixelSize.Height;
                 }
 
-                string query = $"INSERT INTO {DatabaseTables.VehicleImages} (Image, Description, ImageWidth, ImageHeight) VALUES (@Image, @Description, @ImageWidth, @ImageHeight)";
+                string query = $"INSERT INTO {DatabaseTables.VehicleImages} (Image, Description, ImageWidth, ImageHeight, VehicleId) VALUES (@Image, @Description, @ImageWidth, @ImageHeight, @VehicleId)";
+
                 using (SqlCommand cmd = new SqlCommand(query, Database.Instance.GetConnection()))
                 {
                     cmd.Parameters.AddWithValue("@Image", image);
                     cmd.Parameters.AddWithValue("@Description", desc);
                     cmd.Parameters.AddWithValue("@ImageWidth", imageWidth);
                     cmd.Parameters.AddWithValue("@ImageHeight", imageHeight);
+                    cmd.Parameters.AddWithValue("@VehicleId", vehicleId);
                     cmd.ExecuteNonQuery();
                 }
 

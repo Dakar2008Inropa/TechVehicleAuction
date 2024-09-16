@@ -7,5 +7,6 @@
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
         public Vehicle? Vehicle { get; set; }
+        public int VehicleId { get; set; }
     }
 }
