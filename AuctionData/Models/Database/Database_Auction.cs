@@ -7,9 +7,9 @@ namespace AuctionData.Models.Database
     {
         public static class Auction
         {
-            public static void CreateAuction(int vehicleId, int userId, double askingPrice)
+            public static void CreateAuction(int vehicleId, int userId, double minimumAmount)
             {
-                using (SqlConnection con = new SqlConnection(Instance.GetConnectionString(Instance.Settings!)))
+                using (SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
                 {
                     using (SqlCommand cmd = new("CreateAuction", con))
                     {
@@ -18,7 +18,7 @@ namespace AuctionData.Models.Database
 
                         cmd.Parameters.AddWithValue("@VehicleId", SqlDbType.NVarChar).Value = vehicleId;
                         cmd.Parameters.AddWithValue("@SellerId", SqlDbType.NVarChar).Value = userId;
-                        cmd.Parameters.AddWithValue("@AskingPrice", SqlDbType.Decimal).Value = askingPrice;
+                        cmd.Parameters.AddWithValue("@MinimumAmount", SqlDbType.Decimal).Value = minimumAmount;
 
                         cmd.ExecuteNonQuery();
                         con.Close();

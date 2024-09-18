@@ -5,7 +5,9 @@ namespace AuctionData.Models.AuctionModels
     public class AuctionBids : Base
     {
         public Auction? Auction { get; set; }
+        public int AuctionId { get; set; }
         public User? Bidder { get; set; }
+        public int BidderId { get; set; }
         public ulong BidAmount { get; set; }
 
 

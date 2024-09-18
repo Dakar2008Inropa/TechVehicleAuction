@@ -6,6 +6,10 @@ public class CorporateUser : User
 {
     public long Credit { get; set; }
     public string? CvrNumber { get; set; }
+    public CorporateUser()
+    {
+
+    }
     public CorporateUser(long credit, string cvrNumber)
     {
         Credit = credit;

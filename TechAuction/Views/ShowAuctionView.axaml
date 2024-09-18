@@ -94,6 +94,8 @@
         </Grid>
 
         <Grid Grid.Row="3">
+            <Panel>
+            </Panel>
         </Grid>
 
     </Grid>

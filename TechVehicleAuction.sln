@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionData", "AuctionData\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechAuction", "TechAuction\TechAuction.csproj", "{93BE906C-C8BC-41DC-B3B0-04C184129127}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionDataUnitTest", "AuctionDataUnitTest\AuctionDataUnitTest.csproj", "{0B42BF45-58CB-421D-9DCD-C00EAA9793D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionDataUnitTest", "AuctionDataUnitTest\AuctionDataUnitTest.csproj", "{0B42BF45-58CB-421D-9DCD-C00EAA9793D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{ABB04B6A-14BB-45CC-AD68-2459CCBDB24E}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\AuctionDataDiagram.png = ..\..\..\Downloads\AuctionDataDiagram.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,8 +25,7 @@
         public int FuelEconomy { get; set; }
         public int FuelCapacity { get; set; }
         public EnergyClass EnergyClass { get; set; }
-        public List<VehicleImage>? Images { get; set; }
-
+        public string? Discriminator { get; set; }
 
 
         public override string ToString()
@@ -94,7 +93,7 @@
             return "Unknown";
         }
 
-        public LicenseType GetLicenseType()
+        public static LicenseType GetLicenseType()
         {
             return LicenseType.B;
         }

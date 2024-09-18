@@ -1,3 +1,4 @@
+using AuctionData.Models.Database;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using System;
@@ -18,6 +19,8 @@ public partial class SplashScreen : Window
     public SplashScreen()
     {
         InitializeComponent();
+
+        CreateDBTables();
     }
 
     public async Task InitApp()
@@ -86,5 +89,12 @@ public partial class SplashScreen : Window
             Dispatcher.UIThread.Post(() => LoadingProgressBar.Value = progressValue);
             await Task.Delay(10);
         }
+    }
+
+    private static void CreateDBTables()
+    {
+        Database.Instance.OpenConnection();
+        Database.CreateTables();
+        Database.Instance.CloseConnection();
     }
 }

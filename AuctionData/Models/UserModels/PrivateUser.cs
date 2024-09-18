@@ -5,7 +5,12 @@ namespace AuctionData.Models.UserModels;
 
 public class PrivateUser : User
 {
-    public string CPRNumber { get; private set; }
+    public string? CPRNumber { get; private set; }
+
+    public PrivateUser()
+    {
+
+    }
 
     public PrivateUser(string cprNumber)
     {
@@ -22,8 +27,5 @@ public class PrivateUser : User
                 CPRNumber = cpr;
             }
         }
-
-        //DB U11
     }
-
 }

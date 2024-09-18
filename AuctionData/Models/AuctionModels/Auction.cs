@@ -5,8 +5,12 @@ namespace AuctionData.Models.AuctionModels;
 public class Auction : Base
 {
     public Vehicle? Vehicle { get; set; }
+    public int VehicleId { get; set; }
     public User? Seller { get; set; }
+    public int SellerId { get; set; }
     public ulong MinimumAmount { get; set; }
+    public AuctionStatus AuctionStatus { get; set; }
+    public DateTime EndDate { get; set; }
 
 
     public Auction()
@@ -24,12 +28,15 @@ public class Auction : Base
     {
         return new Auction(vehicle, seller, minAmount);
     }
+
     public void RecieveBid(ulong bidAmount)
     {
     }
+
     public void AcceptBid()
     {
     }
+
     public void FindAuctionById()
     {
 
