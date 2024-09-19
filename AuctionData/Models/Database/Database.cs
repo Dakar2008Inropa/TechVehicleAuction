@@ -164,7 +164,7 @@ namespace AuctionData.Models.Database
             BEGIN
                 CREATE TABLE {DatabaseTables.Base} (
                     {nameof(Base.Id)} INT PRIMARY KEY IDENTITY(1,1), 
-                    {nameof(Base.CreatedAt)} DATETIME DEFAULT SYSDATETIME(),
+                    {nameof(Base.CreatedAt)} DATETIME DEFAULT GETUTCDATE(),
                     {nameof(Base.UpdatedAt)} DATETIME NULL,
                     {nameof(Base.DeletedAt)} DATETIME NULL,
                     {nameof(Base.Status)} INT

@@ -3,6 +3,7 @@
 		Bid Decimal,
 		UserId NVARCHAR(100),
 		AuctionId Int,
-		CreatedAt DATETIME DEFAULT SYSDATETIME(),
+		BaseId INT,
+		FOREIGN KEY (BaseId) REFERENCES Base(Id),
 		FOREIGN KEY (UserId) REFERENCES Users (Id),
 		FOREIGN KEY (AuctionId) REFERENCES Auctions (Id) );

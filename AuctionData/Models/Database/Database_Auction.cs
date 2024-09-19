@@ -46,7 +46,7 @@ namespace AuctionData.Models.Database
                                 MinimumAmount = reader.GetDecimal(reader.GetOrdinal("AskingPrice")),
                                 CurrentBid = reader.GetDecimal(reader.GetOrdinal("CurrentBid")),
                                 VehicleId = reader.GetInt32(reader.GetOrdinal("VehicleId")),
-                                Vehicle = new VehicleModels.Vehicle()
+                                
                           
                                 
 
