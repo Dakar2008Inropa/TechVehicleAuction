@@ -8,6 +8,7 @@ namespace TechAuction;
 
 public partial class SplashScreen : Window
 {
+    const string LoadingTextDB = "Creating Database Tables...";
     const string LoadingText1 = "Preparing the auction house... Finding the auctioneer!";
     const string LoadingText2 = "Checking tire pressure on all vehicles... Almost ready!";
     const string LoadingText3 = "Polishing the cars, so they shine at the auction...";
@@ -19,8 +20,6 @@ public partial class SplashScreen : Window
     public SplashScreen()
     {
         InitializeComponent();
-
-        CreateDBTables();
     }
 
     public async Task InitApp()
@@ -38,7 +37,16 @@ public partial class SplashScreen : Window
         }
 
         start = time;
-        Dispatcher.UIThread.Post(() => LoadingText.Text = LoadingText1);
+        if (!Database.IsTablesCreated())
+        {
+            Dispatcher.UIThread.Post(() => LoadingText.Text = LoadingTextDB);
+            await Task.Delay(25);
+            Database.CreateTables();
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(() => LoadingText.Text = LoadingText1);
+        }
         var limit = TimeSpan.TicksPerSecond * 2;
         while ((time - start) < limit)
         {
@@ -89,12 +97,5 @@ public partial class SplashScreen : Window
             Dispatcher.UIThread.Post(() => LoadingProgressBar.Value = progressValue);
             await Task.Delay(10);
         }
-    }
-
-    private static void CreateDBTables()
-    {
-        Database.Instance.OpenConnection();
-        Database.CreateTables();
-        Database.Instance.CloseConnection();
     }
 }

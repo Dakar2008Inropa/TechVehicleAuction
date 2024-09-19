@@ -1,0 +1,13 @@
+DROP TABLE AuctionBids;
+DROP TABLE Auctions;
+DROP TABLE Bus;
+DROP TABLE Truck;
+DROP TABLE HeavyVehicle;
+DROP TABLE CorporateUser;
+DROP TABLE PrivateUser;
+DROP TABLE PrivatePassengerCar;
+DROP TABLE ProfessionalPassengerCar;
+DROP TABLE PassengerCar;
+DROP TABLE Users;
+DROP TABLE Vehicles;
+DROP TABLE Base;
