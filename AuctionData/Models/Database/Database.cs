@@ -94,7 +94,7 @@ namespace AuctionData.Models.Database
             BEGIN
                 CREATE TABLE {DatabaseTables.Base} (
                     {Utility.GetPropertyName(() => new PrivateUser().Id)} INT PRIMARY KEY IDENTITY(1,1),
-                    {Utility.GetPropertyName(() => new PrivateUser().CreatedAt)} DATETIME,
+                    {Utility.GetPropertyName(() => new PrivateUser().CreatedAt)} DATETIME DEFAULT SYSDATETIME(),
                     {Utility.GetPropertyName(() => new PrivateUser().UpdatedAt)} DATETIME,
                     {Utility.GetPropertyName(() => new PrivateUser().DeletedAt)} DATETIME,
                     {Utility.GetPropertyName(() => new PrivateUser().Status)} INT

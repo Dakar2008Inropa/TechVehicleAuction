@@ -3,12 +3,13 @@
 GO;
 
 CREATE PROCEDURE GetActiveAuctions
-(
-	@Username	NVARCHAR(100)
-)
 AS
 BEGIN;
 
-SELECT
-	AA.CurrentBid
-	AA.AskingPrice
+SET NOCOUNT ON
+
+SELECT * FROM Auctions WHERE IsActive = 1
+
+SET NOCOUNT OFF
+
+END;
