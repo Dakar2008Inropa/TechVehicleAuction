@@ -1,7 +1,9 @@
 using AuctionData.Models.Database;
 using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
+using NAudio.Wave;
 using System;
+using System.Threading;
 
 namespace TechAuction.Views;
 
@@ -114,6 +116,7 @@ public partial class CreateUserView : UserControl
                 {
                     ErrorText.IsVisible = true;
                     ErrorText.Text = "Could not create user";
+                    ErrorSound();
                 }
             }
         }
@@ -121,6 +124,22 @@ public partial class CreateUserView : UserControl
         {
             ErrorText.IsVisible = true;
             ErrorText.Text = ex.Message;
+        }
+    }
+
+    private static void ErrorSound()
+    {
+        //Files is placed in the Assets folder
+        var audioFile = "Assets/HvaLaverDu_Psykopat.mp3";
+        using (var audioFileReader = new AudioFileReader(audioFile))
+        using (var outputDevice = new WaveOutEvent())
+        {
+            outputDevice.Init(audioFileReader);
+            outputDevice.Play();
+            while (outputDevice.PlaybackState == PlaybackState.Playing)
+            {
+                Thread.Sleep(100);
+            }
         }
     }
 }
