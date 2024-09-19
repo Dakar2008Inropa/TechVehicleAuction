@@ -4,11 +4,13 @@ using AuctionData.Models.VehicleModels;
 namespace AuctionData.Models.AuctionModels;
 public class Auction : Base
 {
-    public Vehicle? Vehicle { get; set; }
+    public VehicleModels.Vehicle? Vehicle { get; set; }
     public int VehicleId { get; set; }
     public User? Seller { get; set; }
     public int SellerId { get; set; }
-    public ulong MinimumAmount { get; set; }
+    public decimal MinimumAmount { get; set; }
+
+    public decimal CurrentBid {  get; set; }
     public AuctionStatus AuctionStatus { get; set; }
     public DateTime EndDate { get; set; }
     public Base? Base { get; set; }

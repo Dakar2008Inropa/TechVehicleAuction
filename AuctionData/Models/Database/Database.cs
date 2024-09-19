@@ -163,8 +163,8 @@ namespace AuctionData.Models.Database
             IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{DatabaseTables.Base}')
             BEGIN
                 CREATE TABLE {DatabaseTables.Base} (
-                    {nameof(Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
-                    {nameof(Base.CreatedAt)} DATETIME,
+                    {nameof(Base.Id)} INT PRIMARY KEY IDENTITY(1,1), 
+                    {nameof(Base.CreatedAt)} DATETIME DEFAULT SYSDATETIME(),
                     {nameof(Base.UpdatedAt)} DATETIME NULL,
                     {nameof(Base.DeletedAt)} DATETIME NULL,
                     {nameof(Base.Status)} INT

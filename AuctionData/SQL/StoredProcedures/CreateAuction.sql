@@ -4,8 +4,8 @@ GO;
 
 CREATE PROCEDURE CreateAuction
 (
-	@VehicleId		VARCHAR(100),
-	@SellerId		VARCHAR(100),
+	@VehicleId		INT,
+	@SellerId		INT,
 	@AskingPrice	Decimal
 )
 AS
@@ -13,8 +13,11 @@ BEGIN;
 
 SET NOCOUNT ON
 
-INSERT INTO ActiveAuctions (VehicleId, SellerId, AskingPrice)
-VALUES (@MovieId, @SellerId, @AskingPrice);
+DECLARE @BaseId INT;
+EXEC @BaseId = GetBaseReference
+
+INSERT INTO ActiveAuctions (VehicleId, SellerId, AskingPrice, BaseId)
+VALUES (@MovieId, @SellerId, @AskingPrice, @BaseId);
 
 SET NOCOUNT OFF;
 

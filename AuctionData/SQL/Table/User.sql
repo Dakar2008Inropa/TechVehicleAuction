@@ -1,4 +1,4 @@
 ﻿CREATE TABLE Users ( 
 		Username NVARCHAR(255) PRIMARY KEY,
-		CorporateUser Bit,
+		ZipCode NVARCHAR(20),
 		Balance Decimal );

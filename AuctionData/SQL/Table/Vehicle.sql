@@ -1,5 +1,5 @@
 ﻿CREATE TABLE Vehicle ( 
-		Id VARCHAR(100) PRIMARY KEY,
+		Id INT PRIMARY KEY IDENTITY (1,1),
 		Maker VARCHAR(25),
 		Model VARCHAR(25),
 		Odometer Int,
@@ -11,6 +11,6 @@
 		FuelEconomy Int,
 		FuelCapacity Int,
 		EnergyClass Int NOT NULL DEFAULT 1,
-		constraint fk_LicenseType FOREIGN KEY (LicenseType) references LicenseType (Id),
-		constraint fk_EnergyClass FOREIGN KEY (EnergyClass) references EnergyClass (Id));
+		FOREIGN KEY (LicenseType) references LicenseType (Id),
+		FOREIGN KEY (EnergyClass) references EnergyClass (Id));
 
