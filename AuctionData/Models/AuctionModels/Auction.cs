@@ -13,6 +13,8 @@ public class Auction : Base
     public decimal CurrentBid {  get; set; }
     public AuctionStatus AuctionStatus { get; set; }
     public DateTime EndDate { get; set; }
+    public Base? Base { get; set; }
+    public int BaseId { get; set; }
 
 
     public Auction()

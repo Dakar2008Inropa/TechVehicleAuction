@@ -7,6 +7,8 @@
         public bool RacingSeat { get; set; }
         public bool RacingHarness { get; set; }
         public int LoadCapacity { get; set; }
+        public int PassengerCarId { get; set; }
+        public PassengerCar? PassengerCar { get; set; }
 
         public override string ToString()
         {

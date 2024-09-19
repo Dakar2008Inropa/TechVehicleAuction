@@ -9,6 +9,8 @@ namespace AuctionData.Models.AuctionModels
         public User? Bidder { get; set; }
         public int BidderId { get; set; }
         public ulong BidAmount { get; set; }
+        public int BaseId { get; set; }
+        public Base? Base { get; set; }
 
 
         public AuctionBids()

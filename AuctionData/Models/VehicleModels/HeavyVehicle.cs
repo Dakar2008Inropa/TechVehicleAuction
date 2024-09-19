@@ -5,6 +5,8 @@
         public int Height { get; set; }
         public int Weight { get; set; }
         public int Length { get; set; }
+        public int VehicleId { get; set; }
+        public Vehicle? Vehicle { get; set; }
 
         public override string ToString()
         {

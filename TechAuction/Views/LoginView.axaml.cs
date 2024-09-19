@@ -9,7 +9,7 @@ public partial class LoginView : UserControl
         InitializeComponent();
     }
 
-    private void Usernamefield_AttachedToVisualTree(object? sender, Avalonia.VisualTreeAttachmentEventArgs e)
+    private static void Usernamefield_AttachedToVisualTree(object? sender, Avalonia.VisualTreeAttachmentEventArgs e)
     {
         TextBox box = (TextBox)sender!;
         box.Focus();

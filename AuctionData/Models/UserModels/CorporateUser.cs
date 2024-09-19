@@ -6,6 +6,8 @@ public class CorporateUser : User
 {
     public long Credit { get; set; }
     public string? CvrNumber { get; set; }
+    public int UserId { get; set; }
+    public User? User { get; set; }
     public CorporateUser()
     {
 

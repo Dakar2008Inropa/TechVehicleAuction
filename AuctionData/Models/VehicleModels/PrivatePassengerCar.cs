@@ -3,6 +3,8 @@
     public class PrivatePassengerCar : PassengerCar
     {
         public bool IsofixMounts { get; set; }
+        public int PassengerCarId { get; set; }
+        public PassengerCar? PassengerCar { get; set; }
 
         public override string ToString()
         {

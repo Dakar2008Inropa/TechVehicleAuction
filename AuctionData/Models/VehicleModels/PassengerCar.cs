@@ -9,6 +9,8 @@
         public int SeatCapacity { get; set; }
         public bool RequireCommercialLicense { get; set; }
         public double TrunkDimensions { get; set; }
+        public int VehicleId { get; set; }
+        public Vehicle? Vehicle { get; set; }
 
 
         protected PassengerCar()

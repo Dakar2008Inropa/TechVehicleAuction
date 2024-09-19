@@ -26,6 +26,8 @@
         public int FuelCapacity { get; set; }
         public EnergyClass EnergyClass { get; set; }
         public string? Discriminator { get; set; }
+        public int BaseId { get; set; }
+        public Base? Base { get; set; }
 
 
         public override string ToString()
