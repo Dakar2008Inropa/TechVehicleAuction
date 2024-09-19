@@ -3,6 +3,8 @@
     public class Truck : HeavyVehicle
     {
         public int LoadCapacity { get; set; }
+        public int HeavyVehicleId { get; set; }
+        public HeavyVehicle? HeavyVehicle { get; set; }
 
         public Truck()
         {

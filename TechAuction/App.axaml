@@ -6,12 +6,15 @@
  RequestedThemeVariant="Light">
     <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
 
+    <Application.Resources>
+        <x:String x:Key="CurrentUser">
+        </x:String>
+    </Application.Resources>
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Styles>
         <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
-        <!--<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />-->
     </Application.Styles>
 </Application>

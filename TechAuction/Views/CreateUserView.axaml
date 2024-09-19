@@ -53,15 +53,18 @@
 
         <WrapPanel HorizontalAlignment="Center">
 
-            <RadioButton Margin="0,0,35,0"
+            <RadioButton Name="CorporateUserRadio"
+             Margin="0,0,35,0"
              Classes="DefaultRadio"
              Content="Corporate"
              GroupName="UserType"
              TabIndex="3" />
 
-            <RadioButton Classes="DefaultRadio"
+            <RadioButton Name="PrivateUserRadio"
+             Classes="DefaultRadio"
              Content="Private"
              GroupName="UserType"
+             IsChecked="True"
              TabIndex="4" />
 
         </WrapPanel>
@@ -77,10 +80,18 @@
 
             <Button Width="110"
              Classes="GreenBtn"
+             Click="Button_Click"
              Content="Create"
              TabIndex="5" />
 
         </WrapPanel>
+
+        <TextBlock Name="ErrorText"
+         HorizontalAlignment="Center"
+         VerticalAlignment="Center"
+         Classes="ErrorText"
+         IsVisible="False"
+         Text="" />
 
     </StackPanel>
 

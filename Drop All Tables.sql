@@ -9,5 +9,6 @@ DROP TABLE PrivatePassengerCar;
 DROP TABLE ProfessionalPassengerCar;
 DROP TABLE PassengerCar;
 DROP TABLE Users;
+DROP TABLE VehicleImages;
 DROP TABLE Vehicles;
 DROP TABLE Base;

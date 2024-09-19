@@ -5,6 +5,8 @@
         public int SeatingCapacity { get; set; }
         public int SleepingCapacity { get; set; }
         public bool Toilet { get; set; }
+        public int HeavyVehicleId { get; set; }
+        public HeavyVehicle? HeavyVehicle { get; set; }
 
         public Bus()
         {

@@ -6,7 +6,7 @@ namespace TechAuction.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private ViewModelBase _CurrentPage;
-        private Window? _window;
+        private readonly Window? _window;
 
         public MainWindowViewModel(Window window)
         {
