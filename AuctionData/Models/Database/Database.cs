@@ -113,7 +113,6 @@ namespace AuctionData.Models.Database
             BEGIN
                 CREATE TABLE {DatabaseTables.Users} (
                     {Utility.GetPropertyName(() => new PrivateUser().Id)} INT PRIMARY KEY FOREIGN KEY REFERENCES {DatabaseTables.Base}({Utility.GetPropertyName(() => new PrivateUser().Id)}),
-                    {Utility.GetPropertyName(() => new PrivateUser().Password)} NVARCHAR(255),
                     {Utility.GetPropertyName(() => new PrivateUser().PostalCode)} NVARCHAR(50),
                     {Utility.GetPropertyName(() => new PrivateUser().UserName)} NVARCHAR(255),
                     {Utility.GetPropertyName(() => new PrivateUser().Discriminator)} NVARCHAR(50)
