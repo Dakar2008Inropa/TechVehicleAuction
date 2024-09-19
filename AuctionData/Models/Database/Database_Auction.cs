@@ -29,11 +29,11 @@ namespace AuctionData.Models.Database
             public static void GetActiveAuctions()
             {
                 List<AuctionModels.Auction> list = new();
-                using(SqlConnection conn = new SqlConnection( GetConnectionString(Instance.Settings!)))
+                using (SqlConnection conn = new SqlConnection(GetConnectionString(Instance.Settings!)))
                 {
                     using (SqlCommand cmd = new("GetAuctions", conn))
                     {
-                        cmd.CommandType= CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.StoredProcedure;
                         conn.Open();
 
                         SqlDataReader reader = cmd.ExecuteReader();
@@ -46,14 +46,15 @@ namespace AuctionData.Models.Database
                                 MinimumAmount = reader.GetDecimal(reader.GetOrdinal("AskingPrice")),
                                 CurrentBid = reader.GetDecimal(reader.GetOrdinal("CurrentBid")),
                                 VehicleId = reader.GetInt32(reader.GetOrdinal("VehicleId")),
-                                
-                          
-                                
+
+
+
 
                             };
                             list.Add(auction);
+                        }
+                        conn.Close();
                     }
-                    conn.Close();
                 }
             }
         }
