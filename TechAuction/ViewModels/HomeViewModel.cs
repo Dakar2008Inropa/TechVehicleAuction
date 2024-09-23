@@ -17,7 +17,8 @@ namespace TechAuction.ViewModels
             _mainWindowViewModel = main;
             _CurrentPage = new AuctionViewModel();
 
-            _mainWindowViewModel.SetWindowSize(1024, 768);
+            _mainWindowViewModel.SetWindowSize(907, 700);
+            _mainWindowViewModel.SetWindowMinSize(907, 700);
             _mainWindowViewModel.SetCanResize(true);
             _mainWindowViewModel.CenterizeWindow(true);
         }
@@ -26,11 +27,6 @@ namespace TechAuction.ViewModels
         {
             get => _CurrentPage;
             set => this.RaiseAndSetIfChanged(backingField: ref _CurrentPage, newValue: value, propertyName: nameof(CurrentPage));
-        }
-
-        public void ChangeView(ViewModelBase view)
-        {
-            CurrentPage = view;
         }
     }
 }

@@ -109,10 +109,36 @@
                      Value="1" />
                 </WrapPanel>
 
-                <WrapPanel>
+                <WrapPanel Margin="0,0,0,15">
                     <Label Classes="Mainlabel"
                      Content="Close Auction" />
                     <DatePicker Width="300" />
+                </WrapPanel>
+
+                <WrapPanel>
+
+                    <Label Classes="Mainlabel"
+                     Content="Images" />
+
+                    <StackPanel>
+
+                        <ListBox Name="VehicleImagesList"
+                         Width="300"
+                         MinHeight="125"
+                         MaxHeight="125"
+                         Margin="0,0,0,5"
+                         BorderBrush="Black"
+                         BorderThickness="1">
+                            <ListBoxItem>Testing</ListBoxItem>
+                        </ListBox>
+
+                        <Button HorizontalAlignment="Stretch"
+                         Classes="BlueBtn"
+                         Command="{Binding UploadImageCmd}"
+                         Content="Upload Image" />
+
+                    </StackPanel>
+
                 </WrapPanel>
 
             </StackPanel>
@@ -128,8 +154,7 @@
                         <WrapPanel Margin="0,0,0,10">
                             <Label Classes="Mainlabel"
                              Content="Vehicle type" />
-                            <ComboBox SelectedIndex="0"
-                             SelectionChanged="ComboBox_SelectionChanged">
+                            <ComboBox SelectedIndex="{Binding SelectedVehicleTypeIndex}">
                                 <ComboBoxItem Content="Private Passenger Car" />
                                 <ComboBoxItem Content="Professional Passenger Car" />
                                 <ComboBoxItem Content="Truck" />
@@ -178,12 +203,6 @@
                              Value="1" />
                         </WrapPanel>
 
-                    </StackPanel>
-
-                    <StackPanel Name="PassengerCarGroup"
-                     Grid.Row="2"
-                     IsVisible="True">
-
                         <WrapPanel Margin="0,0,0,10">
                             <Label Classes="Mainlabel"
                              Content="Engine Size" />
@@ -191,10 +210,16 @@
                              Classes="Mainnumber"
                              FormatString="0.0 Litre"
                              Increment="1"
-                             Maximum="10"
-                             Minimum="0.7"
-                             Value="0.7" />
+                             Maximum="{Binding MaxEngineSize}"
+                             Minimum="{Binding MinEngineSize}"
+                             Value="{Binding EngineSize}" />
                         </WrapPanel>
+
+                    </StackPanel>
+
+                    <StackPanel Name="PassengerCarGroup"
+                     Grid.Row="2"
+                     IsVisible="{Binding IsPassengerCarGroupVisible}">
 
                         <WrapPanel Margin="0,0,0,10">
                             <Label Classes="Mainlabel"
@@ -234,7 +259,7 @@
 
                     <StackPanel Name="PrivatePassengerCarGroup"
                      Grid.Row="3"
-                     IsVisible="True">
+                     IsVisible="{Binding IsPrivatePassengerCarGroupVisible}">
 
                         <WrapPanel Margin="0,0,0,10">
                             <Label Width="200"
@@ -250,7 +275,7 @@
 
                     <StackPanel Name="ProfessionalPassengerCarGroup"
                      Grid.Row="3"
-                     IsVisible="False">
+                     IsVisible="{Binding IsProfessionalPassengerCarGroupVisible}">
 
                         <WrapPanel Margin="0,10,0,10">
                             <Label Width="100"
@@ -300,7 +325,7 @@
 
                     <StackPanel Name="HeavyVehicleGroup"
                      Grid.Row="2"
-                     IsVisible="False">
+                     IsVisible="{Binding IsHeavyVehicleGroupVisible}">
 
                         <WrapPanel Margin="0,0,0,10">
                             <Label Margin="0,3,0,0"
@@ -345,7 +370,7 @@
 
                     <StackPanel Name="BusGroup"
                      Grid.Row="3"
-                     IsVisible="False">
+                     IsVisible="{Binding IsBusGroupVisible}">
 
                         <WrapPanel Margin="0,0,0,10">
                             <Label Width="125"
@@ -391,7 +416,7 @@
 
                     <StackPanel Name="TruckGroup"
                      Grid.Row="3"
-                     IsVisible="False">
+                     IsVisible="{Binding IsTruckGroupVisible}">
 
                         <WrapPanel>
                             <Label Width="125"
@@ -421,13 +446,15 @@
                 <Panel Grid.Column="0"
                  Margin="10"
                  HorizontalAlignment="Left">
-                    <Button Content="Cancel" />
+                    <Button Classes="GreyBtn"
+                     Content="Cancel" />
                 </Panel>
 
                 <Panel Grid.Column="1"
                  Margin="10"
                  HorizontalAlignment="Right">
                     <Button Grid.Column="1"
+                     Classes="GreenBtn"
                      Content="Create auction" />
                 </Panel>
 

@@ -24,6 +24,7 @@
     <AvaloniaXaml Remove="Assets\LoginStyle.axaml" />
     <AvaloniaXaml Remove="Assets\SetForSaleStyle.axaml" />
     <AvaloniaXaml Remove="Assets\ShowAuctionStyle.axaml" />
+    <AvaloniaXaml Remove="Assets\UploadImageStyle.axaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,6 +71,9 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Update="Assets\ShowAuctionStyle.axaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\UploadImageStyle.axaml">
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />

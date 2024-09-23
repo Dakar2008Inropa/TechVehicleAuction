@@ -1,0 +1,89 @@
+<Window x:Class="TechAuction.Views.UploadImage"
+ xmlns="https://github.com/avaloniaui"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:vm="using:TechAuction.ViewModels"
+ Title="Upload Vehicle Image"
+ Width="600"
+ Height="400"
+ d:DesignHeight="400"
+ d:DesignWidth="600"
+ x:DataType="vm:UploadImageViewModel"
+ Topmost="True"
+ WindowStartupLocation="CenterScreen"
+ mc:Ignorable="d">
+
+    <Design.DataContext>
+        <vm:UploadImageViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <StyleInclude Source="/Assets/UploadImageStyle.axaml" />
+    </Window.Styles>
+
+    <StackPanel Margin="10">
+
+        <Button Name="SelectImageBtn"
+         HorizontalAlignment="Stretch"
+         Classes="BlueBtn"
+         Content="Select Image" />
+
+        <WrapPanel Margin="0,15,0,0"
+         HorizontalAlignment="Center">
+
+            <Label Width="50"
+             Margin="0,3,0,0"
+             Content="Width" />
+
+            <TextBox Name="ImageWidthField"
+             Width="160"
+             Margin="0,0,2,0"
+             IsReadOnly="True"
+             TextAlignment="Center" />
+
+            <Label Margin="0,3,50,0"
+             Content="Pixels" />
+
+            <Label Width="50"
+             Margin="0,3,0,0"
+             Content="Height" />
+
+            <TextBox Name="ImageHeightField"
+             Width="160"
+             IsReadOnly="True"
+             TextAlignment="Center" />
+
+            <Label Margin="0,3,15,0"
+             Content="Pixels" />
+
+        </WrapPanel>
+
+        <Label Margin="0,15,0,0"
+         Content="Description" />
+
+        <TextBox Name="ImageDescriptionField"
+         Height="200"
+         AcceptsReturn="True"
+         AcceptsTab="True" />
+
+        <Grid ColumnDefinitions="* *">
+
+            <Button Grid.Column="0"
+             Margin="0,25,10,0"
+             HorizontalAlignment="Stretch"
+             Classes="GreyBtn"
+             Content="Cancel" />
+
+            <Button Grid.Column="1"
+             Margin="10,25,0,0"
+             HorizontalAlignment="Stretch"
+             Classes="GreenBtn"
+             Content="Upload Image" />
+
+        </Grid>
+
+
+    </StackPanel>
+
+</Window>
