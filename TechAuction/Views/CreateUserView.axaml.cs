@@ -129,7 +129,6 @@ public partial class CreateUserView : UserControl
 
     private static void ErrorSound()
     {
-        //Files is placed in the Assets folder
         var audioFile = "Assets/HvaLaverDu_Psykopat.mp3";
         using (var audioFileReader = new AudioFileReader(audioFile))
         using (var outputDevice = new WaveOutEvent())

@@ -22,6 +22,7 @@
   <ItemGroup>
     <AvaloniaXaml Remove="Assets\AuctionStyle.axaml" />
     <AvaloniaXaml Remove="Assets\LoginStyle.axaml" />
+    <AvaloniaXaml Remove="Assets\SetForSaleStyle.axaml" />
     <AvaloniaXaml Remove="Assets\ShowAuctionStyle.axaml" />
   </ItemGroup>
 
@@ -63,6 +64,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AvaloniaResource>
     <AvaloniaResource Update="Assets\LoginStyle.axaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\SetForSaleStyle.axaml">
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Update="Assets\ShowAuctionStyle.axaml">

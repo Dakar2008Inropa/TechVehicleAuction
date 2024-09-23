@@ -11,7 +11,8 @@ namespace TechAuction.ViewModels
 
         public LoginViewModel()
         {
-
+            CreateUserCmd = ReactiveCommand.Create(NavigateToCreateUser);
+            HomePageCmd = ReactiveCommand.Create(NavigateToHome);
         }
 
         public LoginViewModel(MainWindowViewModel main)
