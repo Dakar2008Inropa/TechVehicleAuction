@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Avalonia.Media.Imaging;
 using System.IO;
+using FluentAvalonia.UI.Windowing;
 
 namespace TechAuction.ViewModels
 {
@@ -26,6 +27,7 @@ namespace TechAuction.ViewModels
         public ReactiveCommand<Unit, Unit> ChooseImageCommand { get; }
         public Action? CloseWindow { get; set; }
         public Action<IStorageProvider>? RequestStorageProvider { get; set; }
+        public Interaction<string, Unit> ShowErrorMessage { get; }
 
         public string? VehicleImage
         {
@@ -63,18 +65,26 @@ namespace TechAuction.ViewModels
             SubmitCommand = ReactiveCommand.Create(OnSubmit);
             CloseCommand = ReactiveCommand.Create(OnClose);
             ChooseImageCommand = ReactiveCommand.CreateFromTask(ChooseImage);
+            ShowErrorMessage = new Interaction<string, Unit>();
         }
 
 
         private void OnSubmit()
         {
-            VehicleImage vi = new VehicleImage();
-            vi.Image = VehicleImageBase64;
-            vi.ImageHeight = VehicleImageHeight;
-            vi.ImageWidth = VehicleImageWidth;
-            vi.Description = VehicleDescription;
+            if (string.IsNullOrEmpty(VehicleImageBase64))
+            {
+                ShowErrorMessage.Handle("Please select an image for the vehicle.");
+            }
+            else
+            {
+                VehicleImage vi = new VehicleImage();
+                vi.Image = VehicleImageBase64;
+                vi.ImageHeight = VehicleImageHeight;
+                vi.ImageWidth = VehicleImageWidth;
+                vi.Description = VehicleDescription;
 
-            VehicleImageAdded?.Invoke(this, vi);
+                VehicleImageAdded?.Invoke(this, vi);
+            }
         }
 
         private void OnClose()
