@@ -1,4 +1,6 @@
+using AuctionData.Models.VehicleModels;
 using ReactiveUI;
+using System.Collections.Generic;
 using System.Reactive;
 using TechAuction.Views;
 
@@ -16,6 +18,7 @@ namespace TechAuction.ViewModels
         private decimal _minEngineSize;
         private decimal _maxEngineSize;
         private decimal _engineSize;
+        private List<VehicleImage> _vehicleImages = new List<VehicleImage>();
 
 
         public int SelectedVehicleTypeIndex
@@ -141,6 +144,15 @@ namespace TechAuction.ViewModels
             }
         }
 
+        public List<VehicleImage> VehicleImages
+        {
+            get => _vehicleImages;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _vehicleImages, value);
+            }
+        }
+
         public decimal MinEngineSize
         {
             get => _minEngineSize;
@@ -170,10 +182,16 @@ namespace TechAuction.ViewModels
 
         public ReactiveCommand<Unit, Unit>? UploadImageCmd { get; }
 
-        public static void UploadVehicleImage()
+        public void UploadVehicleImage()
         {
-            UploadImage uploadImage = new UploadImage();
-            uploadImage.Show();
+            var uploadImageViewModel = new UploadImageViewModel();
+            uploadImageViewModel.VehicleImageAdded += OnVehicleImageAdded;
+            var vehicleWindow = new UploadImage
+            {
+                DataContext = uploadImageViewModel
+            };
+
+            vehicleWindow.Show();
         }
 
         public SetForSaleViewModel()
@@ -188,6 +206,11 @@ namespace TechAuction.ViewModels
             EngineSize = (decimal)0.7;
 
             UploadImageCmd = ReactiveCommand.Create(UploadVehicleImage);
+        }
+
+        private void OnVehicleImageAdded(object? sender, VehicleImage image)
+        {
+            VehicleImages = new List<VehicleImage>(VehicleImages) { image };
         }
     }
 }
