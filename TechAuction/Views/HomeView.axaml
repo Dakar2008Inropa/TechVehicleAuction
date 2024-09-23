@@ -21,13 +21,6 @@
      IsSettingsVisible="False"
      PaneDisplayMode="Top">
 
-        <ui:NavigationView.AutoCompleteBox>
-            <AutoCompleteBox Name="SearchAuctionsField"
-             Width="270"
-             TabIndex="0"
-             Watermark="Search Auctions" />
-        </ui:NavigationView.AutoCompleteBox>
-
         <ui:NavigationView.MenuItems>
 
             <ui:NavigationViewItem Name="AuctionsMenuItem"
