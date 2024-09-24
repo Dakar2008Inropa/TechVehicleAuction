@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using AuctionData.Models.VehicleModels;
+using Microsoft.Data.SqlClient;
 using System.Text;
 
 namespace AuctionData.Models.Database
@@ -72,6 +73,17 @@ namespace AuctionData.Models.Database
 
                         vehicleId = Convert.ToInt32(cmd.ExecuteScalar());
                     }
+
+                    if (vh.VehicleImages != null)
+                    {
+                        foreach (VehicleImage VI in vh.VehicleImages)
+                        {
+                            VI.VehicleId = vehicleId;
+                            VI.BaseId = baseId;
+                        }
+                        CreateVehicleImages(vh.VehicleImages, con);
+                    }
+
                     con.Close();
 
                     return vehicleId;
@@ -207,6 +219,42 @@ namespace AuctionData.Models.Database
                 catch (SqlException)
                 {
                     return false;
+                }
+            }
+
+            public static void CreateVehicleImages(List<VehicleImage> vehicleImages, SqlConnection con)
+            {
+                StringBuilder vehicleImageQuery = new StringBuilder();
+                vehicleImageQuery.Append($@"INSERT INTO {DatabaseTables.VehicleImages} ");
+                vehicleImageQuery.Append($@"({nameof(VehicleImage.Image)},");
+                vehicleImageQuery.Append($@"{nameof(VehicleImage.Description)},");
+                vehicleImageQuery.Append($@"{nameof(VehicleImage.ImageWidth)},");
+                vehicleImageQuery.Append($@"{nameof(VehicleImage.ImageHeight)},");
+                vehicleImageQuery.Append($@"{nameof(VehicleImage.VehicleId)},");
+                vehicleImageQuery.Append($@"{nameof(VehicleImage.BaseId)});");
+
+                vehicleImageQuery.Append($@" VALUES ");
+
+                vehicleImageQuery.Append($@"(@{nameof(VehicleImage.Image)},");
+                vehicleImageQuery.Append($@"@{nameof(VehicleImage.Description)},");
+                vehicleImageQuery.Append($@"@{nameof(VehicleImage.ImageWidth)},");
+                vehicleImageQuery.Append($@"@{nameof(VehicleImage.ImageHeight)},");
+                vehicleImageQuery.Append($@"@{nameof(VehicleImage.VehicleId)},");
+                vehicleImageQuery.Append($@"@{nameof(VehicleImage.BaseId)});");
+
+                foreach (VehicleImage VI in vehicleImages)
+                {
+                    using (SqlCommand cmd = new SqlCommand(vehicleImageQuery.ToString(), con))
+                    {
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.Image)}", VI.Image);
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.Description)}", VI.Description);
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.ImageWidth)}", VI.ImageWidth);
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.ImageHeight)}", VI.ImageHeight);
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.VehicleId)}", VI.VehicleId);
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.BaseId)}", VI.BaseId);
+
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }
