@@ -76,6 +76,45 @@ namespace AuctionData.Models.Database
                     return false;
                 }
             }
+
+            public static UserModels.PrivateUser GetPrivateUser(string username)
+            {
+                UserModels.PrivateUser user = new UserModels.PrivateUser();
+                try
+                {
+                    using (SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
+                    {
+                        con.Open();
+
+                        StringBuilder query = new StringBuilder();
+                        query.Append($@"SELECT * FROM {DatabaseTables.Users} WHERE {nameof(UserModels.User.UserName)} = @{nameof(UserModels.User.UserName)}");
+
+                        using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                        {
+                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.User.UserName)}", username);
+
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    user.UserId = (int)reader[nameof(UserModels.PrivateUser.UserId)];
+                                    user.UserName = reader[nameof(UserModels.PrivateUser.UserName)].ToString();
+                                    user.Discriminator = reader[nameof(UserModels.PrivateUser.Discriminator)].ToString();
+                                    user.BaseId = (int)reader[nameof(UserModels.PrivateUser.BaseId)];
+                                    user.Status = Base.GetStatus(user.BaseId);
+                                }
+                            }
+                        }
+
+                        con.Close();
+                    }
+                }
+                catch (SqlException)
+                {
+                    return user;
+                }
+                return user;
+            }
         }
     }
 }

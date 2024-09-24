@@ -9,6 +9,5 @@
         public Vehicle? Vehicle { get; set; }
         public int VehicleId { get; set; }
         public int BaseId { get; set; }
-        public Base? Base { get; set; }
     }
 }

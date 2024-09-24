@@ -28,7 +28,6 @@
         public string? Discriminator { get; set; }
         public List<VehicleImage>? VehicleImages { get; set; }
         public int BaseId { get; set; }
-        public Base? Base { get; set; }
 
 
 
