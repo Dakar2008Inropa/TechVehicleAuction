@@ -23,4 +23,10 @@ public partial class SetForSaleView : UserControl
         CultureInfo.DefaultThreadCurrentCulture = ci;
         CultureInfo.DefaultThreadCurrentUICulture = ci;
     }
+
+    private static void Maker_AttachedToVisualTree(object? sender, Avalonia.VisualTreeAttachmentEventArgs e)
+    {
+        TextBox box = (TextBox)sender!;
+        box.Focus();
+    }
 }

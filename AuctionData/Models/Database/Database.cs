@@ -63,6 +63,25 @@ namespace AuctionData.Models.Database
             }
         }
 
+        public bool LoginCheck(string username, string password)
+        {
+            SqlConnection sqlcon = new SqlConnection(GetLoginConnectionString(username, password, Settings));
+            try
+            {
+                sqlcon.Open();
+                return true;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+            finally
+            {
+                sqlcon.Close();
+            }
+        }
+
         public static void CreateTables()
         {
             using (SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
@@ -437,6 +456,19 @@ namespace AuctionData.Models.Database
             sb.UserID = settings.Username;
             sb.TrustServerCertificate = true;
             sb.Password = settings.Password;
+            return sb.ToString();
+        }
+
+        private static string GetLoginConnectionString(string username, string password, DbSettings settings)
+        {
+            SqlConnectionStringBuilder sb = new();
+            sb.Clear();
+            sb.DataSource = settings.Hostname;
+            sb.InitialCatalog = settings.Database;
+            sb.UserID = username;
+            sb.TrustServerCertificate = true;
+            sb.Password = password;
+
             return sb.ToString();
         }
     }

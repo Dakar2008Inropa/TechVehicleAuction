@@ -1,13 +1,13 @@
 using AuctionData.Models.VehicleModels;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using ReactiveUI;
 using System;
-using Avalonia.Platform.Storage;
+using System.Collections.Generic;
+using System.IO;
 using System.Reactive;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Avalonia.Media.Imaging;
-using System.IO;
-using FluentAvalonia.UI.Windowing;
+using TechAuction.Views;
 
 namespace TechAuction.ViewModels
 {
@@ -21,12 +21,12 @@ namespace TechAuction.ViewModels
         private int _vehicleImageHeight;
         private string? _vehicleImageBase64;
 
+        public readonly UploadImage? _view;
+
 
         public ReactiveCommand<Unit, Unit> SubmitCommand { get; }
-        public ReactiveCommand<Unit, Unit> CloseCommand { get; }
         public ReactiveCommand<Unit, Unit> ChooseImageCommand { get; }
-        public Action? CloseWindow { get; set; }
-        public Action<IStorageProvider>? RequestStorageProvider { get; set; }
+        public Func<IStorageProvider>? RequestStorageProvider { get; set; }
         public Interaction<string, Unit> ShowErrorMessage { get; }
 
         public string? VehicleImage
@@ -60,13 +60,21 @@ namespace TechAuction.ViewModels
         }
 
 
+        public UploadImageViewModel(UploadImage view)
+        {
+            SubmitCommand = ReactiveCommand.Create(OnSubmit);
+            ChooseImageCommand = ReactiveCommand.CreateFromTask(ChooseImage);
+            ShowErrorMessage = new Interaction<string, Unit>();
+            _view = view;
+        }
+
         public UploadImageViewModel()
         {
             SubmitCommand = ReactiveCommand.Create(OnSubmit);
-            CloseCommand = ReactiveCommand.Create(OnClose);
             ChooseImageCommand = ReactiveCommand.CreateFromTask(ChooseImage);
             ShowErrorMessage = new Interaction<string, Unit>();
         }
+
 
 
         private void OnSubmit()
@@ -87,40 +95,34 @@ namespace TechAuction.ViewModels
             }
         }
 
-        private void OnClose()
-        {
-            CloseWindow?.Invoke();
-        }
-
         private async Task ChooseImage()
         {
-            IStorageProvider? storage = null;
-            RequestStorageProvider?.Invoke(storage!);
+            IStorageProvider? storage = _view!.StorageProvider;
 
-            if(storage == null)
+            if (storage == null)
                 return;
 
             var result = await storage.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = "Select a vehicle image",
                 FileTypeFilter = new List<FilePickerFileType>
-                {
-                    new FilePickerFileType("Image Files")
-                    {
-                        Patterns = new[] {"*.png", "*.jpg", "*.jpeg", "*.bmp"}
-                    }
-                },
+        {
+            new FilePickerFileType("Image Files")
+            {
+                Patterns = new[] {"*.png", "*.jpg", "*.jpeg", "*.bmp"}
+            }
+        },
                 AllowMultiple = false
             });
 
-            if(result != null && result.Count > 0)
+            if (result != null && result.Count > 0)
             {
                 var file = result[0];
 
                 var selectedImagePath = file.Path.LocalPath;
                 VehicleImage = selectedImagePath;
 
-                using(var stream = await file.OpenReadAsync())
+                using (var stream = await file.OpenReadAsync())
                 {
                     var bitmap = new Bitmap(stream);
                     VehicleImageWidth = bitmap.PixelSize.Width;
@@ -131,7 +133,7 @@ namespace TechAuction.ViewModels
             }
         }
 
-        private string ConvertBitmapToBase64(Bitmap bitmap)
+        private static string ConvertBitmapToBase64(Bitmap bitmap)
         {
             using (MemoryStream ms = new MemoryStream())
             {

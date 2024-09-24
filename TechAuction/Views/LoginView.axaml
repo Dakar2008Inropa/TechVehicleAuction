@@ -17,7 +17,8 @@
         <StyleInclude Source="/Assets/LoginStyle.axaml" />
     </UserControl.Styles>
 
-    <StackPanel HorizontalAlignment="Center"
+    <StackPanel Width="250"
+     HorizontalAlignment="Center"
      VerticalAlignment="Center"
      Spacing="15">
 
@@ -35,18 +36,22 @@
          AttachedToVisualTree="Usernamefield_AttachedToVisualTree"
          Classes="LoginFormTextbox"
          TabIndex="0"
+         Text="{Binding Username}"
          Watermark="Username" />
 
         <TextBox Name="Passwordfield"
          Width="250"
          Classes="LoginFormTextbox"
-         PasswordChar="*"
+         KeyDown="TextBox_KeyDown"
+         PasswordChar="•"
          TabIndex="1"
+         Text="{Binding Password}"
          Watermark="Password" />
+
 
         <TextBlock Name="LoginErrorText"
          Classes="ErrorText"
-         IsVisible="False"
+         IsVisible="{Binding ErrorText}"
          Text="! Username or Password was not correct !" />
 
         <WrapPanel>
@@ -68,9 +73,11 @@
 
         </WrapPanel>
 
-        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+        <StackPanel HorizontalAlignment="Stretch"
+         VerticalAlignment="Center">
 
-            <Button Classes="GreenBtn"
+            <Button HorizontalAlignment="Stretch"
+             Classes="GreenBtn"
              Command="{Binding HomePageCmd}"
              Content="Login"
              TabIndex="3" />

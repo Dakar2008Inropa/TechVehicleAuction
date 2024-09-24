@@ -48,6 +48,7 @@
                      Classes="Mainlabel"
                      Content="Maker" />
                     <TextBox Name="MakerField"
+                     AttachedToVisualTree="Maker_AttachedToVisualTree"
                      Classes="Mainbox"
                      Text="{Binding Maker}"
                      Watermark="Maker" />
@@ -482,16 +483,9 @@
         <Grid Name="ButtonsRow"
          Grid.Row="2">
 
-            <Grid ColumnDefinitions="* *">
+            <Grid ColumnDefinitions="*">
 
                 <Panel Grid.Column="0"
-                 Margin="10"
-                 HorizontalAlignment="Left">
-                    <Button Classes="GreyBtn"
-                     Content="Cancel" />
-                </Panel>
-
-                <Panel Grid.Column="1"
                  Margin="10"
                  HorizontalAlignment="Right">
                     <Button Grid.Column="1"

@@ -1,7 +1,6 @@
+using AuctionData.Models.VehicleModels;
 using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
-using FluentAvalonia.UI.Windowing;
-using System.Threading.Tasks;
 using TechAuction.ViewModels;
 
 namespace TechAuction.Views;
@@ -11,21 +10,20 @@ public partial class UploadImage : Window
     public UploadImage()
     {
         InitializeComponent();
-        var viewModel = new UploadImageViewModel();
-        viewModel.CloseWindow = this.Close;
+        var viewModel = new UploadImageViewModel(this);
 
-        viewModel.RequestStorageProvider = (sp) => { sp = this.StorageProvider; };
+        viewModel.RequestStorageProvider = () => this.StorageProvider;
 
         this.DataContext = viewModel;
-
-        viewModel.ShowErrorMessage.RegisterHandler(interaction => {
+        viewModel.VehicleImageAdded += OnVehicleImageAdded;
+        viewModel.ShowErrorMessage.RegisterHandler(interaction =>
+        {
             ShowDialog(interaction.Input);
         });
     }
 
     private void ShowDialog(string message)
     {
-        var ownerWindow = VisualRoot as AppWindow;
         var td = new TaskDialog
         {
             Title = "",
@@ -39,5 +37,15 @@ public partial class UploadImage : Window
         td.XamlRoot = (Avalonia.Visual?)VisualRoot;
 
         td.ShowAsync();
+    }
+
+    private void OnVehicleImageAdded(object? sender, VehicleImage image)
+    {
+        this.Close();
+    }
+
+    private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        this.Close();
     }
 }

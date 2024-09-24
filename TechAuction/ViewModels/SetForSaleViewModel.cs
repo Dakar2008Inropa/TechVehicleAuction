@@ -485,7 +485,7 @@ namespace TechAuction.ViewModels
 
         public void UploadVehicleImage()
         {
-            var uploadImageViewModel = new UploadImageViewModel();
+            var uploadImageViewModel = new UploadImageViewModel(new UploadImage());
             uploadImageViewModel.VehicleImageAdded += OnVehicleImageAdded;
             var vehicleWindow = new UploadImage
             {
