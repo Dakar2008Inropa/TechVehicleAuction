@@ -4,7 +4,6 @@
     {
         private double _engineSize;
 
-
         public string? Maker { get; set; }
         public string? Model { get; set; }
         public int Mileage { get; set; }
