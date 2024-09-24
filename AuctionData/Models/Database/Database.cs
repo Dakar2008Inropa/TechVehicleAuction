@@ -143,17 +143,17 @@ namespace AuctionData.Models.Database
 
             StringBuilder Basequery = new StringBuilder();
             Basequery.Append($@"INSERT INTO {DatabaseTables.Base} ");
-            Basequery.Append($@"({nameof(Base.CreatedAt)},");
-            Basequery.Append($@"{nameof(Base.Status)})");
+            Basequery.Append($@"({nameof(Models.Base.CreatedAt)},");
+            Basequery.Append($@"{nameof(Models.Base.Status)})");
             Basequery.Append($@" VALUES ");
-            Basequery.Append($@"(@{nameof(Base.CreatedAt)},");
-            Basequery.Append($@"@{nameof(Base.Status)}); ");
+            Basequery.Append($@"(@{nameof(Models.Base.CreatedAt)},");
+            Basequery.Append($@"@{nameof(Models.Base.Status)}); ");
             Basequery.Append($@"SELECT SCOPE_IDENTITY();");
 
             using (SqlCommand cmd = new SqlCommand(Basequery.ToString(), connection))
             {
-                cmd.Parameters.AddWithValue($"@{nameof(Base.CreatedAt)}", DateTime.UtcNow);
-                cmd.Parameters.AddWithValue($"@{nameof(Base.Status)}", (int)BaseStatus.Active);
+                cmd.Parameters.AddWithValue($"@{nameof(Models.Base.CreatedAt)}", DateTime.UtcNow);
+                cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Status)}", (int)BaseStatus.Active);
 
                 baseId = Convert.ToInt32(cmd.ExecuteScalar());
             }
@@ -182,11 +182,11 @@ namespace AuctionData.Models.Database
             IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{DatabaseTables.Base}')
             BEGIN
                 CREATE TABLE {DatabaseTables.Base} (
-                    {nameof(Base.Id)} INT PRIMARY KEY IDENTITY(1,1), 
-                    {nameof(Base.CreatedAt)} DATETIME DEFAULT GETUTCDATE(),
-                    {nameof(Base.UpdatedAt)} DATETIME NULL,
-                    {nameof(Base.DeletedAt)} DATETIME NULL,
-                    {nameof(Base.Status)} INT
+                    {nameof(Models.Base.Id)} INT PRIMARY KEY IDENTITY(1,1), 
+                    {nameof(Models.Base.CreatedAt)} DATETIME DEFAULT GETUTCDATE(),
+                    {nameof(Models.Base.UpdatedAt)} DATETIME NULL,
+                    {nameof(Models.Base.DeletedAt)} DATETIME NULL,
+                    {nameof(Models.Base.Status)} INT
                 );
             END
         ");
@@ -205,7 +205,7 @@ namespace AuctionData.Models.Database
                     {nameof(UserModels.User.PostalCode)} NVARCHAR(50),
                     {nameof(UserModels.User.UserName)} NVARCHAR(255),
                     {nameof(UserModels.User.Discriminator)} NVARCHAR(50),
-                    {nameof(UserModels.User.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Base.Id)})
+                    {nameof(UserModels.User.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Models.Base.Id)})
                 );
             END
         ");
@@ -220,7 +220,7 @@ namespace AuctionData.Models.Database
             IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{DatabaseTables.PrivateUser}')
             BEGIN
                 CREATE TABLE {DatabaseTables.PrivateUser} (
-                    {nameof(Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
+                    {nameof(Models.Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
                     {nameof(PrivateUser.CPRNumber)} NVARCHAR(50),
                     {nameof(PrivateUser.UserId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Users}({nameof(UserModels.User.Id)}));
             END
@@ -236,7 +236,7 @@ namespace AuctionData.Models.Database
             IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{DatabaseTables.CorporateUser}')
             BEGIN
                 CREATE TABLE {DatabaseTables.CorporateUser} (
-                    {nameof(Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
+                    {nameof(Models.Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
                     {nameof(CorporateUser.Credit)} DECIMAL(18, 2),
                     {nameof(CorporateUser.CvrNumber)} NVARCHAR(50),
                     {nameof(CorporateUser.UserId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Users}({nameof(UserModels.User.Id)}));
@@ -253,7 +253,7 @@ namespace AuctionData.Models.Database
             IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{DatabaseTables.Vehicles}')
             BEGIN
                 CREATE TABLE {DatabaseTables.Vehicles} (
-                    {nameof(Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
+                    {nameof(Models.Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
                     {nameof(VehicleModels.Vehicle.Maker)} NVARCHAR(120),
                     {nameof(VehicleModels.Vehicle.Model)} NVARCHAR(120),
                     {nameof(VehicleModels.Vehicle.Mileage)} INT,
@@ -267,7 +267,7 @@ namespace AuctionData.Models.Database
                     {nameof(VehicleModels.Vehicle.LicenseType)} INT,
                     {nameof(VehicleModels.Vehicle.Towinghitch)} BIT,
                     {nameof(VehicleModels.Vehicle.Discriminator)} NVARCHAR(50),
-                    {nameof(VehicleModels.Vehicle.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Base.Id)}));
+                    {nameof(VehicleModels.Vehicle.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Models.Base.Id)}));
             END
         ");
 
@@ -394,7 +394,7 @@ namespace AuctionData.Models.Database
                     {nameof(AuctionModels.Auction.MinimumAmount)} DECIMAL(18, 2),
                     {nameof(AuctionModels.Auction.SellerId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Users}({nameof(AuctionModels.Auction.Id)}),
                     {nameof(AuctionModels.Auction.VehicleId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Vehicles}({nameof(AuctionModels.Auction.Id)}),
-                    {nameof(AuctionModels.Auction.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Base.Id)}));
+                    {nameof(AuctionModels.Auction.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Models.Base.Id)}));
             END
         ");
 
@@ -412,7 +412,7 @@ namespace AuctionData.Models.Database
                     {nameof(AuctionModels.AuctionBids.BidAmount)} DECIMAL(18, 2),
                     {nameof(AuctionModels.AuctionBids.BidderId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Users}({nameof(AuctionModels.AuctionBids.Id)}),
                     {nameof(AuctionModels.AuctionBids.AuctionId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Auctions}({nameof(AuctionModels.AuctionBids.Id)}),
-                    {nameof(AuctionModels.AuctionBids.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Base.Id)}));
+                    {nameof(AuctionModels.AuctionBids.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Models.Base.Id)}));
             END
         ");
 
@@ -432,7 +432,7 @@ namespace AuctionData.Models.Database
                     {nameof(VehicleModels.VehicleImage.ImageHeight)} INT,
                     {nameof(VehicleModels.VehicleImage.ImageWidth)} INT,
                     {nameof(VehicleModels.VehicleImage.VehicleId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Vehicles}({nameof(VehicleModels.VehicleImage.Id)}),
-                    {nameof(VehicleModels.VehicleImage.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Base.Id)}));
+                    {nameof(VehicleModels.VehicleImage.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Models.Base.Id)}));
             END
         ");
 

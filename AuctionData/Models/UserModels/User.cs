@@ -8,7 +8,6 @@ public abstract class User : Base, IUser
     public ushort PostalCode { get; set; }
     public string? Discriminator { get; set; }
     public int BaseId { get; set; }
-    public Base? Base { get; set; }
 
     public User()
     {

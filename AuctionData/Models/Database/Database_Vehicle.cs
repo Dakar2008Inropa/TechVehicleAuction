@@ -90,6 +90,8 @@ namespace AuctionData.Models.Database
                 }
             }
 
+            #region Passenger Car
+
             public static int CreatePassengerCar(VehicleModels.PassengerCar pc, string discriminator)
             {
                 using (SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
@@ -221,6 +223,126 @@ namespace AuctionData.Models.Database
                     return false;
                 }
             }
+
+            #endregion
+
+            #region Heavy Vehicle
+
+            public static int CreateHeavyVehicle(VehicleModels.HeavyVehicle hv, string discriminator)
+            {
+                using(SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
+                {
+                    con.Open();
+                    int vehicleId = CreateVehicle(hv, discriminator);
+                    int heavyVehicleId;
+
+                    StringBuilder heavyVehicleQuery = new StringBuilder();
+                    heavyVehicleQuery.Append($@"INSERT INTO {DatabaseTables.HeavyVehicle} ");
+                    heavyVehicleQuery.Append($@"({nameof(VehicleModels.HeavyVehicle.VehicleId)},");
+                    heavyVehicleQuery.Append($@"({nameof(VehicleModels.HeavyVehicle.Height)},");
+                    heavyVehicleQuery.Append($@"({nameof(VehicleModels.HeavyVehicle.Length)},");
+                    heavyVehicleQuery.Append($@"({nameof(VehicleModels.HeavyVehicle.Weight)});");
+
+                    heavyVehicleQuery.Append($@" VALUES ");
+
+                    heavyVehicleQuery.Append($@"(@{nameof(VehicleModels.HeavyVehicle.VehicleId)},");
+                    heavyVehicleQuery.Append($@"@{nameof(VehicleModels.HeavyVehicle.Height)},");
+                    heavyVehicleQuery.Append($@"@{nameof(VehicleModels.HeavyVehicle.Length)},");
+                    heavyVehicleQuery.Append($@"@{nameof(VehicleModels.HeavyVehicle.Weight)});");
+
+                    using (SqlCommand cmd = new SqlCommand(heavyVehicleQuery.ToString(), con))
+                    {
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.HeavyVehicle.VehicleId)}", vehicleId);
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.HeavyVehicle.Height)}", hv.Height);
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.HeavyVehicle.Length)}", hv.Length);
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.HeavyVehicle.Weight)}", hv.Weight);
+
+                        heavyVehicleId = Convert.ToInt32(cmd.ExecuteScalar());
+                    }
+                    con.Close();
+                    return heavyVehicleId;
+                }
+            }
+
+            public static bool CreateBus(VehicleModels.Bus bus)
+            {
+                try
+                {
+                    using (SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
+                    {
+                        con.Open();
+                        int heavyVehicleId = CreateHeavyVehicle(bus, "Bus");
+
+                        StringBuilder busQuery = new StringBuilder();
+                        busQuery.Append($@"INSERT INTO {DatabaseTables.Bus} ");
+                        busQuery.Append($@"({nameof(VehicleModels.Bus.HeavyVehicleId)},");
+                        busQuery.Append($@"({nameof(VehicleModels.Bus.SeatingCapacity)},");
+                        busQuery.Append($@"({nameof(VehicleModels.Bus.SleepingCapacity)},");
+                        busQuery.Append($@"({nameof(VehicleModels.Bus.Toilet)});");
+
+                        busQuery.Append($@" VALUES ");
+
+                        busQuery.Append($@"(@{nameof(VehicleModels.Bus.HeavyVehicleId)},");
+                        busQuery.Append($@"@{nameof(VehicleModels.Bus.SeatingCapacity)},");
+                        busQuery.Append($@"@{nameof(VehicleModels.Bus.SleepingCapacity)},");
+                        busQuery.Append($@"@{nameof(VehicleModels.Bus.Toilet)});");
+
+                        using (SqlCommand cmd = new SqlCommand(busQuery.ToString(), con))
+                        {
+                            cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Bus.HeavyVehicleId)}", heavyVehicleId);
+                            cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Bus.SeatingCapacity)}", bus.SeatingCapacity);
+                            cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Bus.SleepingCapacity)}", bus.SleepingCapacity);
+                            cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Bus.Toilet)}", bus.Toilet);
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    return true;
+                }
+                catch (SqlException)
+                {
+                    return false;
+                }
+            }
+
+            public static bool CreateTruck(VehicleModels.Truck truck)
+            {
+                try
+                {
+                    using (SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
+                    {
+                        con.Open();
+                        int heavyVehicleId = CreateHeavyVehicle(truck, "Truck");
+
+                        StringBuilder truckQuery = new StringBuilder();
+                        truckQuery.Append($@"INSERT INTO {DatabaseTables.Truck} ");
+                        truckQuery.Append($@"({nameof(VehicleModels.Truck.HeavyVehicleId)},");
+                        truckQuery.Append($@"({nameof(VehicleModels.Truck.LoadCapacity)});");
+
+                        truckQuery.Append($@" VALUES ");
+
+                        truckQuery.Append($@"(@{nameof(VehicleModels.Truck.HeavyVehicleId)},");
+                        truckQuery.Append($@"@{nameof(VehicleModels.Truck.LoadCapacity)});");
+
+                        using (SqlCommand cmd = new SqlCommand(truckQuery.ToString(), con))
+                        {
+                            cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Truck.HeavyVehicleId)}", heavyVehicleId);
+                            cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Truck.LoadCapacity)}", truck.LoadCapacity);
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    return true;
+                }
+                catch (SqlException)
+                {
+                    return false;
+                }
+            }
+
+            #endregion
 
             public static void CreateVehicleImages(List<VehicleImage> vehicleImages, SqlConnection con)
             {
