@@ -1,9 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AuctionData.Models.Database
 {
@@ -11,31 +7,156 @@ namespace AuctionData.Models.Database
     {
         public static class Base
         {
-            public static BaseStatus GetStatus(int baseId)
+            #region Create
+            public static int InsertIntoBase(SqlConnection con)
             {
-                using (SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
+                int baseId;
+
+                StringBuilder Basequery = new StringBuilder();
+                Basequery.Append($@"INSERT INTO {DatabaseTables.Base} ");
+                Basequery.Append($@"({nameof(Models.Base.CreatedAt)},");
+                Basequery.Append($@"{nameof(Models.Base.Status)})");
+                Basequery.Append($@" VALUES ");
+                Basequery.Append($@"(@{nameof(Models.Base.CreatedAt)},");
+                Basequery.Append($@"@{nameof(Models.Base.Status)}); ");
+                Basequery.Append($@"SELECT SCOPE_IDENTITY();");
+
+                using (SqlCommand cmd = new SqlCommand(Basequery.ToString(), con))
                 {
-                    con.Open();
+                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.CreatedAt)}", DateTime.UtcNow);
+                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Status)}", (int)BaseStatus.Active);
 
-                    StringBuilder query = new StringBuilder();
-                    query.Append($@"SELECT {nameof(BaseStatus)} FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
+                    baseId = Convert.ToInt32(cmd.ExecuteScalar());
+                }
 
-                    using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                return baseId;
+            }
+            #endregion
+
+            #region Read
+            public static BaseStatus GetStatus(int baseId, SqlConnection con)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append($@"SELECT {nameof(BaseStatus)} FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
+
+                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                {
+                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
-                            {
-                                return (BaseStatus)reader.GetInt32(0);
-                            }
+                            return (BaseStatus)reader.GetInt32(0);
                         }
                     }
                 }
 
                 return BaseStatus.Active;
             }
+
+            public static DateTime GetCreatedAt(int baseId, SqlConnection con)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append($@"SELECT {nameof(Models.Base.CreatedAt)} FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
+
+                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                {
+                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return reader.GetDateTime(0);
+                        }
+                    }
+                }
+                return DateTime.UtcNow;
+            }
+
+            public static DateTime? GetUpdatedAt(int baseId, SqlConnection con)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append($@"SELECT {nameof(Models.Base.UpdatedAt)} FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
+
+                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                {
+                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return reader.GetDateTime(0);
+                        }
+                    }
+                }
+                return null;
+            }
+
+            public static DateTime? GetDeletedAt(int baseId, SqlConnection con)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append($@"SELECT {nameof(Models.Base.DeletedAt)} FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
+
+                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                {
+                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return reader.GetDateTime(0);
+                        }
+                    }
+                }
+                return null;
+            }
+            #endregion
+
+            #region Update
+            public static bool UpdateBase(int baseId)
+            {
+                using (SqlConnection con = OpenNewConnection())
+                {
+                    StringBuilder query = new StringBuilder();
+                    query.Append($@"UPDATE {DatabaseTables.Base} SET ");
+                    query.Append($@"{nameof(Models.Base.UpdatedAt)} = @{nameof(Models.Base.UpdatedAt)} ");
+                    query.Append($@"WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
+
+                    using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                    {
+                        cmd.Parameters.AddWithValue($"@{nameof(Models.Base.UpdatedAt)}", DateTime.UtcNow);
+                        cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
+
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+
+            public static bool UpdateBaseStatus(int baseId, BaseStatus status)
+            {
+                using (SqlConnection con = OpenNewConnection())
+                {
+                    StringBuilder query = new StringBuilder();
+                    query.Append($@"UPDATE {DatabaseTables.Base} SET ");
+                    query.Append($@"{nameof(Models.Base.Status)} = @{nameof(Models.Base.Status)} ");
+                    query.Append($@"WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
+
+                    using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                    {
+                        cmd.Parameters.AddWithValue($"@{nameof(Models.Base.UpdatedAt)}", DateTime.UtcNow);
+                        cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Status)}", (int)status);
+                        cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
+
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+
+            #endregion
         }
     }
 }

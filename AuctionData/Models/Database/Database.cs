@@ -7,19 +7,23 @@ namespace AuctionData.Models.Database
 {
     public partial class Database
     {
+        #region Properties
         private DbSettings Settings { get; set; }
 
         private readonly SqlConnection Sqlcon;
 
         public static Database Instance { get; } = new Database();
+        #endregion
 
-
+        #region Constructor
         public Database()
         {
             Settings = DbSettings.LoadSettings();
             Sqlcon = new SqlConnection(GetConnectionString(Settings!));
         }
+        #endregion
 
+        #region Connection
         public void OpenConnection()
         {
             Sqlcon.Open();
@@ -63,6 +67,27 @@ namespace AuctionData.Models.Database
             }
         }
 
+        private static string GetConnectionString(DbSettings settings)
+        {
+            SqlConnectionStringBuilder sb = new();
+            sb.Clear();
+            sb.DataSource = settings.Hostname;
+            sb.InitialCatalog = settings.Database;
+            sb.UserID = settings.Username;
+            sb.TrustServerCertificate = true;
+            sb.Password = settings.Password;
+            return sb.ToString();
+        }
+
+        private static SqlConnection OpenNewConnection()
+        {
+            var connection = new SqlConnection(GetConnectionString(Instance.Settings!));
+            connection.Open();
+            return connection;
+        }
+        #endregion
+
+        #region Login
         public bool LoginCheck(string username, string password)
         {
             SqlConnection sqlcon = new SqlConnection(GetLoginConnectionString(username, password, Settings));
@@ -82,100 +107,87 @@ namespace AuctionData.Models.Database
             }
         }
 
+        private static string GetLoginConnectionString(string username, string password, DbSettings settings)
+        {
+            SqlConnectionStringBuilder sb = new();
+            sb.Clear();
+            sb.DataSource = settings.Hostname;
+            sb.InitialCatalog = settings.Database;
+            sb.UserID = username;
+            sb.TrustServerCertificate = true;
+            sb.Password = password;
+
+            return sb.ToString();
+        }
+        #endregion
+
+        #region Tables
         public static void CreateTables()
         {
-            using (SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
+            using (SqlConnection con = OpenNewConnection())
             {
-                con.Open();
-
-                CreateBaseTable(con);
-                CreateUsersTable(con);
-                CreatePrivateUserTable(con);
-                CreateCorporateUserTable(con);
-                CreateVehiclesTable(con);
-                CreatePassengerCarTable(con);
-                CreatePrivatePassengerCarTable(con);
-                CreateProfessionalPassengerCarTable(con);
-                CreateHeavyVehicleTable(con);
-                CreateBusTable(con);
-                CreateTruckTable(con);
-                CreateAuctionsTable(con);
-                CreateAuctionBidsTable(con);
-                CreateVehicleImagesTable(con);
-
-                con.Close();
+                CreateBaseTable();
+                CreateUsersTable();
+                CreatePrivateUserTable();
+                CreateCorporateUserTable();
+                CreateVehiclesTable();
+                CreatePassengerCarTable();
+                CreatePrivatePassengerCarTable();
+                CreateProfessionalPassengerCarTable();
+                CreateHeavyVehicleTable();
+                CreateBusTable();
+                CreateTruckTable();
+                CreateAuctionsTable();
+                CreateAuctionBidsTable();
+                CreateVehicleImagesTable();
             }
         }
 
         public static bool IsTablesCreated()
         {
-            using (SqlConnection con = new SqlConnection(GetConnectionString(Instance.Settings!)))
+            using (SqlConnection con = OpenNewConnection())
             {
                 con.Open();
 
-                if (IsTableCreated(con, DatabaseTables.Base) &&
-                    IsTableCreated(con, DatabaseTables.Users) &&
-                    IsTableCreated(con, DatabaseTables.PrivateUser) &&
-                    IsTableCreated(con, DatabaseTables.CorporateUser) &&
-                    IsTableCreated(con, DatabaseTables.Vehicles) &&
-                    IsTableCreated(con, DatabaseTables.PassengerCar) &&
-                    IsTableCreated(con, DatabaseTables.PrivatePassengerCar) &&
-                    IsTableCreated(con, DatabaseTables.ProfessionalPassengerCar) &&
-                    IsTableCreated(con, DatabaseTables.HeavyVehicle) &&
-                    IsTableCreated(con, DatabaseTables.Bus) &&
-                    IsTableCreated(con, DatabaseTables.Truck) &&
-                    IsTableCreated(con, DatabaseTables.Auctions) &&
-                    IsTableCreated(con, DatabaseTables.AuctionBids) &&
-                    IsTableCreated(con, DatabaseTables.VehicleImages))
+                if (IsTableCreated(DatabaseTables.Base) &&
+                    IsTableCreated(DatabaseTables.Users) &&
+                    IsTableCreated(DatabaseTables.PrivateUser) &&
+                    IsTableCreated(DatabaseTables.CorporateUser) &&
+                    IsTableCreated(DatabaseTables.Vehicles) &&
+                    IsTableCreated(DatabaseTables.PassengerCar) &&
+                    IsTableCreated(DatabaseTables.PrivatePassengerCar) &&
+                    IsTableCreated(DatabaseTables.ProfessionalPassengerCar) &&
+                    IsTableCreated(DatabaseTables.HeavyVehicle) &&
+                    IsTableCreated(DatabaseTables.Bus) &&
+                    IsTableCreated(DatabaseTables.Truck) &&
+                    IsTableCreated(DatabaseTables.Auctions) &&
+                    IsTableCreated(DatabaseTables.AuctionBids) &&
+                    IsTableCreated(DatabaseTables.VehicleImages))
                 {
-                    con.Close();
                     return true;
                 }
-
-                con.Close();
                 return false;
             }
         }
 
-        private static int InsertIntoBase(SqlConnection connection)
+        private static bool IsTableCreated(string @base)
         {
-            int baseId;
-
-            StringBuilder Basequery = new StringBuilder();
-            Basequery.Append($@"INSERT INTO {DatabaseTables.Base} ");
-            Basequery.Append($@"({nameof(Models.Base.CreatedAt)},");
-            Basequery.Append($@"{nameof(Models.Base.Status)})");
-            Basequery.Append($@" VALUES ");
-            Basequery.Append($@"(@{nameof(Models.Base.CreatedAt)},");
-            Basequery.Append($@"@{nameof(Models.Base.Status)}); ");
-            Basequery.Append($@"SELECT SCOPE_IDENTITY();");
-
-            using (SqlCommand cmd = new SqlCommand(Basequery.ToString(), connection))
+            using (SqlConnection con = OpenNewConnection())
             {
-                cmd.Parameters.AddWithValue($"@{nameof(Models.Base.CreatedAt)}", DateTime.UtcNow);
-                cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Status)}", (int)BaseStatus.Active);
+                StringBuilder query = new StringBuilder();
+                query.Append($@"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{@base}'");
 
-                baseId = Convert.ToInt32(cmd.ExecuteScalar());
-            }
-
-            return baseId;
-        }
-
-        private static bool IsTableCreated(SqlConnection con, string @base)
-        {
-            StringBuilder query = new StringBuilder();
-            query.Append($@"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{@base}'");
-
-            using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-            {
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
                 {
-                    return reader.HasRows;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        return reader.HasRows;
+                    }
                 }
             }
         }
 
-        private static void CreateBaseTable(SqlConnection con)
+        private static void CreateBaseTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -191,10 +203,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateUsersTable(SqlConnection con)
+        private static void CreateUsersTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -210,10 +222,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreatePrivateUserTable(SqlConnection con)
+        private static void CreatePrivateUserTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append($@"
@@ -226,10 +238,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateCorporateUserTable(SqlConnection con)
+        private static void CreateCorporateUserTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append($@"
@@ -243,10 +255,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateVehiclesTable(SqlConnection con)
+        private static void CreateVehiclesTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append($@"
@@ -271,10 +283,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreatePassengerCarTable(SqlConnection con)
+        private static void CreatePassengerCarTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -292,10 +304,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreatePrivatePassengerCarTable(SqlConnection con)
+        private static void CreatePrivatePassengerCarTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -308,10 +320,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateProfessionalPassengerCarTable(SqlConnection con)
+        private static void CreateProfessionalPassengerCarTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -327,10 +339,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateHeavyVehicleTable(SqlConnection con)
+        private static void CreateHeavyVehicleTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -344,10 +356,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateBusTable(SqlConnection con)
+        private static void CreateBusTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -362,10 +374,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateTruckTable(SqlConnection con)
+        private static void CreateTruckTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -378,10 +390,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateAuctionsTable(SqlConnection con)
+        private static void CreateAuctionsTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -398,10 +410,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateAuctionBidsTable(SqlConnection con)
+        private static void CreateAuctionBidsTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -416,10 +428,10 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void CreateVehicleImagesTable(SqlConnection con)
+        private static void CreateVehicleImagesTable()
         {
             StringBuilder query = new StringBuilder();
             query.Append(@$"
@@ -436,40 +448,16 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(con, query.ToString());
+            ExecuteNonQuery(query.ToString());
         }
 
-        private static void ExecuteNonQuery(SqlConnection con, string query)
+        private static void ExecuteNonQuery(string query)
         {
-            using (SqlCommand cmd = new SqlCommand(query, con))
+            using (SqlCommand cmd = new SqlCommand(query, OpenNewConnection()))
             {
                 cmd.ExecuteNonQuery();
             }
         }
-
-        private static string GetConnectionString(DbSettings settings)
-        {
-            SqlConnectionStringBuilder sb = new();
-            sb.Clear();
-            sb.DataSource = settings.Hostname;
-            sb.InitialCatalog = settings.Database;
-            sb.UserID = settings.Username;
-            sb.TrustServerCertificate = true;
-            sb.Password = settings.Password;
-            return sb.ToString();
-        }
-
-        private static string GetLoginConnectionString(string username, string password, DbSettings settings)
-        {
-            SqlConnectionStringBuilder sb = new();
-            sb.Clear();
-            sb.DataSource = settings.Hostname;
-            sb.InitialCatalog = settings.Database;
-            sb.UserID = username;
-            sb.TrustServerCertificate = true;
-            sb.Password = password;
-
-            return sb.ToString();
-        }
+        #endregion
     }
 }
