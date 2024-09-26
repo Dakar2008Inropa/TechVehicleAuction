@@ -18,7 +18,8 @@
         <StyleInclude Source="/Assets/ShowAuctionStyle.axaml" />
     </UserControl.Styles>
 
-    <Grid Margin="10" RowDefinitions="Auto Auto Auto *">
+    <Grid Margin="10"
+     RowDefinitions="Auto Auto Auto *">
 
         <Grid Grid.Row="0"
          Margin="0,0,0,15"
@@ -26,11 +27,14 @@
 
             <TextBlock Grid.Column="0"
              Classes="BigBold"
-             Text="BMW M5 (2010)" />
+             Text="{Binding CarTitle}" />
 
-            <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
-                <TextBlock Classes="BigNormal" Text="Closing " />
-                <TextBlock Classes="BigNormal" Text="12-12-2022" />
+            <WrapPanel Grid.Column="1"
+             HorizontalAlignment="Right">
+                <TextBlock Classes="BigNormal"
+                 Text="Closing " />
+                <TextBlock Classes="BigNormal"
+                 Text="{Binding ClosingDate}" />
             </WrapPanel>
 
         </Grid>
@@ -43,9 +47,12 @@
              Classes="BigNormal"
              Text="Auction Info" />
 
-            <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
-                <TextBlock Classes="BigNormal" Text="Current Bid: " />
-                <TextBlock Classes="BigBold" Text="DKK 568.00,-" />
+            <WrapPanel Grid.Column="1"
+             HorizontalAlignment="Right">
+                <TextBlock Classes="BigNormal"
+                 Text="Current Bid: " />
+                <TextBlock Classes="BigBold"
+                 Text="{Binding CurrentBid}" />
             </WrapPanel>
 
         </Grid>
@@ -58,20 +65,23 @@
              MaxWidth="300"
              MaxHeight="150">
 
-                <Border BorderBrush="Black" BorderThickness="1">
-                    <Carousel Name="AuctionSlide">
+                <Border BorderBrush="Black"
+                 BorderThickness="1">
+                    <Carousel Name="AuctionSlide"
+                     ItemsSource="{Binding Images}">
                         <Carousel.PageTransition>
                             <CompositePageTransition>
-                                <PageSlide Orientation="Horizontal" Duration="0:00:00.250" />
+                                <PageSlide Orientation="Horizontal"
+                                 Duration="0:00:00.250" />
                             </CompositePageTransition>
                         </Carousel.PageTransition>
-                        <Carousel.Items>
-                            <Image Source="avares://TechAuction/Assets/TestImages/image01.jpg" Stretch="UniformToFill" />
-                            <Image Source="avares://TechAuction/Assets/TestImages/image02.jpg" Stretch="UniformToFill" />
-                            <Image Source="avares://TechAuction/Assets/TestImages/image03.jpg" Stretch="UniformToFill" />
-                            <Image Source="avares://TechAuction/Assets/TestImages/image04.jpg" Stretch="UniformToFill" />
-                            <Image Source="avares://TechAuction/Assets/TestImages/image05.jpg" Stretch="UniformToFill" />
-                        </Carousel.Items>
+                        <Carousel.ItemTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding}"
+                                 Stretch="Uniform">
+                                </Image>
+                            </DataTemplate>
+                        </Carousel.ItemTemplate>
                     </Carousel>
                 </Border>
 
@@ -81,7 +91,10 @@
                      Click="NextImage">
                         &gt;
                     </Button>
-                    <Button Background="White" Click="PrevImage">&lt;</Button>
+                    <Button Background="White"
+                     Click="PrevImage">
+                        &lt;
+                    </Button>
                 </Panel>
 
             </Panel>
@@ -94,7 +107,7 @@
         </Grid>
 
         <Grid Grid.Row="3">
-            <Panel>
+            <Panel Name="PrivatePassengerCarContainer">
             </Panel>
         </Grid>
 

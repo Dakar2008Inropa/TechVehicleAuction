@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
 using NAudio.Wave;
 using System;
+using System.IO;
 using System.Threading;
 
 namespace TechAuction.Views;
@@ -65,7 +66,7 @@ public partial class CreateUserView : UserControl
 
                 if (CorporateUserRadio.IsChecked.GetValueOrDefault())
                 {
-                    userType = "CorporatedUser";
+                    userType = "CorporateUser";
                 }
                 else
                 {
@@ -129,7 +130,11 @@ public partial class CreateUserView : UserControl
 
     private static void ErrorSound()
     {
-        var audioFile = "Assets/HvaLaverDu_Psykopat.mp3";
+        var basePath = AppContext.BaseDirectory;
+        DirectoryInfo baseDir = new DirectoryInfo(basePath);
+
+        var audioFile = Path.Combine(baseDir.Parent!.Parent!.Parent!.FullName, "Assets", "HvaLaverDu_Psykopat.mp3");
+
         using (var audioFileReader = new AudioFileReader(audioFile))
         using (var outputDevice = new WaveOutEvent())
         {

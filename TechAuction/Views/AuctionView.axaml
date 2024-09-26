@@ -18,7 +18,8 @@
         <StyleInclude Source="/Assets/AuctionStyle.axaml" />
     </UserControl.Styles>
 
-    <Grid Margin="10" RowDefinitions="Auto,*,Auto,*">
+    <Grid Margin="10"
+     RowDefinitions="Auto,*,Auto,*">
 
         <TextBlock Grid.Row="0"
          Margin="0,0,0,5"
@@ -29,28 +30,21 @@
          Margin="0,0,0,5"
          BorderBrush="Black"
          BorderThickness="1"
+         DoubleTapped="YourAuctions_DoubleTapped"
          IsReadOnly="True"
+         IsVisible="{Binding VisibleYourAuctions}"
          ItemsSource="{Binding YourAuctions}"
          SelectionMode="Single"
          VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Image">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="48"
-                             Height="48"
-                             Source="/Assets/vehiclePlaceholder.png" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
                 <DataGridTextColumn Width="*"
-                 Binding="{Binding Maker}"
+                 Binding="{Binding Vehicle.Maker}"
                  Header="Maker" />
                 <DataGridTextColumn Width="*"
-                 Binding="{Binding Model}"
+                 Binding="{Binding Vehicle.Model}"
                  Header="Model" />
-                <DataGridTextColumn Binding="{Binding ModelYear}" Header="Year" />
+                <DataGridTextColumn Binding="{Binding Vehicle.ModelYear}"
+                 Header="Year" />
             </DataGrid.Columns>
         </DataGrid>
 
@@ -62,28 +56,21 @@
         <DataGrid Grid.Row="3"
          BorderBrush="Black"
          BorderThickness="1"
+         DoubleTapped="Auctions_DoubleTapped"
          IsReadOnly="True"
+         IsVisible="{Binding VisibleAuctions}"
          ItemsSource="{Binding Auctions}"
          SelectionMode="Single"
          VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Image">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="48"
-                             Height="48"
-                             Source="/Assets/vehiclePlaceholder.png" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
                 <DataGridTextColumn Width="*"
-                 Binding="{Binding Maker}"
+                 Binding="{Binding Vehicle.Maker}"
                  Header="Maker" />
                 <DataGridTextColumn Width="*"
-                 Binding="{Binding Model}"
+                 Binding="{Binding Vehicle.Model}"
                  Header="Model" />
-                <DataGridTextColumn Binding="{Binding ModelYear}" Header="Year" />
+                <DataGridTextColumn Binding="{Binding Vehicle.ModelYear}"
+                 Header="Year" />
             </DataGrid.Columns>
         </DataGrid>
 

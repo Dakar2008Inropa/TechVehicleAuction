@@ -90,20 +90,18 @@ namespace AuctionData.Models.Database
         #region Login
         public bool LoginCheck(string username, string password)
         {
-            SqlConnection sqlcon = new SqlConnection(GetLoginConnectionString(username, password, Settings));
-            try
+            using (SqlConnection sqlcon = new SqlConnection(GetLoginConnectionString(username, password, Settings)))
             {
-                sqlcon.Open();
-                return true;
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-            finally
-            {
-                sqlcon.Close();
+                try
+                {
+                    sqlcon.Open();
+                    return true;
+                }
+                catch (SqlException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
             }
         }
 
@@ -147,7 +145,6 @@ namespace AuctionData.Models.Database
         {
             using (SqlConnection con = OpenNewConnection())
             {
-                con.Open();
 
                 if (IsTableCreated(DatabaseTables.Base) &&
                     IsTableCreated(DatabaseTables.Users) &&
@@ -233,7 +230,7 @@ namespace AuctionData.Models.Database
             BEGIN
                 CREATE TABLE {DatabaseTables.PrivateUser} (
                     {nameof(Models.Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
-                    {nameof(PrivateUser.CPRNumber)} NVARCHAR(50),
+                    {nameof(PrivateUser.CPRNumber)} NVARCHAR(50) NULL,
                     {nameof(PrivateUser.UserId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Users}({nameof(UserModels.User.Id)}));
             END
         ");
@@ -250,7 +247,7 @@ namespace AuctionData.Models.Database
                 CREATE TABLE {DatabaseTables.CorporateUser} (
                     {nameof(Models.Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
                     {nameof(CorporateUser.Credit)} DECIMAL(18, 2),
-                    {nameof(CorporateUser.CvrNumber)} NVARCHAR(50),
+                    {nameof(CorporateUser.CvrNumber)} NVARCHAR(50) NULL,
                     {nameof(CorporateUser.UserId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Users}({nameof(UserModels.User.Id)}));
             END
         ");
@@ -266,8 +263,8 @@ namespace AuctionData.Models.Database
             BEGIN
                 CREATE TABLE {DatabaseTables.Vehicles} (
                     {nameof(Models.Base.Id)} INT PRIMARY KEY IDENTITY(1,1),
-                    {nameof(VehicleModels.Vehicle.Maker)} NVARCHAR(120),
-                    {nameof(VehicleModels.Vehicle.Model)} NVARCHAR(120),
+                    {nameof(VehicleModels.Vehicle.Maker)} VARCHAR(250),
+                    {nameof(VehicleModels.Vehicle.Model)} VARCHAR(250),
                     {nameof(VehicleModels.Vehicle.Mileage)} INT,
                     {nameof(VehicleModels.Vehicle.ModelYear)} INT,
                     {nameof(VehicleModels.Vehicle.EngineSize)} DECIMAL(18, 2),
@@ -275,10 +272,10 @@ namespace AuctionData.Models.Database
                     {nameof(VehicleModels.Vehicle.FuelCapacity)} DECIMAL(18, 2),
                     {nameof(VehicleModels.Vehicle.FuelEconomy)} DECIMAL(18, 2),
                     {nameof(VehicleModels.Vehicle.FuelType)} INT,
-                    {nameof(VehicleModels.Vehicle.LicensePlate)} NVARCHAR(50),
+                    {nameof(VehicleModels.Vehicle.LicensePlate)} VARCHAR(250),
                     {nameof(VehicleModels.Vehicle.LicenseType)} INT,
                     {nameof(VehicleModels.Vehicle.Towinghitch)} BIT,
-                    {nameof(VehicleModels.Vehicle.Discriminator)} NVARCHAR(50),
+                    {nameof(VehicleModels.Vehicle.Discriminator)} VARCHAR(50),
                     {nameof(VehicleModels.Vehicle.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Models.Base.Id)}));
             END
         ");
@@ -334,6 +331,7 @@ namespace AuctionData.Models.Database
                     {nameof(ProfessionalPassengerCar.FireExtinguisher)} BIT,
                     {nameof(ProfessionalPassengerCar.LoadCapacity)} DECIMAL(18, 2),
                     {nameof(ProfessionalPassengerCar.RacingHarness)} BIT,
+                    {nameof(ProfessionalPassengerCar.RacingSeat)} BIT,
                     {nameof(ProfessionalPassengerCar.RollCage)} BIT,
                     {nameof(ProfessionalPassengerCar.PassengerCarId)} INT FOREIGN KEY REFERENCES {DatabaseTables.PassengerCar}({nameof(PassengerCar.Id)}));
             END
@@ -352,6 +350,7 @@ namespace AuctionData.Models.Database
                     {nameof(HeavyVehicle.Id)} INT PRIMARY KEY IDENTITY(1,1),
                     {nameof(HeavyVehicle.Height)} DECIMAL(18, 2),
                     {nameof(HeavyVehicle.Length)} DECIMAL(18, 2),
+                    {nameof(HeavyVehicle.Weight)} DECIMAL(18, 2),
                     {nameof(HeavyVehicle.VehicleId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Vehicles}({nameof(VehicleModels.Vehicle.Id)}));
             END
         ");
@@ -402,7 +401,7 @@ namespace AuctionData.Models.Database
                 CREATE TABLE {DatabaseTables.Auctions} (
                     {nameof(AuctionModels.Auction.Id)} INT PRIMARY KEY IDENTITY(1,1),
                     {nameof(AuctionModels.Auction.AuctionStatus)} INT,
-                    {nameof(AuctionModels.Auction.EndDate)} DATETIME,
+                    {nameof(AuctionModels.Auction.EndDate)} DATETIME NULL,
                     {nameof(AuctionModels.Auction.MinimumAmount)} DECIMAL(18, 2),
                     {nameof(AuctionModels.Auction.SellerId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Users}({nameof(AuctionModels.Auction.Id)}),
                     {nameof(AuctionModels.Auction.VehicleId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Vehicles}({nameof(AuctionModels.Auction.Id)}),
@@ -439,7 +438,7 @@ namespace AuctionData.Models.Database
             BEGIN
                 CREATE TABLE {DatabaseTables.VehicleImages} (
                     {nameof(VehicleModels.VehicleImage.Id)} INT PRIMARY KEY IDENTITY(1,1),
-                    {nameof(VehicleModels.VehicleImage.Description)} NVARCHAR(255),
+                    {nameof(VehicleModels.VehicleImage.Description)} VARCHAR(MAX) NULL,
                     {nameof(VehicleModels.VehicleImage.Image)} VARCHAR(MAX),
                     {nameof(VehicleModels.VehicleImage.ImageHeight)} INT,
                     {nameof(VehicleModels.VehicleImage.ImageWidth)} INT,

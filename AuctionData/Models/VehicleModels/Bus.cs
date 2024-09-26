@@ -11,6 +11,7 @@
         public Bus()
         {
             LicenseType = GetLicenseType();
+            EnergyClass = (EnergyClass)GetEnergyClass();
         }
 
         public new LicenseType GetLicenseType()

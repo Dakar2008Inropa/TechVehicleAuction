@@ -10,7 +10,6 @@
         public bool RequireCommercialLicense { get; set; }
         public double TrunkDimensions { get; set; }
         public int VehicleId { get; set; }
-        public Vehicle? Vehicle { get; set; }
 
 
         protected PassengerCar()
@@ -41,13 +40,9 @@
 
         public double GetTrunkCapacity()
         {
-            double widthMeters = TrunkWidth / 100;
-            double heightMeters = TrunkHeight / 100;
-            double lengthMeters = TrunkLength / 100;
+            double volumeCubicCm = TrunkWidth * TrunkHeight * TrunkLength;
 
-            double volumeCubicMeters = widthMeters * heightMeters * lengthMeters;
-
-            double capacityLiters = volumeCubicMeters * 1000;
+            double capacityLiters = volumeCubicCm / 1000;
 
             return capacityLiters;
         }

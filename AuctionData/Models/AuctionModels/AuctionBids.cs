@@ -6,6 +6,7 @@ namespace AuctionData.Models.AuctionModels
     {
         public int AuctionId { get; set; }
         public int BidderId { get; set; }
+        public User Bidder { get; set; }
         public decimal BidAmount { get; set; }
         public int BaseId { get; set; }
 

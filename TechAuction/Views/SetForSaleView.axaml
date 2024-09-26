@@ -135,7 +135,7 @@
                      Classes="Mainlabel"
                      Content="Close Auction" />
                     <DatePicker Width="300"
-                     SelectedDate="{Binding EndDate}" />
+                     SelectedDate="{Binding EndDateOffset}" />
                 </WrapPanel>
 
                 <WrapPanel>
@@ -258,15 +258,15 @@
                             <TextBox Name="TrunkWidthField"
                              Classes="Smallbox"
                              Text="{Binding TrunkWidth}"
-                             Watermark="Width (M)" />
+                             Watermark="Width (Cm)" />
                             <TextBox Name="TrunkHeightField"
                              Classes="Smallbox"
                              Text="{Binding TrunkHeight}"
-                             Watermark="Height (M)" />
+                             Watermark="Height (Cm)" />
                             <TextBox Name="TrunkLengthField"
                              Classes="Smallbox"
                              Text="{Binding TrunkLength}"
-                             Watermark="Length (M)" />
+                             Watermark="Length (Cm)" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
@@ -490,6 +490,7 @@
                  HorizontalAlignment="Right">
                     <Button Grid.Column="1"
                      Classes="GreenBtn"
+                     Command="{Binding CreateAuctionCmd}"
                      Content="Create auction" />
                 </Panel>
 

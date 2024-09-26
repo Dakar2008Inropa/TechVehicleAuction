@@ -10,169 +10,159 @@ namespace AuctionData.Models.Database
             #region Create
             public static bool CreateUser(string username, string password, string discriminator)
             {
-                try
+                using (SqlConnection con = OpenNewConnection())
                 {
-                    using (SqlConnection con = OpenNewConnection())
+                    using (SqlTransaction transaction = con.BeginTransaction())
                     {
-                        StringBuilder query = new StringBuilder();
-                        query.Append($@"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = '{username}')");
-                        query.AppendLine($@"BEGIN");
-                        query.AppendLine($@"CREATE LOGIN {username}");
-                        query.AppendLine($@"WITH PASSWORD = '{password}'");
-                        query.AppendLine($@"END");
-
-                        query.AppendLine($@"BEGIN");
-                        query.AppendLine($@"CREATE USER {username} FOR LOGIN {username}");
-                        query.AppendLine($@"END");
-
-                        query.AppendLine($@"BEGIN");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.AuctionBids} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Auctions} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Base} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Bus} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.CorporateUser} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.HeavyVehicle} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.PassengerCar} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.PrivatePassengerCar} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.PrivateUser} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.ProfessionalPassengerCar} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Truck} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Users} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.VehicleImages} TO {username}");
-                        query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Vehicles} TO {username}");
-                        query.AppendLine($@"GRANT CREATE PROCEDURE TO {username}");
-                        query.AppendLine($@"GRANT CREATE VIEW TO {username}");
-                        query.AppendLine($@"END");
-
-                        ExecuteNonQuery(query.ToString());
-
-                        int baseId = Base.InsertIntoBase(con);
-
-                        StringBuilder Userquery = new StringBuilder();
-                        Userquery.Append($@"INSERT INTO {DatabaseTables.Users} ");
-                        Userquery.Append($@"({nameof(UserModels.User.UserName)},");
-                        Userquery.Append($@"{nameof(UserModels.User.Discriminator)},");
-                        Userquery.Append($@"{nameof(UserModels.User.BaseId)})");
-                        Userquery.Append($@" VALUES ");
-                        Userquery.Append($@"(@{nameof(UserModels.User.UserName)},");
-                        Userquery.Append($@"@{nameof(UserModels.User.Discriminator)},");
-                        Userquery.Append($@"@{nameof(UserModels.User.BaseId)})");
-
-                        using (SqlCommand cmd = new SqlCommand(Userquery.ToString(), con))
+                        try
                         {
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.User.UserName)}", username);
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.User.Discriminator)}", discriminator);
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.User.BaseId)}", baseId);
+                            StringBuilder query = new StringBuilder();
+                            query.Append($@"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = '{username}')");
+                            query.AppendLine($@" BEGIN ");
+                            query.AppendLine($@"CREATE LOGIN {username} WITH PASSWORD = '{password}'");
+                            query.AppendLine($@" END");
 
-                            cmd.ExecuteNonQuery();
+                            query.AppendLine($@" BEGIN ");
+                            query.AppendLine($@"CREATE USER {username} FOR LOGIN {username}");
+                            query.AppendLine($@" END");
+
+                            query.AppendLine($@" BEGIN ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.AuctionBids} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Auctions} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Base} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Bus} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.CorporateUser} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.HeavyVehicle} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.PassengerCar} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.PrivatePassengerCar} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.ProfessionalPassengerCar} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Truck} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Users} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.VehicleImages} TO {username} ");
+                            query.AppendLine($@"GRANT INSERT, UPDATE ON {DatabaseTables.Vehicles} TO {username} ");
+                            query.AppendLine($@"END");
+
+                            using (SqlCommand cmd = new SqlCommand(query.ToString(), con, transaction))
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            int baseId = Base.InsertIntoBase(con, transaction);
+                            string insertUserQuery = $@"
+                                INSERT INTO {DatabaseTables.Users} 
+                                ({nameof(UserModels.User.UserName)}, {nameof(UserModels.User.Discriminator)}, {nameof(UserModels.User.BaseId)})
+                                VALUES (@UserName, @Discriminator, @BaseId)";
+
+                            int userId;
+                            using (SqlCommand cmd = new SqlCommand(insertUserQuery, con, transaction))
+                            {
+                                cmd.Parameters.AddWithValue("@UserName", username);
+                                cmd.Parameters.AddWithValue("@Discriminator", discriminator);
+                                cmd.Parameters.AddWithValue("@BaseId", baseId);
+                                cmd.ExecuteNonQuery();
+
+                                userId = GetUserId(username, con, transaction);
+                            }
+
+                            if (discriminator == "PrivateUser")
+                            {
+                                string insertPrivateUserQuery = $@"
+                                    INSERT INTO {DatabaseTables.PrivateUser} 
+                                    ({nameof(UserModels.PrivateUser.UserId)})
+                                    VALUES (@UserId)";
+
+                                using (SqlCommand cmd = new SqlCommand(insertPrivateUserQuery, con, transaction))
+                                {
+                                    cmd.Parameters.AddWithValue("@UserId", userId);
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+                            else if (discriminator == "CorporateUser")
+                            {
+                                string insertCorporateUserQuery = $@"
+                                    INSERT INTO {DatabaseTables.CorporateUser} 
+                                    ({nameof(UserModels.CorporateUser.UserId)}, {nameof(UserModels.CorporateUser.Credit)})
+                                    VALUES (@UserId, @Credit)";
+
+                                using (SqlCommand cmd = new SqlCommand(insertCorporateUserQuery, con, transaction))
+                                {
+                                    cmd.Parameters.AddWithValue("@UserId", userId);
+                                    cmd.Parameters.AddWithValue("@Credit", 0);
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+                            transaction.Commit();
+                            return true;
                         }
-
-                        con.Close();
-                    }
-                    return true;
-                }
-                catch (SqlException)
-                {
-                    return false;
-                }
-            }
-
-            public static bool CreatePrivateUser(string username, string cprnumber)
-            {
-                try
-                {
-                    using (SqlConnection con = OpenNewConnection())
-                    {
-                        int userId = GetUserId(username, con);
-
-                        StringBuilder query = new StringBuilder();
-                        query.Append($@"INSERT INTO {DatabaseTables.PrivateUser} ");
-                        query.Append($@"({nameof(UserModels.PrivateUser.UserId)},");
-                        query.Append($@"{nameof(UserModels.PrivateUser.CPRNumber)})");
-                        query.Append($@" VALUES ");
-                        query.Append($@"(@{nameof(UserModels.PrivateUser.UserId)},");
-                        query.Append($@"@{nameof(UserModels.PrivateUser.CPRNumber)})");
-
-                        using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                        catch (SqlException ex)
                         {
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.PrivateUser.UserId)}", userId);
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.PrivateUser.CPRNumber)}", cprnumber);
-
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                    return true;
-                }
-                catch (SqlException)
-                {
-                    return false;
-                }
-            }
-
-            public static bool CreateCorporateUser(string username, long credit, string cvrnumber)
-            {
-                try
-                {
-                    using (SqlConnection con = OpenNewConnection())
-                    {
-                        int userId = GetUserId(username, con);
-
-                        StringBuilder query = new StringBuilder();
-                        query.Append($@"INSERT INTO {DatabaseTables.CorporateUser} ");
-                        query.Append($@"({nameof(UserModels.CorporateUser.UserId)},");
-                        query.Append($@"{nameof(UserModels.CorporateUser.Credit)},");
-                        query.Append($@"{nameof(UserModels.CorporateUser.CvrNumber)})");
-                        query.Append($@" VALUES ");
-                        query.Append($@"(@{nameof(UserModels.CorporateUser.UserId)},");
-                        query.Append($@"@{nameof(UserModels.CorporateUser.Credit)},");
-                        query.Append($@"@{nameof(UserModels.CorporateUser.CvrNumber)})");
-
-                        using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-                        {
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.UserId)}", userId);
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.Credit)}", credit);
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.CvrNumber)}", cvrnumber);
-
-                            cmd.ExecuteNonQuery();
+                            Console.WriteLine(ex.Message);
+                            transaction.Rollback();
+                            return false;
                         }
                     }
-                    return true;
-                }
-                catch (SqlException)
-                {
-                    return false;
                 }
             }
             #endregion
 
             #region Read
-            public static UserModels.PrivateUser GetPrivateUser(string username)
+            public static UserModels.User GetUser(string? username)
             {
-                UserModels.PrivateUser user = new UserModels.PrivateUser();
                 try
                 {
                     using (SqlConnection con = OpenNewConnection())
                     {
-                        StringBuilder query = new StringBuilder();
-                        query.Append($@"SELECT * FROM {DatabaseTables.Users} WHERE {nameof(UserModels.User.UserName)} = @{nameof(UserModels.User.UserName)}");
+                        string query = $@"
+                            SELECT u.*, b.{nameof(Models.Base.CreatedAt)}, b.{nameof(Models.Base.UpdatedAt)}, b.{nameof(Models.Base.DeletedAt)}, b.{nameof(Models.Base.Status)},
+                                pu.{nameof(UserModels.PrivateUser.CPRNumber)}, 
+                                cu.{nameof(UserModels.CorporateUser.Credit)}, cu.{nameof(UserModels.CorporateUser.CvrNumber)}
+                            FROM {DatabaseTables.Users} u
+                            LEFT JOIN {DatabaseTables.PrivateUser} pu ON u.{nameof(UserModels.User.Id)} = pu.{nameof(UserModels.PrivateUser.UserId)}
+                            LEFT JOIN {DatabaseTables.CorporateUser} cu ON u.{nameof(UserModels.User.Id)} = cu.{nameof(UserModels.CorporateUser.UserId)}
+                            LEFT JOIN {DatabaseTables.Base} b ON u.{nameof(UserModels.User.BaseId)} = b.{nameof(Models.Base.Id)}
+                            WHERE u.{nameof(UserModels.User.UserName)} = @UserName";
 
-                        using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                        using (SqlCommand cmd = new SqlCommand(query, con))
                         {
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.User.UserName)}", username);
+                            cmd.Parameters.AddWithValue("@UserName", username);
 
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                while (reader.Read())
+                                if (reader.Read())
                                 {
-                                    user.UserId = (int)reader[nameof(UserModels.PrivateUser.UserId)];
-                                    user.UserName = reader[nameof(UserModels.PrivateUser.UserName)].ToString();
-                                    user.Discriminator = reader[nameof(UserModels.PrivateUser.Discriminator)].ToString();
-                                    user.BaseId = (int)reader[nameof(UserModels.PrivateUser.BaseId)];
-                                    user.Status = Base.GetStatus(user.BaseId, con);
-                                    user.CreatedAt = Base.GetCreatedAt(user.BaseId, con);
-                                    user.UpdatedAt = Base.GetUpdatedAt(user.BaseId, con);
-                                    user.DeletedAt = Base.GetDeletedAt(user.BaseId, con);
-                                    user.CPRNumber = GetCPRNumber(user.UserId, con);
+                                    string? discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
+                                    UserModels.User user;
+
+                                    if (discriminator == "PrivateUser")
+                                    {
+                                        user = new UserModels.PrivateUser
+                                        {
+                                            CPRNumber = reader[nameof(UserModels.PrivateUser.CPRNumber)].ToString()
+                                        };
+                                    }
+                                    else if (discriminator == "CorporateUser")
+                                    {
+                                        user = new UserModels.CorporateUser
+                                        {
+                                            Credit = (long)reader[nameof(UserModels.CorporateUser.Credit)],
+                                            CvrNumber = reader[nameof(UserModels.CorporateUser.CvrNumber)].ToString()
+                                        };
+                                    }
+                                    else
+                                    {
+                                        throw new InvalidOperationException("Unknown user type.");
+                                    }
+
+                                    user.Id = (int)reader[nameof(UserModels.User.Id)];
+                                    user.UserName = reader[nameof(UserModels.User.UserName)].ToString();
+                                    user.Discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
+                                    user.BaseId = (int)reader[nameof(UserModels.User.BaseId)];
+                                    user.CreatedAt = (DateTime)reader[nameof(Models.Base.CreatedAt)];
+                                    user.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)];
+                                    user.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)];
+                                    user.Status = (BaseStatus)reader[nameof(Models.Base.Status)];
+
+                                    return user;
                                 }
                             }
                         }
@@ -180,39 +170,68 @@ namespace AuctionData.Models.Database
                 }
                 catch (SqlException)
                 {
-                    return user;
+                    return null;
                 }
-                return user;
-            }
 
-            public static UserModels.CorporateUser GetCorporateUser(string username)
+                return null;
+            }
+            public static UserModels.User GetUser(int userId)
             {
-                UserModels.CorporateUser user = new UserModels.CorporateUser();
                 try
                 {
                     using (SqlConnection con = OpenNewConnection())
                     {
-                        StringBuilder query = new StringBuilder();
-                        query.Append($@"SELECT * FROM {DatabaseTables.Users} WHERE {nameof(UserModels.User.UserName)} = @{nameof(UserModels.User.UserName)}");
+                        string query = $@"
+                            SELECT u.*, b.{nameof(Models.Base.CreatedAt)}, b.{nameof(Models.Base.UpdatedAt)}, b.{nameof(Models.Base.DeletedAt)}, b.{nameof(Models.Base.Status)},
+                                pu.{nameof(UserModels.PrivateUser.CPRNumber)}, 
+                                cu.{nameof(UserModels.CorporateUser.Credit)}, cu.{nameof(UserModels.CorporateUser.CvrNumber)}
+                            FROM {DatabaseTables.Users} u
+                            LEFT JOIN {DatabaseTables.PrivateUser} pu ON u.{nameof(UserModels.User.Id)} = pu.{nameof(UserModels.PrivateUser.UserId)}
+                            LEFT JOIN {DatabaseTables.CorporateUser} cu ON u.{nameof(UserModels.User.Id)} = cu.{nameof(UserModels.CorporateUser.UserId)}
+                            LEFT JOIN {DatabaseTables.Base} b ON u.{nameof(UserModels.User.BaseId)} = b.{nameof(Models.Base.Id)}
+                            WHERE u.{nameof(UserModels.User.Id)} = @userId";
 
-                        using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                        using (SqlCommand cmd = new SqlCommand(query, con))
                         {
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.User.UserName)}", username);
+                            cmd.Parameters.AddWithValue("@userId", userId);
 
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                while (reader.Read())
+                                if (reader.Read())
                                 {
-                                    user.UserId = (int)reader[nameof(UserModels.CorporateUser.UserId)];
-                                    user.UserName = reader[nameof(UserModels.CorporateUser.UserName)].ToString();
-                                    user.Discriminator = reader[nameof(UserModels.CorporateUser.Discriminator)].ToString();
-                                    user.BaseId = (int)reader[nameof(UserModels.CorporateUser.BaseId)];
-                                    user.Status = Base.GetStatus(user.BaseId, con);
-                                    user.CreatedAt = Base.GetCreatedAt(user.BaseId, con);
-                                    user.UpdatedAt = Base.GetUpdatedAt(user.BaseId, con);
-                                    user.DeletedAt = Base.GetDeletedAt(user.BaseId, con);
-                                    user.CvrNumber = GetCVRNumber(user.UserId, con);
-                                    user.Credit = GetCredit(user.UserId, con);
+                                    string? discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
+                                    UserModels.User user;
+
+                                    if (discriminator == "PrivateUser")
+                                    {
+                                        user = new UserModels.PrivateUser
+                                        {
+                                            CPRNumber = reader[nameof(UserModels.PrivateUser.CPRNumber)].ToString()
+                                        };
+                                    }
+                                    else if (discriminator == "CorporateUser")
+                                    {
+                                        user = new UserModels.CorporateUser
+                                        {
+                                            Credit = (long)reader[nameof(UserModels.CorporateUser.Credit)],
+                                            CvrNumber = reader[nameof(UserModels.CorporateUser.CvrNumber)].ToString()
+                                        };
+                                    }
+                                    else
+                                    {
+                                        throw new InvalidOperationException("Unknown user type.");
+                                    }
+
+                                    user.Id = (int)reader[nameof(UserModels.User.Id)];
+                                    user.UserName = reader[nameof(UserModels.User.UserName)].ToString();
+                                    user.Discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
+                                    user.BaseId = (int)reader[nameof(UserModels.User.BaseId)];
+                                    user.CreatedAt = (DateTime)reader[nameof(Models.Base.CreatedAt)];
+                                    user.UpdatedAt = (DateTime)reader[nameof(Models.Base.UpdatedAt)];
+                                    user.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)];
+                                    user.Status = (BaseStatus)reader[nameof(Models.Base.Status)];
+
+                                    return user;
                                 }
                             }
                         }
@@ -220,186 +239,32 @@ namespace AuctionData.Models.Database
                 }
                 catch (SqlException)
                 {
-                    return user;
+                    return null;
                 }
-                return user;
-            }
-            #endregion
 
-            #region Update
-            public static bool UpdatePrivateUser(string username, string cprnumber)
-            {
-                try
-                {
-                    using (SqlConnection con = OpenNewConnection())
-                    {
-                        int userId = GetUserId(username, con);
-
-                        StringBuilder query = new StringBuilder();
-                        query.Append($@"UPDATE {DatabaseTables.PrivateUser} SET ");
-                        query.Append($"{nameof(UserModels.PrivateUser.CPRNumber)} = @{nameof(UserModels.PrivateUser.CPRNumber)} ");
-                        query.Append($"WHERE {nameof(UserModels.PrivateUser.UserId)} = @{nameof(UserModels.PrivateUser.UserId)}");
-
-                        using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-                        {
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.PrivateUser.CPRNumber)}", cprnumber);
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.PrivateUser.UserId)}", userId);
-
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                    return true;
-                }
-                catch (SqlException)
-                {
-                    return false;
-                }
-            }
-
-            public static bool UpdateCorporateUser(string username, long credit, string cvrnumber)
-            {
-                try
-                {
-                    using (SqlConnection con = OpenNewConnection())
-                    {
-                        int userId = GetUserId(username, con);
-
-                        StringBuilder query = new StringBuilder();
-                        query.Append($@"UPDATE {DatabaseTables.CorporateUser} SET ");
-                        query.Append($"{nameof(UserModels.CorporateUser.Credit)} = @{nameof(UserModels.CorporateUser.Credit)}, ");
-                        query.Append($"{nameof(UserModels.CorporateUser.CvrNumber)} = @{nameof(UserModels.CorporateUser.CvrNumber)} ");
-                        query.Append($"WHERE {nameof(UserModels.CorporateUser.UserId)} = @{nameof(UserModels.CorporateUser.UserId)}");
-
-                        using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-                        {
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.Credit)}", credit);
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.CvrNumber)}", cvrnumber);
-                            cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.UserId)}", userId);
-
-                            cmd.ExecuteNonQuery();
-                        }
-
-                        con.Close();
-                    }
-                    return true;
-                }
-                catch (SqlException)
-                {
-                    return false;
-                }
+                return null;
             }
             #endregion
 
             #region Internal
-            private static string GetCPRNumber(int userId, SqlConnection con)
-            {
-                string? cprNumber = string.Empty;
-                try
-                {
-                    StringBuilder query = new StringBuilder();
-                    query.Append($@"SELECT * FROM {DatabaseTables.PrivateUser} WHERE {nameof(UserModels.PrivateUser.UserId)} = @{nameof(UserModels.PrivateUser.UserId)}");
-
-                    using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-                    {
-                        cmd.Parameters.AddWithValue($"@{nameof(UserModels.PrivateUser.UserId)}", userId);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                cprNumber = reader[nameof(UserModels.PrivateUser.CPRNumber)].ToString();
-                            }
-                        }
-                    }
-                }
-                catch (SqlException)
-                {
-                    return cprNumber;
-                }
-                return cprNumber;
-            }
-
-            private static string GetCVRNumber(int userId, SqlConnection con)
-            {
-                string? cvrNumber = string.Empty;
-                try
-                {
-                    StringBuilder query = new StringBuilder();
-                    query.Append($@"SELECT * FROM {DatabaseTables.CorporateUser} WHERE {nameof(UserModels.CorporateUser.UserId)} = @{nameof(UserModels.CorporateUser.UserId)}");
-
-                    using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-                    {
-                        cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.UserId)}", userId);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                cvrNumber = reader[nameof(UserModels.CorporateUser.CvrNumber)].ToString();
-                            }
-                        }
-                    }
-                }
-                catch (SqlException)
-                {
-                    return cvrNumber;
-                }
-                return cvrNumber;
-            }
-
-            private static long GetCredit(int userId, SqlConnection con)
-            {
-                long credit = 0;
-                try
-                {
-                    StringBuilder query = new StringBuilder();
-                    query.Append($@"SELECT * FROM {DatabaseTables.CorporateUser} WHERE {nameof(UserModels.CorporateUser.UserId)} = @{nameof(UserModels.CorporateUser.UserId)}");
-
-                    using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-                    {
-                        cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.UserId)}", userId);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                credit = (long)reader[nameof(UserModels.CorporateUser.Credit)];
-                            }
-                        }
-                    }
-                }
-                catch (SqlException)
-                {
-                    return credit;
-                }
-                return credit;
-            }
-
-            private static int GetUserId(string username, SqlConnection con)
+            private static int GetUserId(string username, SqlConnection con, SqlTransaction transaction)
             {
                 int userId = 0;
-                try
+                string query = $@"SELECT {nameof(UserModels.User.Id)} FROM {DatabaseTables.Users} WHERE {nameof(UserModels.User.UserName)} = @UserName";
+
+                using (SqlCommand cmd = new SqlCommand(query, con, transaction))
                 {
-                    StringBuilder query = new StringBuilder();
-                    query.Append($@"SELECT * FROM {DatabaseTables.Users} WHERE {nameof(UserModels.User.UserName)} = @{nameof(UserModels.User.UserName)}");
+                    cmd.Parameters.AddWithValue("@UserName", username);
 
-                    using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue($"@{nameof(UserModels.User.UserName)}", username);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                userId = (int)reader[nameof(UserModels.User.Id)];
-                            }
+                            userId = (int)reader[nameof(UserModels.User.Id)];
                         }
                     }
                 }
-                catch (SqlException)
-                {
-                    return userId;
-                }
+
                 return userId;
             }
             #endregion

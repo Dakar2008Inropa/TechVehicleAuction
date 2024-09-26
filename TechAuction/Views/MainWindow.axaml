@@ -13,7 +13,7 @@
  CanResize="False"
  Icon="/Assets/LogoIco.ico"
  Loaded="Window_Loaded"
- Topmost="True"
+ Topmost="False"
  WindowStartupLocation="CenterOwner"
  mc:Ignorable="d">
 

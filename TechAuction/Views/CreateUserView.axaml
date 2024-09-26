@@ -40,14 +40,14 @@
         <TextBox Name="Passwordfield"
          Width="250"
          Classes="LoginFormTextbox"
-         PasswordChar="*"
+         PasswordChar="•"
          TabIndex="1"
          Watermark="Password" />
 
         <TextBox Name="ConfirmPasswordfield"
          Width="250"
          Classes="LoginFormTextbox"
-         PasswordChar="*"
+         PasswordChar="•"
          TabIndex="2"
          Watermark="Password again" />
 

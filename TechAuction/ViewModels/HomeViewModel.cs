@@ -1,4 +1,5 @@
 using ReactiveUI;
+using System;
 
 namespace TechAuction.ViewModels
 {
@@ -21,12 +22,20 @@ namespace TechAuction.ViewModels
             _mainWindowViewModel.SetWindowMinSize(907, 700);
             _mainWindowViewModel.SetCanResize(true);
             _mainWindowViewModel.CenterizeWindow(true);
+
+            var setForSaleViewModel = new SetForSaleViewModel();
+            setForSaleViewModel.AuctionCreated += OnAuctionCreated;
         }
 
         public ViewModelBase CurrentPage
         {
             get => _CurrentPage;
             set => this.RaiseAndSetIfChanged(backingField: ref _CurrentPage, newValue: value, propertyName: nameof(CurrentPage));
+        }
+
+        private void OnAuctionCreated(object? sender, EventArgs e)
+        {
+            CurrentPage = new AuctionViewModel();
         }
     }
 }

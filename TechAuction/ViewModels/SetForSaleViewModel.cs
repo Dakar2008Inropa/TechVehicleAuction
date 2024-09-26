@@ -1,4 +1,7 @@
+using AuctionData.Models.Database;
+using AuctionData.Models.UserModels;
 using AuctionData.Models.VehicleModels;
+using Avalonia;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -18,7 +21,7 @@ namespace TechAuction.ViewModels
         private bool _towingHitch;
 
         private decimal _minimumAmount;
-        private DateTime? _endDate;
+        private DateTimeOffset _endDateOffset;
 
         private FuelType _fuelType;
         private int? _fuelEconomy;
@@ -283,12 +286,12 @@ namespace TechAuction.ViewModels
             }
         }
 
-        public DateTime? EndDate
+        public DateTimeOffset EndDateOffset
         {
-            get => _endDate;
+            get => _endDateOffset;
             set
             {
-                this.RaiseAndSetIfChanged(ref _endDate, value);
+                this.RaiseAndSetIfChanged(ref _endDateOffset, value);
             }
         }
 
@@ -483,6 +486,8 @@ namespace TechAuction.ViewModels
 
         public ReactiveCommand<Unit, Unit>? UploadImageCmd { get; }
 
+        public ReactiveCommand<Unit, Unit>? CreateAuctionCmd { get; }
+
         public void UploadVehicleImage()
         {
             var uploadImageViewModel = new UploadImageViewModel(new UploadImage());
@@ -493,6 +498,89 @@ namespace TechAuction.ViewModels
             };
 
             vehicleWindow.Show();
+        }
+
+        public void CreateAuction()
+        {
+            Vehicle vehicle;
+
+            switch (SelectedVehicleTypeIndex)
+            {
+                case 0:
+                    vehicle = new PrivatePassengerCar
+                    {
+                        TrunkHeight = TrunkHeight.GetValueOrDefault(),
+                        TrunkWidth = TrunkWidth.GetValueOrDefault(),
+                        TrunkLength = TrunkLength.GetValueOrDefault(),
+                        RequireCommercialLicense = RequireCommercialLicense,
+                        Discriminator = "PrivatePassengerCar",
+                        IsofixMounts = IsofixMounts
+                    };
+                    break;
+                case 1:
+                    vehicle = new ProfessionalPassengerCar
+                    {
+                        TrunkHeight = TrunkHeight.GetValueOrDefault(),
+                        TrunkWidth = TrunkWidth.GetValueOrDefault(),
+                        TrunkLength = TrunkLength.GetValueOrDefault(),
+                        RequireCommercialLicense = RequireCommercialLicense,
+                        RollCage = RollCage,
+                        FireExtinguisher = FireExtinguisher,
+                        RacingSeat = RacingSeat,
+                        RacingHarness = RacingHarness,
+                        Discriminator = "ProfessionalPassengerCar",
+                        LoadCapacity = ProfessionalPassengerCarLoadCapacity.GetValueOrDefault()
+                    };
+                    break;
+                case 2:
+                    vehicle = new Bus
+                    {
+                        Height = HeavyHeight.GetValueOrDefault(),
+                        Weight = HeavyWeight.GetValueOrDefault(),
+                        Length = HeavyLength.GetValueOrDefault(),
+                        SeatingCapacity = BusSeatCapacity.GetValueOrDefault(),
+                        SleepingCapacity = BusSleepCapacity.GetValueOrDefault(),
+                        Discriminator = "Bus",
+                        Toilet = BusToilet
+                    };
+                    break;
+                case 3:
+                    vehicle = new Truck
+                    {
+                        Height = HeavyHeight.GetValueOrDefault(),
+                        Weight = HeavyWeight.GetValueOrDefault(),
+                        Length = HeavyLength.GetValueOrDefault(),
+                        Discriminator = "Truck",
+                        LoadCapacity = TruckLoadCapacity.GetValueOrDefault()
+                    };
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown vehicle type");
+            }
+
+            vehicle.Maker = Maker;
+            vehicle.Model = Model;
+            vehicle.Mileage = Mileage.GetValueOrDefault();
+            vehicle.LicensePlate = LicensePlate;
+            vehicle.ModelYear = ModelYear.GetValueOrDefault();
+            vehicle.Towinghitch = TowingHitch;
+            vehicle.FuelType = FuelType;
+            vehicle.FuelEconomy = FuelEconomy.GetValueOrDefault();
+            vehicle.FuelCapacity = FuelCapacity.GetValueOrDefault();
+            vehicle.EngineSize = EngineSize;
+
+            vehicle.VehicleImages = VehicleImages;
+
+            int? vehicleId = Database.Vehicle.CreateVehicle(vehicle);
+
+            AuctionData.Models.AuctionModels.Auction auction = new AuctionData.Models.AuctionModels.Auction();
+
+            auction.MinimumAmount = MinimumAmount;
+            auction.EndDate = EndDateOffset.DateTime;
+
+            Database.Auction.CreateAuction(auction, GetCurrentUserId(), vehicleId.GetValueOrDefault());
+
+            AuctionCreated?.Invoke(this, EventArgs.Empty);
         }
 
         public List<FuelType> FuelTypes { get; }
@@ -512,6 +600,7 @@ namespace TechAuction.ViewModels
             BusSleepCapacity = 1;
             ModelYear = 1885;
             MinimumAmount = 1;
+            EndDateOffset = new DateTimeOffset(DateTime.Now);
             FuelEconomy = 1;
             FuelCapacity = 1;
             HeavyHeight = 1;
@@ -522,11 +611,24 @@ namespace TechAuction.ViewModels
             FuelTypes = Enum.GetValues(typeof(FuelType)).Cast<FuelType>().ToList();
 
             UploadImageCmd = ReactiveCommand.Create(UploadVehicleImage);
+
+            CreateAuctionCmd = ReactiveCommand.Create(CreateAuction);
         }
 
         private void OnVehicleImageAdded(object? sender, VehicleImage image)
         {
             VehicleImages = new List<VehicleImage>(VehicleImages) { image };
         }
+
+        private static int GetCurrentUserId()
+        {
+            string? currentU = (string?)Application.Current!.Resources["CurrentUser"];
+
+            User currentUser = Database.User.GetUser(currentU);
+
+            return currentUser.Id;
+        }
+
+        public event EventHandler? AuctionCreated;
     }
 }

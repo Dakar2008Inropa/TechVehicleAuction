@@ -35,46 +35,46 @@
             return $"{Maker} {Model} ({ModelYear})";
         }
 
-        public string GetEnergyClass()
+        public int GetEnergyClass()
         {
             if (FuelType == FuelType.Electric)
             {
-                return "A";
+                return 0;
             }
 
-            var dieselPre2010 = new List<(double min, double max, string energyClass)>
+            var dieselPre2010 = new List<(double min, double max, int energyClass)>
             {
-                (23, double.MaxValue, "A"),
-                (18, 23, "B"),
-                (13, 18, "C"),
-                (double.MinValue, 13, "D")
+                (23, double.MaxValue, 0),
+                (18, 23, 1),
+                (13, 18, 2),
+                (double.MinValue, 13, 3)
             };
 
-            var gasolinePre2010 = new List<(double min, double max, string energyClass)>
+            var gasolinePre2010 = new List<(double min, double max, int energyClass)>
             {
-                (18, double.MaxValue, "A"),
-                (14, 18, "B"),
-                (10, 14, "C"),
-                (double.MinValue, 10, "D")
+                (18, double.MaxValue, 0),
+                (14, 18, 1),
+                (10, 14, 2),
+                (double.MinValue, 10, 3)
             };
 
-            var dieselPost2010 = new List<(double min, double max, string energyClass)>
+            var dieselPost2010 = new List<(double min, double max, int energyClass)>
             {
-                (25, double.MaxValue, "A"),
-                (20, 25, "B"),
-                (15, 20, "C"),
-                (double.MinValue, 15, "D")
+                (25, double.MaxValue, 0),
+                (20, 25, 1),
+                (15, 20, 2),
+                (double.MinValue, 15, 3)
             };
 
-            var gasolinePost2010 = new List<(double min, double max, string energyClass)>
+            var gasolinePost2010 = new List<(double min, double max, int energyClass)>
             {
-                (20, double.MaxValue, "A"),
-                (16, 20, "B"),
-                (12, 16, "C"),
-                (double.MinValue, 12, "D")
+                (20, double.MaxValue, 0),
+                (16, 20, 1),
+                (12, 16, 2),
+                (double.MinValue, 12, 3)
             };
 
-            var energyClassLookup = new Dictionary<(FuelType fuelType, bool isPost2010), List<(double min, double max, string energyClass)>>
+            var energyClassLookup = new Dictionary<(FuelType fuelType, bool isPost2010), List<(double min, double max, int energyClass)>>
             {
                 { (FuelType.Diesel, false), dieselPre2010 },
                 { (FuelType.Gasoline, false), gasolinePre2010 },
@@ -89,10 +89,10 @@
             if (energyClassLookup.TryGetValue((FuelType, isPost2010), out var ranges))
             {
                 var energyClass = ranges.Find(range => FuelEconomy >= range.min && FuelEconomy < range.max);
-                return energyClass.energyClass ?? "Unknown";
+                return energyClass.energyClass;
             }
 
-            return "Unknown";
+            return 0;
         }
 
         public static LicenseType GetLicenseType()

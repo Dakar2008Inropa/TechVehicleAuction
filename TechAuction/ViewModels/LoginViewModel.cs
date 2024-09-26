@@ -1,6 +1,11 @@
 using AuctionData.Models.Database;
+using Avalonia;
+using NAudio.Wave;
 using ReactiveUI;
+using System;
+using System.IO;
 using System.Reactive;
+using System.Threading;
 
 namespace TechAuction.ViewModels
 {
@@ -32,15 +37,20 @@ namespace TechAuction.ViewModels
             if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
             {
                 ErrorText = true;
+                ErrorSound();
                 return;
             }
             if (Database.Instance.LoginCheck(Username, Password))
             {
+                var app = Application.Current;
+                app!.Resources["CurrentUser"] = Username;
+
                 _mainWindowViewModel?.ChangeView(new HomeViewModel(_mainWindowViewModel));
             }
             else
             {
                 ErrorText = true;
+                ErrorSound();
             }
         }
 
@@ -68,6 +78,26 @@ namespace TechAuction.ViewModels
         {
             get => _ErrorText;
             set => this.RaiseAndSetIfChanged(backingField: ref _ErrorText, newValue: value, propertyName: nameof(ErrorText));
+        }
+
+
+        private static void ErrorSound()
+        {
+            var basePath = AppContext.BaseDirectory;
+            DirectoryInfo baseDir = new DirectoryInfo(basePath);
+
+            var audioFile = Path.Combine(baseDir.Parent!.Parent!.Parent!.FullName, "Assets", "HvaLaverDu_Psykopat.mp3");
+
+            using (var audioFileReader = new AudioFileReader(audioFile))
+            using (var outputDevice = new WaveOutEvent())
+            {
+                outputDevice.Init(audioFileReader);
+                outputDevice.Play();
+                while (outputDevice.PlaybackState == PlaybackState.Playing)
+                {
+                    Thread.Sleep(100);
+                }
+            }
         }
     }
 }

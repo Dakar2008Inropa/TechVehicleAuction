@@ -31,9 +31,59 @@ namespace AuctionData.Models.Database
 
                 return baseId;
             }
+
+            public static int InsertIntoBase(SqlConnection con, SqlTransaction trans)
+            {
+                int baseId;
+
+                StringBuilder Basequery = new StringBuilder();
+                Basequery.Append($@"INSERT INTO {DatabaseTables.Base} ");
+                Basequery.Append($@"({nameof(Models.Base.CreatedAt)},");
+                Basequery.Append($@"{nameof(Models.Base.Status)})");
+                Basequery.Append($@" VALUES ");
+                Basequery.Append($@"(@{nameof(Models.Base.CreatedAt)},");
+                Basequery.Append($@"@{nameof(Models.Base.Status)}); ");
+                Basequery.Append($@"SELECT SCOPE_IDENTITY();");
+
+                using (SqlCommand cmd = new SqlCommand(Basequery.ToString(), con, trans))
+                {
+                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.CreatedAt)}", DateTime.UtcNow);
+                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Status)}", (int)BaseStatus.Active);
+
+                    baseId = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                return baseId;
+            }
             #endregion
 
             #region Read
+
+            public static Models.Base GetBase(int baseId, SqlConnection con)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append($@"SELECT * FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
+
+                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                {
+                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        Models.Base modelBase = null;
+                        if (reader.Read())
+                        {
+                            modelBase!.Id = reader.GetInt32(0);
+                            modelBase.CreatedAt = reader.GetDateTime(1);
+                            modelBase.UpdatedAt = reader.IsDBNull(2) ? null : reader.GetDateTime(2);
+                            modelBase.DeletedAt = reader.IsDBNull(3) ? null : reader.GetDateTime(3);
+                            modelBase.Status = (BaseStatus)reader.GetInt32(4);
+                        }
+                        return modelBase!;
+                    }
+                }
+            }
+
             public static BaseStatus GetStatus(int baseId, SqlConnection con)
             {
                 StringBuilder query = new StringBuilder();

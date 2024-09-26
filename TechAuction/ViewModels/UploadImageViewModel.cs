@@ -92,6 +92,12 @@ namespace TechAuction.ViewModels
                 vi.Description = VehicleDescription;
 
                 VehicleImageAdded?.Invoke(this, vi);
+
+                VehicleImage = "";
+                VehicleDescription = "";
+                VehicleImageBase64 = "";
+                VehicleImageHeight = 0;
+                VehicleImageWidth = 0;
             }
         }
 
