@@ -80,6 +80,7 @@ namespace AuctionData.Models.Database
             sb.DataSource = settings.Hostname;
             sb.InitialCatalog = settings.Database;
             sb.UserID = settings.Username;
+            sb.MultipleActiveResultSets = true;
             sb.TrustServerCertificate = true;
             sb.Password = settings.Password;
             return sb.ToString();
@@ -120,6 +121,7 @@ namespace AuctionData.Models.Database
             sb.InitialCatalog = settings.Database;
             sb.UserID = username;
             sb.TrustServerCertificate = true;
+            sb.MultipleActiveResultSets = true;
             sb.Password = password;
 
             return sb.ToString();

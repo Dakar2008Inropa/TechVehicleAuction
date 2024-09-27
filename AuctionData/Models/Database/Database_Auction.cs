@@ -197,12 +197,12 @@ namespace AuctionData.Models.Database
 
                         using (SqlCommand cmd = new SqlCommand(auctionQuery.ToString(), con))
                         {
-                            AuctionModels.Auction auction = new AuctionModels.Auction();
-
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
                                 while (reader.Read())
                                 {
+                                    AuctionModels.Auction auction = new AuctionModels.Auction();
+
                                     auction.Id = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.Auction.Id)));
                                     auction.VehicleId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.Auction.VehicleId)));
                                     auction.SellerId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.Auction.SellerId)));
@@ -215,15 +215,15 @@ namespace AuctionData.Models.Database
                                     auction.CreatedAt = reader.GetDateTime(reader.GetOrdinal(nameof(Models.Base.CreatedAt)));
                                     auction.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)];
                                     auction.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)];
+
+                                    auction.Vehicle = Vehicle.GetVehicle(auction.VehicleId, con);
+                                    auction.Seller = User.GetUser(auction.SellerId, con);
+                                    auction.Bids = GetAuctionBids(auction.Id, con);
+
+                                    if (auction.MinimumAmount > 0)
+                                        auctions.Add(auction);
                                 }
                             }
-
-                            auction.Vehicle = Vehicle.GetVehicle(auction.VehicleId, con);
-                            auction.Seller = User.GetUser(auction.SellerId, con);
-                            auction.Bids = GetAuctionBids(auction.Id, con);
-
-                            if (auction.MinimumAmount > 0)
-                                auctions.Add(auction);
                         }
                         return auctions;
                     }
@@ -269,12 +269,13 @@ namespace AuctionData.Models.Database
                         {
                             cmd.Parameters.AddWithValue(nameof(AuctionModels.Auction.SellerId), userId);
 
-                            AuctionModels.Auction auction = new AuctionModels.Auction();
 
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
                                 while (reader.Read())
                                 {
+                                    AuctionModels.Auction auction = new AuctionModels.Auction();
+
                                     auction.Id = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.Auction.Id)));
                                     auction.VehicleId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.Auction.VehicleId)));
                                     auction.SellerId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.Auction.SellerId)));
@@ -287,15 +288,15 @@ namespace AuctionData.Models.Database
                                     auction.CreatedAt = reader.GetDateTime(reader.GetOrdinal(nameof(Models.Base.CreatedAt)));
                                     auction.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)];
                                     auction.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)];
+
+                                    auction.Vehicle = Vehicle.GetVehicle(auction.VehicleId, con);
+                                    auction.Seller = User.GetUser(auction.SellerId, con);
+                                    auction.Bids = GetAuctionBids(auction.Id, con);
+
+                                    if (auction.MinimumAmount > 0)
+                                        auctions.Add(auction);
                                 }
                             }
-
-                            auction.Vehicle = Vehicle.GetVehicle(auction.VehicleId, con);
-                            auction.Seller = User.GetUser(auction.SellerId, con);
-                            auction.Bids = GetAuctionBids(auction.Id, con);
-
-                            if (auction.MinimumAmount > 0)
-                                auctions.Add(auction);
                         }
                         return auctions;
                     }

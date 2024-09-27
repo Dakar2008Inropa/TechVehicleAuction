@@ -277,7 +277,7 @@
                              Classes="Mainnumber"
                              Maximum="8"
                              Minimum="1"
-                             Value="{Binding PassengerCarSeatCapacity, , Converter={StaticResource NumberFormatter}, ConverterParameter=';Seat;Seats'}" />
+                             Value="{Binding PassengerCarSeatCapacity}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
@@ -360,7 +360,7 @@
                              Classes="Mainnumber"
                              Maximum="3000"
                              Minimum="1"
-                             Value="{Binding ProfessionalPassengerCarLoadCapacity, , Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}}" />
+                             Value="{Binding ProfessionalPassengerCarLoadCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}}" />
                         </WrapPanel>
 
                     </StackPanel>
@@ -379,7 +379,7 @@
                              Increment="1"
                              Maximum="10000"
                              Minimum="1"
-                             Value="{Binding HeavyHeight, , Converter={StaticResource NumberFormatter}, ConverterParameter='Cm'}}" />
+                             Value="{Binding HeavyHeight, Converter={StaticResource NumberFormatter}, ConverterParameter='Cm'}}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
@@ -392,7 +392,7 @@
                              Increment="1"
                              Maximum="10000"
                              Minimum="1"
-                             Value="{Binding HeavyLength, , Converter={StaticResource NumberFormatter}, ConverterParameter='Cm'}}" />
+                             Value="{Binding HeavyLength, Converter={StaticResource NumberFormatter}, ConverterParameter='Cm'}}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
@@ -405,7 +405,7 @@
                              Increment="1"
                              Maximum="100000"
                              Minimum="1"
-                             Value="{Binding HeavyWeight, , Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}}" />
+                             Value="{Binding HeavyWeight, Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}}" />
                         </WrapPanel>
 
                     </StackPanel>
@@ -425,7 +425,7 @@
                              Increment="1"
                              Maximum="500"
                              Minimum="1"
-                             Value="{Binding BusSeatCapacity, , Converter={StaticResource NumberFormatter}, ConverterParameter=';Seat;Seats'}" />
+                             Value="{Binding BusSeatCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter=';Seat;Seats'}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
@@ -439,7 +439,7 @@
                              Increment="1"
                              Maximum="250"
                              Minimum="1"
-                             Value="{Binding BusSleepCapacity, , Converter={StaticResource NumberFormatter}, ConverterParameter=';Bed;Beds'}" />
+                             Value="{Binding BusSleepCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter=';Bed;Beds'}" />
                         </WrapPanel>
 
                         <WrapPanel>
@@ -469,7 +469,7 @@
                              Classes="Mainnumber"
                              Maximum="80000"
                              Minimum="1"
-                             Value="{Binding TruckLoadCapacity, , Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}" />
+                             Value="{Binding TruckLoadCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}" />
                         </WrapPanel>
 
                     </StackPanel>
