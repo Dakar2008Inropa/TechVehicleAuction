@@ -24,6 +24,7 @@
         <TextBlock Grid.Row="0"
          Margin="0,0,0,5"
          Classes="Header"
+         IsVisible="{Binding VisibleYourAuctions}"
          Text="Your Auctions" />
 
         <DataGrid Grid.Row="1"
@@ -43,14 +44,22 @@
                 <DataGridTextColumn Width="*"
                  Binding="{Binding Vehicle.Model}"
                  Header="Model" />
-                <DataGridTextColumn Binding="{Binding Vehicle.ModelYear}"
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding Vehicle.ModelYear}"
                  Header="Year" />
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding Vehicle.Mileage, StringFormat='{}{0:N0} Km'}"
+                 Header="Mileage" />
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding EndDate, StringFormat='{}{0:dd-MM-yyyy}'}"
+                 Header="Closing" />
             </DataGrid.Columns>
         </DataGrid>
 
         <TextBlock Grid.Row="2"
          Margin="0,0,0,5"
          Classes="Header"
+         IsVisible="{Binding VisibleAuctions}"
          Text="Current Auctions" />
 
         <DataGrid Grid.Row="3"
@@ -69,8 +78,15 @@
                 <DataGridTextColumn Width="*"
                  Binding="{Binding Vehicle.Model}"
                  Header="Model" />
-                <DataGridTextColumn Binding="{Binding Vehicle.ModelYear}"
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding Vehicle.ModelYear}"
                  Header="Year" />
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding Vehicle.Mileage, StringFormat='{}{0:N0} Km'}"
+                 Header="Mileage" />
+                <DataGridTextColumn Width="*"
+                 Binding="{Binding EndDate, StringFormat='{}{0:dd-MM-yyyy}'}"
+                 Header="Closing" />
             </DataGrid.Columns>
         </DataGrid>
 

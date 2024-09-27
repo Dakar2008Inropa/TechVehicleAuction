@@ -81,5 +81,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AuctionData\AuctionData.csproj" />
+    <ProjectReference Include="..\Logging\Logging.csproj" />
   </ItemGroup>
 </Project>

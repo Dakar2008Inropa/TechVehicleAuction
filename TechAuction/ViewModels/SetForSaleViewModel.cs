@@ -61,7 +61,11 @@ namespace TechAuction.ViewModels
         private double _minEngineSize;
         private double _maxEngineSize;
         private double _engineSize;
+        private bool _showErrorText;
+        private string? _errorText;
         private List<VehicleImage> _vehicleImages = new List<VehicleImage>();
+
+        public HomeViewModel Parent { get; set; }
 
 
         public int SelectedVehicleTypeIndex
@@ -484,6 +488,24 @@ namespace TechAuction.ViewModels
             }
         }
 
+        public bool ShowErrorText
+        {
+            get => _showErrorText;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _showErrorText, value);
+            }
+        }
+
+        public string? ErrorText
+        {
+            get => _errorText;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _errorText, value);
+            }
+        }
+
         public ReactiveCommand<Unit, Unit>? UploadImageCmd { get; }
 
         public ReactiveCommand<Unit, Unit>? CreateAuctionCmd { get; }
@@ -502,6 +524,13 @@ namespace TechAuction.ViewModels
 
         public void CreateAuction()
         {
+            if (Maker == null || Model == null || LicensePlate == null)
+            {
+                ShowErrorText = true;
+                ErrorText = "Please fill in all fields";
+                return;
+            }
+
             Vehicle vehicle;
 
             switch (SelectedVehicleTypeIndex)
@@ -571,21 +600,24 @@ namespace TechAuction.ViewModels
 
             vehicle.VehicleImages = VehicleImages;
 
-            int? vehicleId = Database.Vehicle.CreateVehicle(vehicle);
+            foreach (VehicleImage image in vehicle.VehicleImages)
+            {
+                log.Info($"image.Image: {image.Image}");
+            }
 
             AuctionData.Models.AuctionModels.Auction auction = new AuctionData.Models.AuctionModels.Auction();
 
             auction.MinimumAmount = MinimumAmount;
             auction.EndDate = EndDateOffset.DateTime;
 
-            Database.Auction.CreateAuction(auction, GetCurrentUserId(), vehicleId.GetValueOrDefault());
+            Database.Vehicle.CreateVehicleAndAuction(vehicle, auction, GetCurrentUserId());
 
-            AuctionCreated?.Invoke(this, EventArgs.Empty);
+            Parent.CurrentPage = new AuctionViewModel(Parent);
         }
 
         public List<FuelType> FuelTypes { get; }
 
-        public SetForSaleViewModel()
+        public SetForSaleViewModel(HomeViewModel parent)
         {
             SelectedVehicleTypeIndex = 0;
             IsHeavyVehicleGroupVisible = false;
@@ -596,6 +628,7 @@ namespace TechAuction.ViewModels
             IsProfessionalPassengerCarGroupVisible = false;
             Mileage = 1;
             HeavyWeight = 1;
+            ShowErrorText = false;
             BusSeatCapacity = 1;
             BusSleepCapacity = 1;
             ModelYear = 1885;
@@ -613,10 +646,16 @@ namespace TechAuction.ViewModels
             UploadImageCmd = ReactiveCommand.Create(UploadVehicleImage);
 
             CreateAuctionCmd = ReactiveCommand.Create(CreateAuction);
+            Parent = parent;
         }
 
         private void OnVehicleImageAdded(object? sender, VehicleImage image)
         {
+            log.Info($"VehicleImage.{nameof(VehicleImage.Image)}: {image.Image}");
+            log.Info($"VehicleImage.{nameof(VehicleImage.Description)}: {image.Description}");
+            log.Info($"VehicleImage.{nameof(VehicleImage.ImageWidth)}: {image.ImageWidth}");
+            log.Info($"VehicleImage.{nameof(VehicleImage.ImageHeight)}: {image.ImageHeight}");
+
             VehicleImages = new List<VehicleImage>(VehicleImages) { image };
         }
 
@@ -628,7 +667,5 @@ namespace TechAuction.ViewModels
 
             return currentUser.Id;
         }
-
-        public event EventHandler? AuctionCreated;
     }
 }

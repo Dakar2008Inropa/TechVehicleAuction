@@ -92,11 +92,12 @@ namespace AuctionData.Models.Database
                                 }
                             }
                             transaction.Commit();
+                            log.Info($"Creating user {username}");
                             return true;
                         }
-                        catch (SqlException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine(ex.Message);
+                            log.Error($"Could not create user {username}", ex);
                             transaction.Rollback();
                             return false;
                         }
@@ -175,6 +176,7 @@ namespace AuctionData.Models.Database
 
                 return null;
             }
+
             public static UserModels.User GetUser(int userId)
             {
                 try
@@ -227,7 +229,7 @@ namespace AuctionData.Models.Database
                                     user.Discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
                                     user.BaseId = (int)reader[nameof(UserModels.User.BaseId)];
                                     user.CreatedAt = (DateTime)reader[nameof(Models.Base.CreatedAt)];
-                                    user.UpdatedAt = (DateTime)reader[nameof(Models.Base.UpdatedAt)];
+                                    user.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)];
                                     user.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)];
                                     user.Status = (BaseStatus)reader[nameof(Models.Base.Status)];
 
@@ -243,6 +245,73 @@ namespace AuctionData.Models.Database
                 }
 
                 return null;
+            }
+
+            public static UserModels.User GetUser(int userId, SqlConnection con)
+            {
+                try
+                {
+                    string query = $@"
+                            SELECT u.*, b.{nameof(Models.Base.CreatedAt)}, b.{nameof(Models.Base.UpdatedAt)}, b.{nameof(Models.Base.DeletedAt)}, b.{nameof(Models.Base.Status)},
+                                pu.{nameof(UserModels.PrivateUser.CPRNumber)}, 
+                                cu.{nameof(UserModels.CorporateUser.Credit)}, cu.{nameof(UserModels.CorporateUser.CvrNumber)}
+                            FROM {DatabaseTables.Users} u
+                            LEFT JOIN {DatabaseTables.PrivateUser} pu ON u.{nameof(UserModels.User.Id)} = pu.{nameof(UserModels.PrivateUser.UserId)}
+                            LEFT JOIN {DatabaseTables.CorporateUser} cu ON u.{nameof(UserModels.User.Id)} = cu.{nameof(UserModels.CorporateUser.UserId)}
+                            LEFT JOIN {DatabaseTables.Base} b ON u.{nameof(UserModels.User.BaseId)} = b.{nameof(Models.Base.Id)}
+                            WHERE u.{nameof(UserModels.User.Id)} = @userId";
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@userId", userId);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string? discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
+                                UserModels.User user;
+
+                                if (discriminator == "PrivateUser")
+                                {
+                                    user = new UserModels.PrivateUser
+                                    {
+                                        CPRNumber = reader[nameof(UserModels.PrivateUser.CPRNumber)].ToString()
+                                    };
+                                }
+                                else if (discriminator == "CorporateUser")
+                                {
+                                    user = new UserModels.CorporateUser
+                                    {
+                                        Credit = (long)reader[nameof(UserModels.CorporateUser.Credit)],
+                                        CvrNumber = reader[nameof(UserModels.CorporateUser.CvrNumber)].ToString()
+                                    };
+                                }
+                                else
+                                {
+                                    throw new InvalidOperationException("Unknown user type.");
+                                }
+
+                                user.Id = (int)reader[nameof(UserModels.User.Id)];
+                                user.UserName = reader[nameof(UserModels.User.UserName)].ToString();
+                                user.Discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
+                                user.BaseId = (int)reader[nameof(UserModels.User.BaseId)];
+                                user.CreatedAt = (DateTime)reader[nameof(Models.Base.CreatedAt)];
+                                user.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)];
+                                user.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)];
+                                user.Status = (BaseStatus)reader[nameof(Models.Base.Status)];
+
+                                return user;
+                            }
+                        }
+                    }
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Could not retrieve user", ex);
+                    return null;
+                }
             }
             #endregion
 

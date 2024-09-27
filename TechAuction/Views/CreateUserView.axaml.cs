@@ -5,6 +5,7 @@ using NAudio.Wave;
 using System;
 using System.IO;
 using System.Threading;
+using TechAuction.ViewModels;
 
 namespace TechAuction.Views;
 
@@ -94,23 +95,8 @@ public partial class CreateUserView : UserControl
 
                     if (result.ToString() == "OK")
                     {
-                        var loginPage = $"TechAuction.Views.LoginView";
-                        var type = Type.GetType(loginPage);
-                        if (type != null)
-                        {
-                            var pg = Activator.CreateInstance(type);
-
-                            if (pg is UserControl userControl)
-                            {
-                                var viewModelType = Type.GetType($"TechAuction.ViewModels.LoginViewModel");
-                                if (viewModelType != null)
-                                {
-                                    var viewModel = Activator.CreateInstance(viewModelType);
-                                    userControl.DataContext = viewModel;
-                                }
-                                this.Content = pg;
-                            }
-                        }
+                        CreateUserViewModel vm = (CreateUserViewModel)DataContext!;
+                        vm.NavigateToLoginPage();
                     }
                 }
                 else

@@ -84,85 +84,32 @@ namespace AuctionData.Models.Database
                 }
             }
 
-            public static BaseStatus GetStatus(int baseId, SqlConnection con)
+            public static Models.Base GetBase(int baseId)
             {
                 StringBuilder query = new StringBuilder();
-                query.Append($@"SELECT {nameof(BaseStatus)} FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
+                query.Append($@"SELECT * FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
 
-                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                using (SqlConnection con = OpenNewConnection())
                 {
-                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
                     {
-                        if (reader.Read())
+                        cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            return (BaseStatus)reader.GetInt32(0);
+                            Models.Base modelBase = null;
+                            if (reader.Read())
+                            {
+                                modelBase!.Id = reader.GetInt32(0);
+                                modelBase.CreatedAt = reader.GetDateTime(1);
+                                modelBase.UpdatedAt = reader.IsDBNull(2) ? null : reader.GetDateTime(2);
+                                modelBase.DeletedAt = reader.IsDBNull(3) ? null : reader.GetDateTime(3);
+                                modelBase.Status = (BaseStatus)reader.GetInt32(4);
+                            }
+                            return modelBase!;
                         }
                     }
                 }
-
-                return BaseStatus.Active;
-            }
-
-            public static DateTime GetCreatedAt(int baseId, SqlConnection con)
-            {
-                StringBuilder query = new StringBuilder();
-                query.Append($@"SELECT {nameof(Models.Base.CreatedAt)} FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
-
-                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-                {
-                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return reader.GetDateTime(0);
-                        }
-                    }
-                }
-                return DateTime.UtcNow;
-            }
-
-            public static DateTime? GetUpdatedAt(int baseId, SqlConnection con)
-            {
-                StringBuilder query = new StringBuilder();
-                query.Append($@"SELECT {nameof(Models.Base.UpdatedAt)} FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
-
-                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-                {
-                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return reader.GetDateTime(0);
-                        }
-                    }
-                }
-                return null;
-            }
-
-            public static DateTime? GetDeletedAt(int baseId, SqlConnection con)
-            {
-                StringBuilder query = new StringBuilder();
-                query.Append($@"SELECT {nameof(Models.Base.DeletedAt)} FROM {DatabaseTables.Base} WHERE {nameof(Models.Base.Id)} = @{nameof(Models.Base.Id)}");
-
-                using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
-                {
-                    cmd.Parameters.AddWithValue($"@{nameof(Models.Base.Id)}", baseId);
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return reader.GetDateTime(0);
-                        }
-                    }
-                }
-                return null;
             }
             #endregion
 

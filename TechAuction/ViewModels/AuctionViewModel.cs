@@ -3,9 +3,7 @@ using AuctionData.Models.Database;
 using AuctionData.Models.UserModels;
 using Avalonia;
 using ReactiveUI;
-using System;
 using System.Collections.ObjectModel;
-using System.Reactive;
 
 namespace TechAuction.ViewModels
 {
@@ -14,10 +12,10 @@ namespace TechAuction.ViewModels
         private bool _VisibleAuctions;
         private bool _VisibleYourAuctions;
 
+        public HomeViewModel? Parent { get; set; }
+
         public ObservableCollection<Auction> YourAuctions { get; }
         public ObservableCollection<Auction> Auctions { get; }
-
-        public ReactiveCommand<Auction, Unit> ShowAuctionDetailsCmd { get; }
 
         public bool VisibleAuctions
         {
@@ -31,7 +29,7 @@ namespace TechAuction.ViewModels
             set => this.RaiseAndSetIfChanged(ref _VisibleYourAuctions, value);
         }
 
-        public AuctionViewModel()
+        public AuctionViewModel(HomeViewModel parent)
         {
             string? currentU = (string?)Application.Current!.Resources["CurrentUser"];
 
@@ -43,14 +41,7 @@ namespace TechAuction.ViewModels
             VisibleYourAuctions = YourAuctions.Count > 0;
             VisibleAuctions = Auctions.Count > 0;
 
-            ShowAuctionDetailsCmd = ReactiveCommand.Create<Auction>(ShowAuctionDetails);
+            Parent = parent;
         }
-
-        private void ShowAuctionDetails(Auction auction)
-        {
-            AuctionSelected?.Invoke(this, auction);
-        }
-
-        public event EventHandler<Auction>? AuctionSelected;
     }
 }

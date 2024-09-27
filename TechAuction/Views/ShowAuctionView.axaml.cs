@@ -19,4 +19,12 @@ public partial class ShowAuctionView : UserControl
     {
         AuctionSlide.Previous();
     }
+
+    private void GoBack_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is TechAuction.ViewModels.ShowAuctionViewModel viewModel)
+        {
+            viewModel.Parent!.ShowAuctions();
+        }
+    }
 }

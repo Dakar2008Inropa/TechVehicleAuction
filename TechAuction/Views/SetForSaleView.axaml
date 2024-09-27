@@ -486,12 +486,18 @@
             <Grid ColumnDefinitions="*">
 
                 <Panel Grid.Column="0"
-                 Margin="10"
-                 HorizontalAlignment="Right">
-                    <Button Grid.Column="1"
-                     Classes="GreenBtn"
-                     Command="{Binding CreateAuctionCmd}"
-                     Content="Create auction" />
+                 Margin="10">
+                    <WrapPanel Grid.Column="1"
+                     HorizontalAlignment="Right">
+                        <TextBlock Margin="0,5,8,0"
+                         FontWeight="Bold"
+                         Foreground="Red"
+                         IsVisible="{Binding ShowErrorText}"
+                         Text="{Binding ErrorText}" />
+                        <Button Classes="GreenBtn"
+                         Command="{Binding CreateAuctionCmd}"
+                         Content="Create auction" />
+                    </WrapPanel>
                 </Panel>
 
             </Grid>

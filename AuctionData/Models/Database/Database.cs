@@ -1,5 +1,7 @@
 ﻿using AuctionData.Models.UserModels;
 using AuctionData.Models.VehicleModels;
+using log4net;
+using Logging;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
@@ -13,6 +15,9 @@ namespace AuctionData.Models.Database
         private readonly SqlConnection Sqlcon;
 
         public static Database Instance { get; } = new Database();
+
+        private static readonly ILog log = Logger.GetLogger(typeof(Database));
+
         #endregion
 
         #region Constructor
@@ -54,11 +59,12 @@ namespace AuctionData.Models.Database
             try
             {
                 OpenConnection();
+                log.Info("Connection success");
                 return true;
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                log.Error("Could not connect to database", ex);
                 return false;
             }
             finally
@@ -95,11 +101,12 @@ namespace AuctionData.Models.Database
                 try
                 {
                     sqlcon.Open();
+                    log.Info($"Login success for {username}");
                     return true;
                 }
-                catch (SqlException ex)
+                catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    log.Error($"Login failed for {username}", ex);
                     return false;
                 }
             }
@@ -124,6 +131,8 @@ namespace AuctionData.Models.Database
         {
             using (SqlConnection con = OpenNewConnection())
             {
+                log.Info("Creating Database tables");
+
                 CreateBaseTable();
                 CreateUsersTable();
                 CreatePrivateUserTable();
@@ -138,6 +147,8 @@ namespace AuctionData.Models.Database
                 CreateAuctionsTable();
                 CreateAuctionBidsTable();
                 CreateVehicleImagesTable();
+
+                log.Info("All Tables created");
             }
         }
 
@@ -200,7 +211,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.Base} table");
         }
 
         private static void CreateUsersTable()
@@ -219,7 +230,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.Users} table");
         }
 
         private static void CreatePrivateUserTable()
@@ -235,7 +246,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.PrivateUser} table");
         }
 
         private static void CreateCorporateUserTable()
@@ -252,7 +263,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.CorporateUser} table");
         }
 
         private static void CreateVehiclesTable()
@@ -280,7 +291,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.Vehicles} table");
         }
 
         private static void CreatePassengerCarTable()
@@ -301,7 +312,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.PassengerCar} table");
         }
 
         private static void CreatePrivatePassengerCarTable()
@@ -317,7 +328,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.PrivatePassengerCar} table");
         }
 
         private static void CreateProfessionalPassengerCarTable()
@@ -337,7 +348,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.ProfessionalPassengerCar} table");
         }
 
         private static void CreateHeavyVehicleTable()
@@ -355,7 +366,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.HeavyVehicle} table");
         }
 
         private static void CreateBusTable()
@@ -373,7 +384,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.Bus} table");
         }
 
         private static void CreateTruckTable()
@@ -389,7 +400,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.Truck} table");
         }
 
         private static void CreateAuctionsTable()
@@ -409,7 +420,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.Auctions} table");
         }
 
         private static void CreateAuctionBidsTable()
@@ -427,7 +438,7 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.AuctionBids} table");
         }
 
         private static void CreateVehicleImagesTable()
@@ -438,8 +449,8 @@ namespace AuctionData.Models.Database
             BEGIN
                 CREATE TABLE {DatabaseTables.VehicleImages} (
                     {nameof(VehicleModels.VehicleImage.Id)} INT PRIMARY KEY IDENTITY(1,1),
+                    {nameof(VehicleModels.VehicleImage.Image)} VARCHAR(MAX) NULL,
                     {nameof(VehicleModels.VehicleImage.Description)} VARCHAR(MAX) NULL,
-                    {nameof(VehicleModels.VehicleImage.Image)} VARCHAR(MAX),
                     {nameof(VehicleModels.VehicleImage.ImageHeight)} INT,
                     {nameof(VehicleModels.VehicleImage.ImageWidth)} INT,
                     {nameof(VehicleModels.VehicleImage.VehicleId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Vehicles}({nameof(VehicleModels.VehicleImage.Id)}),
@@ -447,14 +458,22 @@ namespace AuctionData.Models.Database
             END
         ");
 
-            ExecuteNonQuery(query.ToString());
+            ExecuteNonQuery(query.ToString(), $"Creating {DatabaseTables.VehicleImages} table");
         }
 
-        private static void ExecuteNonQuery(string query)
+        private static void ExecuteNonQuery(string query, string infoMsg)
         {
             using (SqlCommand cmd = new SqlCommand(query, OpenNewConnection()))
             {
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    log.Info(infoMsg);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Something went wrong when creating tables", ex);
+                }
             }
         }
         #endregion

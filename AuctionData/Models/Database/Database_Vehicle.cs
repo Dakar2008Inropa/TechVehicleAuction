@@ -10,7 +10,7 @@ namespace AuctionData.Models.Database
         {
             #region Create
 
-            public static int? CreateVehicle(VehicleModels.Vehicle vehicle)
+            public static bool CreateVehicleAndAuction(VehicleModels.Vehicle vehicle, AuctionModels.Auction auction, int userId)
             {
                 using (SqlConnection con = OpenNewConnection())
                 {
@@ -18,92 +18,99 @@ namespace AuctionData.Models.Database
                     {
                         try
                         {
-                            StringBuilder vehicleQuery = new StringBuilder();
-                            vehicleQuery.Append($@"INSERT INTO {DatabaseTables.Vehicles} ");
-                            vehicleQuery.Append($@"({nameof(VehicleModels.Vehicle.Maker)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.Model)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.Mileage)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.LicensePlate)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.ModelYear)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.Towinghitch)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.LicenseType)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.EngineSize)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.FuelType)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.FuelEconomy)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.FuelCapacity)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.EnergyClass)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.Discriminator)},");
-                            vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.BaseId)})");
-
-                            vehicleQuery.Append($@" VALUES ");
-
-                            vehicleQuery.Append($@"(@{nameof(VehicleModels.Vehicle.Maker)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.Model)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.Mileage)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.LicensePlate)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.ModelYear)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.Towinghitch)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.LicenseType)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.EngineSize)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.FuelType)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.FuelEconomy)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.FuelCapacity)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.EnergyClass)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.Discriminator)},");
-                            vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.BaseId)});");
-                            vehicleQuery.Append($@"SELECT SCOPE_IDENTITY();");
-
-                            int vehicleId;
-                            int baseId = Base.InsertIntoBase(con, trans);
-
-                            using (SqlCommand cmd = new SqlCommand(vehicleQuery.ToString(), con, trans))
-                            {
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Maker)}", vehicle.Maker);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Model)}", vehicle.Model);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Mileage)}", vehicle.Mileage);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.LicensePlate)}", vehicle.LicensePlate);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.ModelYear)}", vehicle.ModelYear);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Towinghitch)}", vehicle.Towinghitch);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.LicenseType)}", (int)vehicle.LicenseType);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.EngineSize)}", vehicle.EngineSize);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.FuelType)}", (int)vehicle.FuelType);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.FuelEconomy)}", vehicle.FuelEconomy);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.FuelCapacity)}", vehicle.FuelCapacity);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.EnergyClass)}", (int)vehicle.EnergyClass);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Discriminator)}", vehicle.Discriminator);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.BaseId)}", baseId);
-
-                                vehicleId = Convert.ToInt32(cmd.ExecuteScalar());
-                                vehicle.Id = vehicleId;
-                            }
-
-                            switch (vehicle.Discriminator)
-                            {
-                                case "PrivatePassengerCar":
-                                case "ProfessionalPassengerCar":
-                                    CreatePassengerCar(vehicle, con, trans);
-                                    break;
-                                case "Bus":
-                                case "Truck":
-                                    CreateHeavyVehicle(vehicle, con, trans);
-                                    break;
-                                default:
-                                    throw new InvalidOperationException("Unknown vehicle type");
-                            }
-
-                            CreateVehicleImages(vehicle, con, trans);
+                            int vehicleId = CreateVehicle(con, trans, vehicle);
+                            Auction.CreateAuction(con, trans, auction, userId, vehicleId);
 
                             trans.Commit();
-                            return vehicleId;
+                            log.Info("Auction created");
+                            return true;
                         }
-                        catch (SqlException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine(ex);
+                            log.Error("Something went wrong when trying to create an auction in database", ex);
                             trans.Rollback();
-                            return null;
+                            return false;
                         }
                     }
                 }
+            }
+
+            private static int CreateVehicle(SqlConnection con, SqlTransaction trans, VehicleModels.Vehicle vehicle)
+            {
+                StringBuilder vehicleQuery = new StringBuilder();
+                vehicleQuery.Append($@"INSERT INTO {DatabaseTables.Vehicles} ");
+                vehicleQuery.Append($@"({nameof(VehicleModels.Vehicle.Maker)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.Model)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.Mileage)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.LicensePlate)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.ModelYear)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.Towinghitch)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.LicenseType)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.EngineSize)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.FuelType)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.FuelEconomy)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.FuelCapacity)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.EnergyClass)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.Discriminator)},");
+                vehicleQuery.Append($@"{nameof(VehicleModels.Vehicle.BaseId)})");
+
+                vehicleQuery.Append($@" VALUES ");
+
+                vehicleQuery.Append($@"(@{nameof(VehicleModels.Vehicle.Maker)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.Model)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.Mileage)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.LicensePlate)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.ModelYear)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.Towinghitch)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.LicenseType)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.EngineSize)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.FuelType)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.FuelEconomy)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.FuelCapacity)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.EnergyClass)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.Discriminator)},");
+                vehicleQuery.Append($@"@{nameof(VehicleModels.Vehicle.BaseId)});");
+                vehicleQuery.Append($@"SELECT SCOPE_IDENTITY();");
+
+                int baseId = Base.InsertIntoBase(con, trans);
+
+                using (SqlCommand cmd = new SqlCommand(vehicleQuery.ToString(), con, trans))
+                {
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Maker)}", vehicle.Maker);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Model)}", vehicle.Model);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Mileage)}", vehicle.Mileage);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.LicensePlate)}", vehicle.LicensePlate);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.ModelYear)}", vehicle.ModelYear);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Towinghitch)}", vehicle.Towinghitch);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.LicenseType)}", (int)vehicle.LicenseType);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.EngineSize)}", vehicle.EngineSize);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.FuelType)}", (int)vehicle.FuelType);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.FuelEconomy)}", vehicle.FuelEconomy);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.FuelCapacity)}", vehicle.FuelCapacity);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.EnergyClass)}", (int)vehicle.EnergyClass);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Discriminator)}", vehicle.Discriminator);
+                    cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.BaseId)}", baseId);
+
+                    vehicle.Id = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                switch (vehicle.Discriminator)
+                {
+                    case "PrivatePassengerCar":
+                    case "ProfessionalPassengerCar":
+                        CreatePassengerCar(vehicle, con, trans);
+                        break;
+                    case "Bus":
+                    case "Truck":
+                        CreateHeavyVehicle(vehicle, con, trans);
+                        break;
+                    default:
+                        throw new InvalidOperationException("Unknown vehicle type");
+                }
+
+                CreateVehicleImages(vehicle, con, trans);
+
+                return vehicle.Id;
             }
 
             private static void CreatePassengerCar(VehicleModels.Vehicle vehicle, SqlConnection con, SqlTransaction trans)
@@ -322,7 +329,7 @@ namespace AuctionData.Models.Database
                             using (SqlCommand cmd = new SqlCommand(vehicleImageQuery.ToString(), con, trans))
                             {
                                 cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.Image)}", image.Image);
-                                cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.Description)}", image.Description);
+                                cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.Description)}", string.IsNullOrEmpty(image.Description) ? "" : image.Description);
                                 cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.ImageWidth)}", image.ImageWidth);
                                 cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.ImageHeight)}", image.ImageHeight);
                                 cmd.Parameters.AddWithValue($"@{nameof(VehicleImage.VehicleId)}", vehicle.Id);
@@ -333,10 +340,9 @@ namespace AuctionData.Models.Database
                         }
                     }
                 }
-                catch (SqlException ex)
+                catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
-                    throw;
+                    log.Error("Could not add image to database", ex);
                 }
             }
             #endregion
@@ -531,6 +537,202 @@ namespace AuctionData.Models.Database
                     }
                 }
                 return null;
+            }
+
+            public static VehicleModels.Vehicle GetVehicle(int vehicleId, SqlConnection con)
+            {
+                try
+                {
+                    StringBuilder query = new StringBuilder();
+                    query.Append($@"SELECT ");
+
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.Maker)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.Model)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.Mileage)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.LicensePlate)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.ModelYear)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.Towinghitch)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.LicenseType)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.EngineSize)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.FuelType)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.FuelEconomy)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.FuelCapacity)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.EnergyClass)},");
+                    query.Append($@"v.{nameof(VehicleModels.Vehicle.Discriminator)},");
+
+                    query.Append($@"pc.{nameof(VehicleModels.PassengerCar.TrunkWidth)},");
+                    query.Append($@"pc.{nameof(VehicleModels.PassengerCar.TrunkHeight)},");
+                    query.Append($@"pc.{nameof(VehicleModels.PassengerCar.TrunkLength)},");
+                    query.Append($@"pc.{nameof(VehicleModels.PassengerCar.SeatCapacity)},");
+                    query.Append($@"pc.{nameof(VehicleModels.PassengerCar.RequireCommercialLicense)},");
+                    query.Append($@"pc.{nameof(VehicleModels.PassengerCar.TrunkDimensions)},");
+
+                    query.Append($@"ppc.{nameof(VehicleModels.PrivatePassengerCar.Id)} AS PrivatePassengerCarId,");
+                    query.Append($@"ppc.{nameof(VehicleModels.PrivatePassengerCar.IsofixMounts)},");
+
+                    query.Append($@"prpc.{nameof(VehicleModels.ProfessionalPassengerCar.Id)} AS ProfessionalPassengerCarId,");
+                    query.Append($@"prpc.{nameof(VehicleModels.ProfessionalPassengerCar.RollCage)},");
+                    query.Append($@"prpc.{nameof(VehicleModels.ProfessionalPassengerCar.FireExtinguisher)},");
+                    query.Append($@"prpc.{nameof(VehicleModels.ProfessionalPassengerCar.RacingSeat)},");
+                    query.Append($@"prpc.{nameof(VehicleModels.ProfessionalPassengerCar.RacingHarness)},");
+                    query.Append($@"prpc.{nameof(VehicleModels.ProfessionalPassengerCar.LoadCapacity)},");
+
+                    query.Append($@"hv.{nameof(VehicleModels.HeavyVehicle.Height)},");
+                    query.Append($@"hv.{nameof(VehicleModels.HeavyVehicle.Weight)},");
+                    query.Append($@"hv.{nameof(VehicleModels.HeavyVehicle.Length)},");
+
+                    query.Append($@"bus.{nameof(VehicleModels.Bus.Id)} AS BusId,");
+                    query.Append($@"bus.{nameof(VehicleModels.Bus.SeatingCapacity)},");
+                    query.Append($@"bus.{nameof(VehicleModels.Bus.SleepingCapacity)},");
+                    query.Append($@"bus.{nameof(VehicleModels.Bus.Toilet)},");
+
+                    query.Append($@"truck.{nameof(VehicleModels.Truck.Id)} AS TruckId,");
+                    query.Append($@"truck.{nameof(VehicleModels.Truck.LoadCapacity)},");
+
+                    query.Append($@"vehicleImage.{nameof(VehicleImage.Id)} AS VehicleImageId,");
+                    query.Append($@"vehicleImage.{nameof(VehicleImage.Image)},");
+                    query.Append($@"vehicleImage.{nameof(VehicleImage.Description)},");
+                    query.Append($@"vehicleImage.{nameof(VehicleImage.ImageWidth)},");
+                    query.Append($@"vehicleImage.{nameof(VehicleImage.ImageHeight)},");
+
+                    query.Append($@"b.{nameof(Models.Base.CreatedAt)},");
+                    query.Append($@"b.{nameof(Models.Base.UpdatedAt)},");
+                    query.Append($@"b.{nameof(Models.Base.DeletedAt)},");
+                    query.Append($@"b.{nameof(Models.Base.Status)}");
+
+                    query.Append($@" FROM ");
+
+                    query.Append($@"{DatabaseTables.Vehicles} v ");
+                    query.Append($@"LEFT JOIN {DatabaseTables.PassengerCar} pc ON v.{nameof(VehicleModels.Vehicle.Id)} = pc.{nameof(VehicleModels.PassengerCar.VehicleId)} ");
+                    query.Append($@"LEFT JOIN {DatabaseTables.PrivatePassengerCar} ppc ON pc.{nameof(VehicleModels.PassengerCar.Id)} = ppc.{nameof(VehicleModels.PrivatePassengerCar.PassengerCarId)} ");
+                    query.Append($@"LEFT JOIN {DatabaseTables.ProfessionalPassengerCar} prpc ON pc.{nameof(VehicleModels.PassengerCar.Id)} = prpc.{nameof(VehicleModels.ProfessionalPassengerCar.PassengerCarId)} ");
+                    query.Append($@"LEFT JOIN {DatabaseTables.HeavyVehicle} hv ON v.{nameof(VehicleModels.Vehicle.Id)} = hv.{nameof(VehicleModels.HeavyVehicle.VehicleId)} ");
+                    query.Append($@"LEFT JOIN {DatabaseTables.Bus} bus ON hv.{nameof(VehicleModels.HeavyVehicle.Id)} = bus.{nameof(VehicleModels.Bus.HeavyVehicleId)} ");
+                    query.Append($@"LEFT JOIN {DatabaseTables.Truck} truck ON hv.{nameof(VehicleModels.HeavyVehicle.Id)} = truck.{nameof(VehicleModels.Truck.HeavyVehicleId)} ");
+                    query.Append($@"LEFT JOIN {DatabaseTables.Base} b ON v.{nameof(VehicleModels.Vehicle.BaseId)} = b.{nameof(Models.Base.Id)} ");
+                    query.Append($@"LEFT JOIN {DatabaseTables.VehicleImages} vehicleImage ON v.{nameof(VehicleModels.Vehicle.Id)} = vehicleImage.{nameof(VehicleImage.VehicleId)} ");
+
+                    query.Append($@"WHERE v.{nameof(VehicleModels.Vehicle.Id)} = @{nameof(VehicleModels.Vehicle.Id)}");
+
+                    using (SqlCommand cmd = new SqlCommand(query.ToString(), con))
+                    {
+                        cmd.Parameters.AddWithValue($"@{nameof(VehicleModels.Vehicle.Id)}", vehicleId);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            VehicleModels.Vehicle vehicle = null;
+                            List<VehicleImage> vehicleImages = new List<VehicleImage>();
+
+                            while (reader.Read())
+                            {
+                                if (vehicle == null)
+                                {
+                                    string? discriminator = reader[nameof(VehicleModels.Vehicle.Discriminator)].ToString();
+
+                                    switch (discriminator)
+                                    {
+                                        case "PrivatePassengerCar":
+                                            vehicle = new PrivatePassengerCar
+                                            {
+                                                Id = Convert.ToInt32(reader["PrivatePassengerCarId"]),
+                                                TrunkHeight = Convert.ToInt32(reader[nameof(VehicleModels.PassengerCar.TrunkHeight)]),
+                                                TrunkWidth = Convert.ToInt32(reader[nameof(VehicleModels.PassengerCar.TrunkWidth)]),
+                                                TrunkLength = Convert.ToInt32(reader[nameof(VehicleModels.PassengerCar.TrunkLength)]),
+                                                SeatCapacity = Convert.ToInt32(reader[nameof(VehicleModels.PassengerCar.SeatCapacity)]),
+                                                RequireCommercialLicense = Convert.ToBoolean(reader[nameof(VehicleModels.PassengerCar.RequireCommercialLicense)]),
+                                                TrunkDimensions = Convert.ToDouble(reader[nameof(VehicleModels.PassengerCar.TrunkDimensions)]),
+                                                IsofixMounts = Convert.ToBoolean(reader[nameof(VehicleModels.PrivatePassengerCar.IsofixMounts)])
+                                            };
+                                            break;
+                                        case "ProfessionalPassengerCar":
+                                            vehicle = new ProfessionalPassengerCar
+                                            {
+                                                Id = Convert.ToInt32(reader["ProfessionalPassengerCarId"]),
+                                                RollCage = Convert.ToBoolean(reader[nameof(VehicleModels.ProfessionalPassengerCar.RollCage)]),
+                                                FireExtinguisher = Convert.ToBoolean(reader[nameof(VehicleModels.ProfessionalPassengerCar.FireExtinguisher)]),
+                                                RacingSeat = Convert.ToBoolean(reader[nameof(VehicleModels.ProfessionalPassengerCar.RacingSeat)]),
+                                                RacingHarness = Convert.ToBoolean(reader[nameof(VehicleModels.ProfessionalPassengerCar.RacingHarness)]),
+                                                LoadCapacity = Convert.ToInt32(reader[nameof(VehicleModels.ProfessionalPassengerCar.LoadCapacity)]),
+                                                TrunkHeight = Convert.ToInt32(reader[nameof(VehicleModels.PassengerCar.TrunkHeight)]),
+                                                TrunkWidth = Convert.ToInt32(reader[nameof(VehicleModels.PassengerCar.TrunkWidth)]),
+                                                TrunkLength = Convert.ToInt32(reader[nameof(VehicleModels.PassengerCar.TrunkLength)]),
+                                                SeatCapacity = Convert.ToInt32(reader[nameof(VehicleModels.PassengerCar.SeatCapacity)]),
+                                                RequireCommercialLicense = Convert.ToBoolean(reader[nameof(VehicleModels.PassengerCar.RequireCommercialLicense)]),
+                                                TrunkDimensions = Convert.ToDouble(reader[nameof(VehicleModels.PassengerCar.TrunkDimensions)]),
+                                            };
+                                            break;
+                                        case "Bus":
+                                            vehicle = new Bus
+                                            {
+                                                Id = Convert.ToInt32(reader["BusId"]),
+                                                SeatingCapacity = Convert.ToInt32(reader[nameof(VehicleModels.Bus.SeatingCapacity)]),
+                                                SleepingCapacity = Convert.ToInt32(reader[nameof(VehicleModels.Bus.SleepingCapacity)]),
+                                                Toilet = Convert.ToBoolean(reader[nameof(VehicleModels.Bus.Toilet)]),
+                                                Height = Convert.ToInt32(reader[nameof(VehicleModels.HeavyVehicle.Height)]),
+                                                Weight = Convert.ToInt32(reader[nameof(VehicleModels.HeavyVehicle.Weight)]),
+                                                Length = Convert.ToInt32(reader[nameof(VehicleModels.HeavyVehicle.Length)])
+                                            };
+                                            break;
+                                        case "Truck":
+                                            vehicle = new Truck
+                                            {
+                                                Id = Convert.ToInt32(reader["TruckId"]),
+                                                LoadCapacity = Convert.ToInt32(reader[nameof(VehicleModels.Truck.LoadCapacity)]),
+                                                Height = Convert.ToInt32(reader[nameof(VehicleModels.HeavyVehicle.Height)]),
+                                                Weight = Convert.ToInt32(reader[nameof(VehicleModels.HeavyVehicle.Weight)]),
+                                                Length = Convert.ToInt32(reader[nameof(VehicleModels.HeavyVehicle.Length)])
+                                            };
+                                            break;
+                                        default:
+                                            throw new InvalidOperationException("Unknown vehicle type");
+                                    }
+
+                                    vehicle.Maker = reader[nameof(VehicleModels.Vehicle.Maker)].ToString();
+                                    vehicle.Model = reader[nameof(VehicleModels.Vehicle.Model)].ToString();
+                                    vehicle.Mileage = Convert.ToInt32(reader[nameof(VehicleModels.Vehicle.Mileage)]);
+                                    vehicle.LicensePlate = reader[nameof(VehicleModels.Vehicle.LicensePlate)].ToString();
+                                    vehicle.ModelYear = Convert.ToInt32(reader[nameof(VehicleModels.Vehicle.ModelYear)]);
+                                    vehicle.Towinghitch = Convert.ToBoolean(reader[nameof(VehicleModels.Vehicle.Towinghitch)]);
+                                    vehicle.LicenseType = (LicenseType)Convert.ToInt32(reader[nameof(VehicleModels.Vehicle.LicenseType)]);
+                                    vehicle.EngineSize = Convert.ToDouble(reader[nameof(VehicleModels.Vehicle.EngineSize)]);
+                                    vehicle.FuelType = (FuelType)Convert.ToInt32(reader[nameof(VehicleModels.Vehicle.FuelType)]);
+                                    vehicle.FuelEconomy = Convert.ToInt32(reader[nameof(VehicleModels.Vehicle.FuelEconomy)]);
+                                    vehicle.FuelCapacity = Convert.ToInt32(reader[nameof(VehicleModels.Vehicle.FuelCapacity)]);
+                                    vehicle.EnergyClass = (EnergyClass)Convert.ToInt32(reader[nameof(VehicleModels.Vehicle.EnergyClass)]);
+                                    vehicle.CreatedAt = Convert.ToDateTime(reader[nameof(Models.Base.CreatedAt)]);
+                                    vehicle.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : Convert.ToDateTime(reader[nameof(Models.Base.UpdatedAt)]);
+                                    vehicle.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : Convert.ToDateTime(reader[nameof(Models.Base.DeletedAt)]);
+                                    vehicle.Status = (BaseStatus)Convert.ToInt32(reader[nameof(Models.Base.Status)]);
+                                }
+
+                                if (!reader.IsDBNull(reader.GetOrdinal("VehicleImageId")))
+                                {
+                                    vehicleImages.Add(new VehicleImage
+                                    {
+                                        Id = Convert.ToInt32(reader["VehicleImageId"]),
+                                        Image = reader["Image"].ToString(),
+                                        Description = reader["Description"].ToString(),
+                                        ImageWidth = Convert.ToInt32(reader["ImageWidth"]),
+                                        ImageHeight = Convert.ToInt32(reader["ImageHeight"]),
+                                        VehicleId = vehicleId
+                                    });
+                                }
+                            }
+
+                            if (vehicle != null)
+                            {
+                                vehicle.VehicleImages = vehicleImages;
+                                return vehicle;
+                            }
+                        }
+                    }
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Could not retrieve vehicle", ex);
+                    return null;
+                }
             }
             #endregion
         }

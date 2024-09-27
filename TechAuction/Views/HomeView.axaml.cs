@@ -63,30 +63,44 @@ public partial class HomeView : UserControl
                 return;
             }
 
-            var page = $"TechAuction.Views.{nvi.Tag}View";
-            var type = Type.GetType(page);
-            if (type != null)
+            if (DataContext is HomeViewModel homeViewModel)
             {
-                var pg = Activator.CreateInstance(type);
-
-                if (pg != null && sender is NavigationView navigationView)
+                var page = $"TechAuction.Views.{nvi.Tag}View";
+                var type = Type.GetType(page);
+                if (type != null)
                 {
-                    if (pg is UserControl userControl)
-                    {
-                        var viewModelType = Type.GetType($"TechAuction.ViewModels.{nvi.Tag}ViewModel");
-                        if (viewModelType != null)
-                        {
-                            var viewModel = Activator.CreateInstance(viewModelType);
-                            userControl.DataContext = viewModel;
-                        }
-                    }
+                    var pg = Activator.CreateInstance(type);
 
-                    navigationView.Content = pg;
+                    if (pg != null && sender is NavigationView navigationView)
+                    {
+                        if (pg is UserControl userControl)
+                        {
+                            var viewModelType = Type.GetType($"TechAuction.ViewModels.{nvi.Tag}ViewModel");
+                            if (viewModelType != null)
+                            {
+                                var constructor = viewModelType.GetConstructor(new[] { typeof(HomeViewModel) });
+                                object? viewModel = null;
+
+                                if (constructor != null)
+                                {
+                                    viewModel = constructor.Invoke(new object[] { homeViewModel });
+                                }
+                                else
+                                {
+                                    viewModel = Activator.CreateInstance(viewModelType);
+                                }
+
+                                userControl.DataContext = viewModel;
+                            }
+                        }
+
+                        navigationView.Content = pg;
+                    }
                 }
-            }
-            else
-            {
-                Console.WriteLine($"Type '{page}' was not found.");
+                else
+                {
+                    Console.WriteLine($"Type '{page}' was not found.");
+                }
             }
         }
     }
