@@ -1,14 +1,15 @@
-<UserControl x:Class="TechAuction.Views.AuctionView"
- xmlns="https://github.com/avaloniaui"
- xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
- xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
- xmlns:ui="using:FluentAvalonia.UI.Controls"
- xmlns:vm="using:TechAuction.ViewModels"
- d:DesignHeight="450"
- d:DesignWidth="600"
- x:DataType="vm:AuctionViewModel"
- mc:Ignorable="d">
+<UserControl
+    x:Class="TechAuction.Views.AuctionView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:FluentAvalonia.UI.Controls"
+    xmlns:vm="using:TechAuction.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="600"
+    x:DataType="vm:AuctionViewModel"
+    mc:Ignorable="d">
 
     <Design.DataContext>
         <vm:AuctionViewModel />
@@ -18,75 +19,98 @@
         <StyleInclude Source="/Assets/AuctionStyle.axaml" />
     </UserControl.Styles>
 
-    <Grid Margin="10"
-     RowDefinitions="Auto,*,Auto,*">
+    <Grid Margin="10" RowDefinitions="Auto,*,Auto,*">
 
-        <TextBlock Grid.Row="0"
-         Margin="0,0,0,5"
-         Classes="Header"
-         IsVisible="{Binding VisibleYourAuctions}"
-         Text="Your Auctions" />
+        <TextBlock
+            Grid.Row="0"
+            Margin="0,0,0,5"
+            Classes="Header"
+            IsVisible="{Binding VisibleYourAuctions}"
+            Text="Your Auctions" />
 
-        <DataGrid Grid.Row="1"
-         Margin="0,0,0,5"
-         BorderBrush="Black"
-         BorderThickness="1"
-         DoubleTapped="YourAuctions_DoubleTapped"
-         IsReadOnly="True"
-         IsVisible="{Binding VisibleYourAuctions}"
-         ItemsSource="{Binding YourAuctions}"
-         SelectionMode="Single"
-         VerticalScrollBarVisibility="Auto">
+        <TextBlock
+            Grid.Row="1"
+            IsVisible="{Binding LoadingAuctions}"
+            Text="Loading auctions, please wait..." />
+
+        <DataGrid
+            Grid.Row="1"
+            Margin="0,0,0,5"
+            BorderBrush="Black"
+            BorderThickness="1"
+            DoubleTapped="YourAuctions_DoubleTapped"
+            IsReadOnly="True"
+            IsVisible="{Binding VisibleYourAuctions}"
+            ItemsSource="{Binding YourAuctions}"
+            SelectionMode="Single"
+            VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding Vehicle.Maker}"
-                 Header="Maker" />
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding Vehicle.Model}"
-                 Header="Model" />
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding Vehicle.ModelYear}"
-                 Header="Year" />
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding Vehicle.Mileage, StringFormat='{}{0:N0} Km'}"
-                 Header="Mileage" />
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding EndDate, StringFormat='{}{0:dd-MM-yyyy}'}"
-                 Header="Closing" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Vehicle.Maker}"
+                    Header="Maker" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Vehicle.Model}"
+                    Header="Model" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Vehicle.ModelYear}"
+                    Header="Year" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Vehicle.Mileage, StringFormat='{}{0:N0} Km'}"
+                    Header="Mileage" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding EndDate, StringFormat='{}{0:dd-MM-yyyy}'}"
+                    Header="Closing" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <TextBlock Grid.Row="2"
-         Margin="0,0,0,5"
-         Classes="Header"
-         IsVisible="{Binding VisibleAuctions}"
-         Text="Current Auctions" />
+        <TextBlock
+            Grid.Row="2"
+            Margin="0,0,0,5"
+            Classes="Header"
+            IsVisible="{Binding VisibleAuctions}"
+            Text="Current Auctions" />
 
-        <DataGrid Grid.Row="3"
-         BorderBrush="Black"
-         BorderThickness="1"
-         DoubleTapped="Auctions_DoubleTapped"
-         IsReadOnly="True"
-         IsVisible="{Binding VisibleAuctions}"
-         ItemsSource="{Binding Auctions}"
-         SelectionMode="Single"
-         VerticalScrollBarVisibility="Auto">
+        <TextBlock
+            Grid.Row="3"
+            IsVisible="{Binding LoadingAuctions}"
+            Text="Loading auctions, please wait..." />
+
+        <DataGrid
+            Grid.Row="3"
+            BorderBrush="Black"
+            BorderThickness="1"
+            DoubleTapped="Auctions_DoubleTapped"
+            IsReadOnly="True"
+            IsVisible="{Binding VisibleAuctions}"
+            ItemsSource="{Binding Auctions}"
+            SelectionMode="Single"
+            VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding Vehicle.Maker}"
-                 Header="Maker" />
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding Vehicle.Model}"
-                 Header="Model" />
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding Vehicle.ModelYear}"
-                 Header="Year" />
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding Vehicle.Mileage, StringFormat='{}{0:N0} Km'}"
-                 Header="Mileage" />
-                <DataGridTextColumn Width="*"
-                 Binding="{Binding EndDate, StringFormat='{}{0:dd-MM-yyyy}'}"
-                 Header="Closing" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Vehicle.Maker}"
+                    Header="Maker" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Vehicle.Model}"
+                    Header="Model" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Vehicle.ModelYear}"
+                    Header="Year" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Vehicle.Mileage, StringFormat='{}{0:N0} Km'}"
+                    Header="Mileage" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding EndDate, StringFormat='{}{0:dd-MM-yyyy}'}"
+                    Header="Closing" />
             </DataGrid.Columns>
         </DataGrid>
 

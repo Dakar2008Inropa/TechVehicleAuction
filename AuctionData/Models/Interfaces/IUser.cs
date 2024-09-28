@@ -3,6 +3,6 @@
 public interface IUser
 {
     string? UserName { get; set; }
-    ushort PostalCode { get; set; }
+    string? PostalCode { get; set; }
     string ToString();
 }

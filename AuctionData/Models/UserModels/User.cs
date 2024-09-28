@@ -5,7 +5,7 @@ namespace AuctionData.Models.UserModels;
 public abstract class User : Base, IUser
 {
     public string? UserName { get; set; }
-    public ushort PostalCode { get; set; }
+    public string? PostalCode { get; set; }
     public string? Discriminator { get; set; }
     public int BaseId { get; set; }
 

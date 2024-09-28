@@ -541,6 +541,7 @@ namespace TechAuction.ViewModels
                         TrunkHeight = TrunkHeight.GetValueOrDefault(),
                         TrunkWidth = TrunkWidth.GetValueOrDefault(),
                         TrunkLength = TrunkLength.GetValueOrDefault(),
+                        SeatCapacity = PassengerCarSeatCapacity.GetValueOrDefault(),
                         RequireCommercialLicense = RequireCommercialLicense,
                         Discriminator = "PrivatePassengerCar",
                         IsofixMounts = IsofixMounts
@@ -552,6 +553,7 @@ namespace TechAuction.ViewModels
                         TrunkHeight = TrunkHeight.GetValueOrDefault(),
                         TrunkWidth = TrunkWidth.GetValueOrDefault(),
                         TrunkLength = TrunkLength.GetValueOrDefault(),
+                        SeatCapacity = PassengerCarSeatCapacity.GetValueOrDefault(),
                         RequireCommercialLicense = RequireCommercialLicense,
                         RollCage = RollCage,
                         FireExtinguisher = FireExtinguisher,
