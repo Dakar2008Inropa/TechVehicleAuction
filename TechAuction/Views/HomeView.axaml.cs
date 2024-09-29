@@ -36,7 +36,7 @@ public partial class HomeView : UserControl
                     Title = "Logout",
                     Header = "Logout",
                     SubHeader = "Are you sure you want to logout?",
-                    Content = $"Height: {ownerWindow!.Height} Width: {ownerWindow!.Width} \nYou will be logged out of the application.",
+                    Content = $"You will be logged out of the application.",
                     IconSource = new SymbolIconSource { Symbol = Symbol.Save },
                     FooterVisibility = TaskDialogFooterVisibility.Never,
                     Buttons =

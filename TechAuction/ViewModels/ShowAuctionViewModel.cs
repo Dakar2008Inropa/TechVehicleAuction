@@ -4,12 +4,14 @@ using AuctionData.Models.UserModels;
 using AuctionData.Models.VehicleModels;
 using Avalonia;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Threading;
+using System.Threading.Tasks;
 using TechAuction.Utilities;
 
 namespace TechAuction.ViewModels
@@ -508,7 +510,7 @@ namespace TechAuction.ViewModels
             }
         }
 
-        private void MakeABidCommand()
+        private async void MakeABidCommand()
         {
             AuctionBids newBid = new AuctionBids
             {
@@ -516,17 +518,31 @@ namespace TechAuction.ViewModels
                 BidAmount = NextBidStart
             };
 
-            if(Database.Auction.CreateAuctionBid(newBid, GetCurrentUserId(), Auction.Id))
+            await MakeABidAsync(newBid);
+        }
+
+        private async Task MakeABidAsync(AuctionBids auctionbid)
+        {
+            try
             {
                 ShowThanksText = true;
                 ShowMakeABid = false;
                 ShowMakeABidBtn = false;
                 ShowCancelBidBtn = false;
+
+                int currentUserId = await Task.Run(() => GetCurrentUserId());
+
+                await Task.Run(() => Database.Auction.CreateAuctionBid(auctionbid, currentUserId, Auction!.Id));
+
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    SetData(Database.Auction.GetAuction(Auction!.Id));
+                });
             }
-
-            Thread.Sleep(5000);
-
-            SetData(Database.Auction.GetAuction(Auction.Id));
+            finally
+            {
+                ShowThanksText = false;
+            }
         }
 
         private static int GetCurrentUserId()

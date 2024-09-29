@@ -56,12 +56,14 @@ namespace AuctionData.Models.Database
                             auctionBidQuery.Append($@"INSERT INTO {DatabaseTables.AuctionBids} ");
                             auctionBidQuery.Append($@"({nameof(AuctionModels.AuctionBids.AuctionId)},");
                             auctionBidQuery.Append($@"{nameof(AuctionModels.AuctionBids.BidderId)},");
+                            auctionBidQuery.Append($@"{nameof(AuctionModels.AuctionBids.BaseId)},");
                             auctionBidQuery.Append($@"{nameof(AuctionModels.AuctionBids.BidAmount)})");
 
                             auctionBidQuery.Append($@" VALUES ");
 
                             auctionBidQuery.Append($@"(@{nameof(AuctionModels.AuctionBids.AuctionId)},");
                             auctionBidQuery.Append($@"@{nameof(AuctionModels.AuctionBids.BidderId)},");
+                            auctionBidQuery.Append($@"@{nameof(AuctionModels.AuctionBids.BaseId)},");
                             auctionBidQuery.Append($@"@{nameof(AuctionModels.AuctionBids.BidAmount)});");
 
                             int baseId = Base.InsertIntoBase(con, trans);
