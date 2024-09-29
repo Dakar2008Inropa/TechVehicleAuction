@@ -7,6 +7,7 @@ using DynamicData;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -119,10 +120,10 @@ namespace TechAuction.ViewModels
                 await Dispatcher.UIThread.InvokeAsync(() => 
                 {
                     YourAuctions.Clear();
-                    YourAuctions.AddRange(userAuctions);
+                    YourAuctions.AddRange(userAuctions.DistinctBy(x => x.Id));
 
                     Auctions.Clear();
-                    Auctions.AddRange(auctions);
+                    Auctions.AddRange(auctions.DistinctBy(x => x.Id));
 
                     VisibleYourAuctions = YourAuctions.Count > 0;
                     VisibleAuctions = Auctions.Count > 0;
