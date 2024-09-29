@@ -12,4 +12,4 @@ TVA benytter sig af følgende teknologier
 * [C# 12](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-12)
 * [.NET 8.0](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-8/overview)
 ## Screenshots
-![alt text](https://github.com/Dakar2008Inropa/TechVehicleAuction/blob/master/Blob/Login.jpg =100x100)
+![alt text](https://github.com/Dakar2008Inropa/TechVehicleAuction/blob/master/Blob/Login.jpg | height=100)
