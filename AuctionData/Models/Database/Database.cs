@@ -224,9 +224,10 @@ namespace AuctionData.Models.Database
             BEGIN
                 CREATE TABLE {DatabaseTables.Users} (
                     {nameof(UserModels.User.Id)} INT PRIMARY KEY IDENTITY(1,1),
-                    {nameof(UserModels.User.PostalCode)} NVARCHAR(50),
+                    {nameof(UserModels.User.PostalCode)} VARCHAR(50) NULL,
                     {nameof(UserModels.User.UserName)} NVARCHAR(255),
-                    {nameof(UserModels.User.Discriminator)} NVARCHAR(50),
+                    {nameof(UserModels.User.ProfileImage)} VARCHAR(MAX) NULL,
+                    {nameof(UserModels.User.Discriminator)} VARCHAR(100),
                     {nameof(UserModels.User.BaseId)} INT FOREIGN KEY REFERENCES {DatabaseTables.Base}({nameof(Models.Base.Id)})
                 );
             END

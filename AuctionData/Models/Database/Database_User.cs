@@ -157,6 +157,8 @@ namespace AuctionData.Models.Database
                                     user.Id = (int)reader[nameof(UserModels.User.Id)];
                                     user.UserName = reader[nameof(UserModels.User.UserName)].ToString();
                                     user.Discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
+                                    user.PostalCode = reader[nameof(UserModels.User.PostalCode)].ToString();
+                                    user.ProfileImage = reader[nameof(UserModels.User.ProfileImage)].ToString();
                                     user.BaseId = (int)reader[nameof(UserModels.User.BaseId)];
                                     user.CreatedAt = (DateTime)reader[nameof(Models.Base.CreatedAt)];
                                     user.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)];

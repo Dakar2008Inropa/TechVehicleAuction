@@ -1,0 +1,170 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <StackPanel Spacing="10">
+                <TextBlock Classes="BigBold" Text="BMW M5 (2010)" />
+                <TextBlock Classes="BigNormal" Text="Closing 12-12-2022" />
+                <Button
+                    HorizontalAlignment="Stretch"
+                    Classes="GreenBtn"
+                    Content="Login" />
+
+                <Button
+                    HorizontalAlignment="Stretch"
+                    Classes="LightBlueBtn"
+                    Content="Cancel btn" />
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="TextBlock.Headline">
+        <Setter Property="FontSize" Value="25" />
+    </Style>
+
+    <Style Selector="Label.Mainlabel">
+        <Setter Property="Width" Value="110" />
+    </Style>
+
+    <Style Selector="TextBox.Mainbox">
+        <Setter Property="Width" Value="300" />
+    </Style>
+
+    <Style Selector="TextBox.Smallbox">
+        <Setter Property="Width" Value="100" />
+        <Setter Property="TextAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="NumericUpDown.Mainnumber">
+        <Setter Property="Width" Value="300" />
+    </Style>
+
+    <Style Selector="ComboBox">
+        <Setter Property="Width" Value="300" />
+    </Style>
+
+    <Style Selector="Button.GreenBtn">
+        <Setter Property="Background" Value="#128715" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.GreenBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#1da91d" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.BlueBtn">
+        <Setter Property="Background" Value="#012045" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.BlueBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#003d87" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.GreyBtn">
+        <Setter Property="Background" Value="#bcbcbc" />
+        <Setter Property="Foreground" Value="#000" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.GreyBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#cecece" />
+        <Setter Property="Foreground" Value="#000" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.OrangeBtn">
+        <Setter Property="Background" Value="#ff7600" />
+        <Setter Property="Foreground" Value="#000" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.OrangeBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#ffb100" />
+        <Setter Property="Foreground" Value="#000" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.LightBlueBtn">
+        <Setter Property="Background" Value="#006eff" />
+        <Setter Property="Foreground" Value="#fff" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.LightBlueBtn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#0098ff" />
+        <Setter Property="Foreground" Value="#fff" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="DataGridColumnHeader">
+        <Setter Property="Background" Value="#005b9e" />
+        <Setter Property="Foreground" Value="#FFF" />
+        <Setter Property="FontFamily" Value="Verdana" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="BorderBrush" Value="#000" />
+        <Setter Property="BorderThickness" Value="0 0 0 1" />
+    </Style>
+
+    <Style Selector="DataGridRow:selected">
+        <Setter Property="Background" Value="#2d3a43" />
+        <Setter Property="Foreground" Value="#FFF" />
+    </Style>
+
+    <Style Selector="DataGridRow:pointerover">
+        <Setter Property="Background" Value="#2d3a43" />
+        <Setter Property="Foreground" Value="#FFF" />
+    </Style>
+
+</Styles>

@@ -25,6 +25,7 @@
     <AvaloniaXaml Remove="Assets\SetForSaleStyle.axaml" />
     <AvaloniaXaml Remove="Assets\ShowAuctionStyle.axaml" />
     <AvaloniaXaml Remove="Assets\UploadImageStyle.axaml" />
+    <AvaloniaXaml Remove="Assets\UserProfileStyle.axaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,5 +83,11 @@
   <ItemGroup>
     <ProjectReference Include="..\AuctionData\AuctionData.csproj" />
     <ProjectReference Include="..\Logging\Logging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Update="Assets\UserProfileStyle.axaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
   </ItemGroup>
 </Project>
