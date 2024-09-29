@@ -11,3 +11,5 @@ TVA benytter sig af følgende teknologier
 * [MS SQL](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 * [C# 12](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-12)
 * [.NET 8.0](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-8/overview)
+## Screenshots
+![alt text](https://github.com/Dakar2008Inropa/TechVehicleAuction/blob/master/Blob/Login.jpg)
