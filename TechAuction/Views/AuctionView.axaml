@@ -22,19 +22,19 @@
     <Grid Margin="10" RowDefinitions="Auto,*,Auto,*">
 
         <TextBlock
-            Grid.Row="0"
+            Grid.Row="{Binding YourAuctionTextRowId}"
             Margin="0,0,0,5"
             Classes="Header"
             IsVisible="{Binding VisibleYourAuctions}"
             Text="Your Auctions" />
 
         <TextBlock
-            Grid.Row="1"
+            Grid.Row="{Binding YourAuctionGridRowId}"
             IsVisible="{Binding LoadingAuctions}"
             Text="Loading auctions, please wait..." />
 
         <DataGrid
-            Grid.Row="1"
+            Grid.Row="{Binding YourAuctionGridRowId}"
             Margin="0,0,0,5"
             BorderBrush="Black"
             BorderThickness="1"
@@ -69,19 +69,19 @@
         </DataGrid>
 
         <TextBlock
-            Grid.Row="2"
+            Grid.Row="{Binding AuctionTextRowId}"
             Margin="0,0,0,5"
             Classes="Header"
             IsVisible="{Binding VisibleAuctions}"
             Text="Current Auctions" />
 
         <TextBlock
-            Grid.Row="3"
+            Grid.Row="{Binding AuctionGridRowId}"
             IsVisible="{Binding LoadingAuctions}"
             Text="Loading auctions, please wait..." />
 
         <DataGrid
-            Grid.Row="3"
+            Grid.Row="{Binding AuctionGridRowId}"
             BorderBrush="Black"
             BorderThickness="1"
             DoubleTapped="Auctions_DoubleTapped"

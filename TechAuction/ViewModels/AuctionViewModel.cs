@@ -19,6 +19,11 @@ namespace TechAuction.ViewModels
         private bool _VisibleAuctions;
         private bool _VisibleYourAuctions;
 
+        private int _YourAuctionTextRowId;
+        private int _YourAuctionGridRowId;
+        private int _AuctionTextRowId;
+        private int _AuctionGridRowId;
+
         private bool _LoadingAuctions;
 
         public HomeViewModel? Parent { get; set; }
@@ -43,6 +48,32 @@ namespace TechAuction.ViewModels
             get => _LoadingAuctions;
             set => this.RaiseAndSetIfChanged(ref _LoadingAuctions, value);
         }
+
+        public int YourAuctionTextRowId
+        {
+            get => _YourAuctionTextRowId;
+            set => this.RaiseAndSetIfChanged(ref _YourAuctionTextRowId, value);
+        }
+
+        public int YourAuctionGridRowId
+        {
+            get => _YourAuctionGridRowId;
+            set => this.RaiseAndSetIfChanged(ref _YourAuctionGridRowId, value);
+        }
+
+        public int AuctionTextRowId
+        {
+            get => _AuctionTextRowId;
+            set => this.RaiseAndSetIfChanged(ref _AuctionTextRowId, value);
+        }
+
+        public int AuctionGridRowId
+        {
+            get => _AuctionGridRowId;
+            set => this.RaiseAndSetIfChanged(ref _AuctionGridRowId, value);
+        }
+
+
 
         public AuctionViewModel()
         {
@@ -95,6 +126,19 @@ namespace TechAuction.ViewModels
 
                     VisibleYourAuctions = YourAuctions.Count > 0;
                     VisibleAuctions = Auctions.Count > 0;
+
+                    if(VisibleYourAuctions)
+                    {
+                        YourAuctionTextRowId = 0;
+                        YourAuctionGridRowId = 1;
+                        AuctionTextRowId = 2;
+                        AuctionGridRowId = 3;
+                    }
+                    else
+                    {
+                        AuctionTextRowId = 0;
+                        AuctionGridRowId = 1;
+                    }
                 });
             }
             finally

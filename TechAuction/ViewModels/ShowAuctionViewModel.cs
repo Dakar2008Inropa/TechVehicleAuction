@@ -1,9 +1,15 @@
+using AuctionData.Models.AuctionModels;
+using AuctionData.Models.Database;
+using AuctionData.Models.UserModels;
 using AuctionData.Models.VehicleModels;
+using Avalonia;
 using Avalonia.Media.Imaging;
 using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
+using System.Threading;
 using TechAuction.Utilities;
 
 namespace TechAuction.ViewModels
@@ -49,6 +55,8 @@ namespace TechAuction.ViewModels
         private string? _TruckLoadCapacity;
 
         private string? _ClosingDate;
+        private decimal _CurrentBidDecimal;
+        private decimal _NextBidStart;
         private string? _CurrentBid;
         private ObservableCollection<Bitmap>? _Images;
 
@@ -57,9 +65,19 @@ namespace TechAuction.ViewModels
         private bool _ShowBus;
         private bool _ShowTruck;
 
+        private bool _ShowMakeABid;
+
+        private string? _MakeABidBtnText;
+        private bool _ShowCancelBidBtn;
+        private bool _ShowMakeABidBtn;
+
+        private bool _ShowThanksText;
+
+
+
         public HomeViewModel? Parent { get; set; }
 
-        public AuctionData.Models.AuctionModels.Auction? Auction { get; }
+        public AuctionData.Models.AuctionModels.Auction? Auction { get; set; }
 
         public string? CarTitle
         {
@@ -277,22 +295,85 @@ namespace TechAuction.ViewModels
             set => this.RaiseAndSetIfChanged(ref _Images, value);
         }
 
+        public decimal CurrentBidDecimal
+        {
+            get => _CurrentBidDecimal;
+            set => this.RaiseAndSetIfChanged(ref _CurrentBidDecimal, value);
+        }
+
+        public decimal NextBidStart
+        {
+            get => _NextBidStart;
+            set => this.RaiseAndSetIfChanged(ref _NextBidStart, value);
+        }
+
+        public bool ShowMakeABid
+        {
+            get => _ShowMakeABid;
+            set => this.RaiseAndSetIfChanged(ref _ShowMakeABid, value);
+        }
+
+        public string? MakeABidBtnText
+        {
+            get => _MakeABidBtnText;
+            set => this.RaiseAndSetIfChanged(ref _MakeABidBtnText, value);
+        }
+
+        public bool ShowCancelBidBtn
+        {
+            get => _ShowCancelBidBtn;
+            set => this.RaiseAndSetIfChanged(ref _ShowCancelBidBtn, value);
+        }
+
+        public bool ShowMakeABidBtn
+        {
+            get => _ShowMakeABidBtn;
+            set => this.RaiseAndSetIfChanged(ref _ShowMakeABidBtn, value);
+        }
+
+        public bool ShowThanksText
+        {
+            get => _ShowThanksText;
+            set => this.RaiseAndSetIfChanged(ref _ShowThanksText, value);
+        }
+
+        public ReactiveCommand<Unit, Unit>? ShowMakeABidCmd { get; }
+
+        public ReactiveCommand<Unit, Unit>? MakeABidCmd { get; }
+
 
 
         public ShowAuctionViewModel()
         {
+            ShowMakeABidCmd = ReactiveCommand.Create(ShowMakeABidCommand);
+            MakeABidCmd = ReactiveCommand.Create(MakeABidCommand);
         }
 
         public ShowAuctionViewModel(AuctionData.Models.AuctionModels.Auction? auctionData, HomeViewModel parent)
         {
-            Auction = auctionData;
+            SetData(auctionData);
             Parent = parent;
+            ShowMakeABidCmd = ReactiveCommand.Create(ShowMakeABidCommand);
+            MakeABidCmd = ReactiveCommand.Create(MakeABidCommand);
+        }
+
+        private void SetData(Auction? auction)
+        {
+            Auction = auction;
             CarTitle = $"{Auction!.Vehicle.Maker} {Auction!.Vehicle.Model} ({Auction!.Vehicle.ModelYear})";
             ClosingDate = Auction!.EndDate.ToString("dd-MM-yyyy");
             if (Auction.Bids != null && Auction.Bids.Any())
+            {
                 CurrentBid = $"DKK {Auction.Bids.Max(x => x.BidAmount).ToString("N2")},-";
+                CurrentBidDecimal = Auction.Bids.Max(x => x.BidAmount);
+                NextBidStart = Auction.Bids.Max(x => x.BidAmount) + 1;
+            }
             else
+            {
                 CurrentBid = $"There is no bids...";
+                CurrentBidDecimal = 0;
+                NextBidStart = Auction.MinimumAmount;
+            }
             Images = new ObservableCollection<Bitmap>(GetImages(Auction!.Vehicle!.VehicleImages!));
 
             Maker = Auction.Vehicle.Maker;
@@ -312,6 +393,19 @@ namespace TechAuction.ViewModels
             ShowProfessionalPassengerCar = false;
             ShowTruck = false;
             ShowBus = false;
+            ShowMakeABid = false;
+
+            ShowThanksText = false;
+
+            ShowMakeABidBtn = true;
+            ShowCancelBidBtn = false;
+
+            MakeABidBtnText = "Make a bid";
+
+            if (GetCurrentUserId() == Auction.SellerId)
+            {
+                ShowMakeABidBtn = false;
+            }
 
             if (Auction.Vehicle is PrivatePassengerCar ppc)
             {
@@ -394,6 +488,54 @@ namespace TechAuction.ViewModels
                 bitmaps.Add(Helper.Vehicle.Base64ToBitmap(vehicle.Image!));
             }
             return bitmaps;
+        }
+
+        private void ShowMakeABidCommand()
+        {
+            if (ShowMakeABid)
+            {
+                MakeABidBtnText = "Make a bid";
+                ShowCancelBidBtn = false;
+                ShowMakeABidBtn = true;
+                ShowMakeABid = false;
+            }
+            else
+            {
+                ShowMakeABid = true;
+                MakeABidBtnText = "Cancel bid";
+                ShowCancelBidBtn = true;
+                ShowMakeABidBtn = false;
+            }
+        }
+
+        private void MakeABidCommand()
+        {
+            AuctionBids newBid = new AuctionBids
+            {
+                AuctionId = Auction!.Id,
+                BidAmount = NextBidStart
+            };
+
+            if(Database.Auction.CreateAuctionBid(newBid, GetCurrentUserId(), Auction.Id))
+            {
+                ShowThanksText = true;
+                ShowMakeABid = false;
+                ShowMakeABidBtn = false;
+                ShowCancelBidBtn = false;
+            }
+
+            Thread.Sleep(5000);
+
+            SetData(Database.Auction.GetAuction(Auction.Id));
+        }
+
+        private static int GetCurrentUserId()
+        {
+            string? currentU = (string?)Application.Current!.Resources["CurrentUser"];
+
+            User currentUser = Database.User.GetUser(currentU);
+
+            return currentUser.Id;
         }
     }
 }

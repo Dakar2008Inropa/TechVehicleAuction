@@ -119,7 +119,7 @@ namespace AuctionData.Models.Database
 
                         auctionQuery.Append($@"{DatabaseTables.Auctions} a ");
                         auctionQuery.Append($@"LEFT JOIN {DatabaseTables.Base} b ON a.{nameof(AuctionModels.Auction.BaseId)} = b.{nameof(Models.Base.Id)} ");
-                        auctionQuery.Append($@"LEFT JOIN {DatabaseTables.AuctionBids} bids ON a.{nameof(AuctionModels.Auction.Id)} = bids.{nameof(AuctionModels.AuctionBids.AuctionId)}");
+                        auctionQuery.Append($@"LEFT JOIN {DatabaseTables.AuctionBids} bids ON a.{nameof(AuctionModels.Auction.Id)} = bids.{nameof(AuctionModels.AuctionBids.AuctionId)} ");
 
                         auctionQuery.Append($@"WHERE a.{nameof(AuctionModels.Auction.Id)} = @{nameof(AuctionModels.Auction.Id)}");
 
