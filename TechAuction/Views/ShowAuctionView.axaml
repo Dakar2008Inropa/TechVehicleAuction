@@ -1,15 +1,14 @@
-<UserControl
-    x:Class="TechAuction.Views.ShowAuctionView"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:FluentAvalonia.UI.Controls"
-    xmlns:vm="using:TechAuction.ViewModels"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    x:DataType="vm:ShowAuctionViewModel"
-    mc:Ignorable="d">
+<UserControl x:Class="TechAuction.Views.ShowAuctionView"
+ xmlns="https://github.com/avaloniaui"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:ui="using:FluentAvalonia.UI.Controls"
+ xmlns:vm="using:TechAuction.ViewModels"
+ d:DesignHeight="450"
+ d:DesignWidth="800"
+ x:DataType="vm:ShowAuctionViewModel"
+ mc:Ignorable="d">
 
     <Design.DataContext>
         <vm:ShowAuctionViewModel />
@@ -19,76 +18,81 @@
         <StyleInclude Source="/Assets/ShowAuctionStyle.axaml" />
     </UserControl.Styles>
 
-    <Grid Margin="10" RowDefinitions="Auto Auto Auto *">
+    <Grid Margin="10"
+     RowDefinitions="Auto Auto Auto *">
 
-        <Grid
-            Grid.Row="0"
-            Margin="0,0,0,15"
-            ColumnDefinitions="* *">
+        <Grid Grid.Row="0"
+         Margin="0,0,0,15"
+         ColumnDefinitions="* *">
 
-            <TextBlock
-                Grid.Column="0"
-                Classes="BigBold"
-                Text="{Binding CarTitle}" />
+            <TextBlock Grid.Column="0"
+             Classes="BigBold"
+             Text="{Binding CarTitle}" />
 
-            <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
-                <TextBlock Classes="BigNormal" Text="Closing " />
-                <TextBlock Classes="BigNormal" Text="{Binding ClosingDate}" />
+            <WrapPanel Grid.Column="1"
+             HorizontalAlignment="Right">
+                <TextBlock Classes="BigNormal"
+                 Text="Closing " />
+                <TextBlock Classes="BigNormal"
+                 Text="{Binding ClosingDate}" />
             </WrapPanel>
 
         </Grid>
 
-        <Grid
-            Grid.Row="1"
-            Margin="0,0,0,20"
-            ColumnDefinitions="* *">
+        <Grid Grid.Row="1"
+         Margin="0,0,0,20"
+         ColumnDefinitions="* *">
 
-            <TextBlock
-                Grid.Column="0"
-                Classes="BigNormal"
-                Text="Auction Info" />
+            <TextBlock Grid.Column="0"
+             Classes="BigNormal"
+             Text="Auction Info" />
 
-            <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
-                <TextBlock Classes="BigNormal" Text="Current Bid: " />
-                <TextBlock Classes="BigBold" Text="{Binding CurrentBid}" />
+            <WrapPanel Grid.Column="1"
+             HorizontalAlignment="Right">
+                <TextBlock Classes="BigNormal"
+                 Text="Current Bid: " />
+                <TextBlock Classes="BigBold"
+                 Text="{Binding CurrentBid}" />
             </WrapPanel>
 
         </Grid>
 
-        <Grid
-            Grid.Row="2"
-            Margin="0,0,0,10"
-            ColumnDefinitions="* *">
+        <Grid Grid.Row="2"
+         Margin="0,0,0,10"
+         ColumnDefinitions="* *">
 
-            <Panel
-                Grid.Column="0"
-                MaxWidth="450"
-                MaxHeight="250"
-                HorizontalAlignment="Left">
+            <Panel Grid.Column="0"
+             MaxWidth="450"
+             MaxHeight="250"
+             HorizontalAlignment="Left">
 
-                <Border BorderBrush="Black" BorderThickness="1">
-                    <Carousel Name="AuctionSlide" ItemsSource="{Binding Images}">
+                <Border BorderBrush="Black"
+                 BorderThickness="1">
+                    <Carousel Name="AuctionSlide"
+                     ItemsSource="{Binding Images}">
                         <Carousel.PageTransition>
                             <CompositePageTransition>
-                                <PageSlide Orientation="Horizontal" Duration="0:00:00.250" />
+                                <PageSlide Orientation="Horizontal"
+                                 Duration="0:00:00.250" />
                             </CompositePageTransition>
                         </Carousel.PageTransition>
                         <Carousel.ItemTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding}" Stretch="UniformToFill" />
+                                <Image Source="{Binding}"
+                                 Stretch="UniformToFill" />
                             </DataTemplate>
                         </Carousel.ItemTemplate>
                     </Carousel>
                 </Border>
 
                 <Panel Margin="20">
-                    <Button
-                        HorizontalAlignment="Right"
-                        Background="White"
-                        Click="NextImage">
+                    <Button HorizontalAlignment="Right"
+                     Background="White"
+                     Click="NextImage">
                         &gt;
                     </Button>
-                    <Button Background="White" Click="PrevImage">
+                    <Button Background="White"
+                     Click="PrevImage">
                         &lt;
                     </Button>
                 </Panel>
@@ -96,324 +100,282 @@
             </Panel>
             <StackPanel Grid.Column="1">
                 <WrapPanel HorizontalAlignment="Right">
-                    <Button
-                        Margin="0,0,10,0"
-                        Classes="BlueBtn"
-                        Click="GoBack_Click"
-                        Content="Go Back" />
-                    <Button
-                        Classes="GreenBtn"
-                        Command="{Binding ShowMakeABidCmd}"
-                        Content="{Binding MakeABidBtnText}"
-                        IsVisible="{Binding ShowMakeABidBtn}" />
-                    <Button
-                        Classes="RedBtn"
-                        Command="{Binding ShowMakeABidCmd}"
-                        Content="{Binding MakeABidBtnText}"
-                        IsVisible="{Binding ShowCancelBidBtn}" />
+                    <Button Margin="0,0,10,0"
+                     Classes="BlueBtn"
+                     Click="GoBack_Click"
+                     Content="Go Back" />
+                    <Button Classes="GreenBtn"
+                     Command="{Binding ShowMakeABidCmd}"
+                     Content="{Binding MakeABidBtnText}"
+                     IsVisible="{Binding ShowMakeABidBtn}" />
+                    <Button Classes="RedBtn"
+                     Command="{Binding ShowMakeABidCmd}"
+                     Content="{Binding MakeABidBtnText}"
+                     IsVisible="{Binding ShowCancelBidBtn}" />
                 </WrapPanel>
-                <Border
-                    Margin="10"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    IsVisible="{Binding ShowMakeABid}">
+                <Border Margin="10"
+                 BorderBrush="Black"
+                 BorderThickness="1"
+                 IsVisible="{Binding ShowMakeABid}">
                     <StackPanel>
-                        <NumericUpDown
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            FormatString="C2"
-                            Maximum="500000000"
-                            Minimum="{Binding NextBidStart}"
-                            Value="{Binding NextBidStart}" />
-                        <Button
-                            Margin="5"
-                            HorizontalAlignment="Stretch"
-                            Classes="GreenBtn"
-                            Command="{Binding MakeABidCmd}"
-                            Content="Place Bid" />
+                        <NumericUpDown Margin="5"
+                         HorizontalAlignment="Stretch"
+                         FormatString="C2"
+                         Maximum="500000000"
+                         Minimum="{Binding CurrentBidDecimal}"
+                         Value="{Binding NextBidStart}" />
+                        <Button Margin="5"
+                         HorizontalAlignment="Stretch"
+                         Classes="GreenBtn"
+                         Command="{Binding MakeABidCmd}"
+                         Content="Place Bid" />
                     </StackPanel>
                 </Border>
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    FontWeight="Bold"
-                    Foreground="Red"
-                    IsVisible="{Binding ShowThanksText}"
-                    Text="Thanks for your bid..." />
+                <TextBlock HorizontalAlignment="Center"
+                 FontWeight="Bold"
+                 Foreground="Red"
+                 IsVisible="{Binding ShowThanksText}"
+                 Text="Thanks for your bid..." />
             </StackPanel>
 
         </Grid>
 
-        <Grid Grid.Row="3" ColumnDefinitions="* * *">
-            <Panel Name="VehicleInfoContainer" Grid.Column="0">
+        <Grid Grid.Row="3"
+         ColumnDefinitions="* * *">
+            <Panel Name="VehicleInfoContainer"
+             Grid.Column="0">
                 <StackPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Maker:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Maker:" />
                         <TextBlock Text="{Binding Maker}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Model:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Model:" />
                         <TextBlock Text="{Binding Model}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Mileage:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Mileage:" />
                         <TextBlock Text="{Binding Mileage}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="License Plate:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="License Plate:" />
                         <TextBlock Text="{Binding LicensePlate}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Model Year:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Model Year:" />
                         <TextBlock Text="{Binding ModelYear}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Towing Hitch:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Towing Hitch:" />
                         <TextBlock Text="{Binding TowingHitch}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="License Type:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="License Type:" />
                         <TextBlock Text="{Binding LicenseType}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Engine Size:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Engine Size:" />
                         <TextBlock Text="{Binding EngineSize}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Fuel Type:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Fuel Type:" />
                         <TextBlock Text="{Binding FuelType}" />
                     </WrapPanel>
                 </StackPanel>
             </Panel>
-            <Panel Name="VehicleInfoContainerTwo" Grid.Column="1">
+            <Panel Name="VehicleInfoContainerTwo"
+             Grid.Column="1">
                 <StackPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Fuel Economy:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Fuel Economy:" />
                         <TextBlock Text="{Binding FuelEconomy}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Fuel Capacity:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Fuel Capacity:" />
                         <TextBlock Text="{Binding FuelCapacity}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Energy Class:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Energy Class:" />
                         <TextBlock Text="{Binding EnergyClass}" />
                     </WrapPanel>
                 </StackPanel>
             </Panel>
-            <Panel
-                Name="PrivatePassengerCarContainer"
-                Grid.Column="2"
-                IsVisible="{Binding ShowPrivatePassengerCar}">
+            <Panel Name="PrivatePassengerCarContainer"
+             Grid.Column="2"
+             IsVisible="{Binding ShowPrivatePassengerCar}">
                 <StackPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Trunk Capacity:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Trunk Capacity:" />
                         <TextBlock Text="{Binding TrunkDimensions}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Seat Capacity:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Seat Capacity:" />
                         <TextBlock Text="{Binding SeatCapacity}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Require Commercial License:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Require Commercial License:" />
                         <TextBlock Text="{Binding RequireCommercialLicense}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="ISO Fix Mount:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="ISO Fix Mount:" />
                         <TextBlock Text="{Binding IsoFixMount}" />
                     </WrapPanel>
                 </StackPanel>
             </Panel>
-            <Panel
-                Name="ProfessionalPassengerCarContainer"
-                Grid.Column="2"
-                IsVisible="{Binding ShowProfessionalPassengerCar}">
+            <Panel Name="ProfessionalPassengerCarContainer"
+             Grid.Column="2"
+             IsVisible="{Binding ShowProfessionalPassengerCar}">
                 <StackPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Trunk Capacity:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Trunk Capacity:" />
                         <TextBlock Text="{Binding TrunkDimensions}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Seat Capacity:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Seat Capacity:" />
                         <TextBlock Text="{Binding SeatCapacity}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Require Commercial License:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Require Commercial License:" />
                         <TextBlock Text="{Binding RequireCommercialLicense}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Rollcage:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Rollcage:" />
                         <TextBlock Text="{Binding Rollcage}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Fire Extinguisher:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Fire Extinguisher:" />
                         <TextBlock Text="{Binding FireExtinguisher}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Racing Seat:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Racing Seat:" />
                         <TextBlock Text="{Binding RacingSeat}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Racing Harness:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Racing Harness:" />
                         <TextBlock Text="{Binding RacingHarness}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Load Capacity:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Load Capacity:" />
                         <TextBlock Text="{Binding LoadCapacity}" />
                     </WrapPanel>
                 </StackPanel>
             </Panel>
-            <Panel
-                Name="BusContainer"
-                Grid.Column="2"
-                IsVisible="{Binding ShowBus}">
+            <Panel Name="BusContainer"
+             Grid.Column="2"
+             IsVisible="{Binding ShowBus}">
                 <StackPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Height:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Height:" />
                         <TextBlock Text="{Binding HeavyHeight}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Weight:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Weight:" />
                         <TextBlock Text="{Binding HeavyWeigth}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Length:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Length:" />
                         <TextBlock Text="{Binding HeavyLength}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Seating Capacity:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Seating Capacity:" />
                         <TextBlock Text="{Binding BusSeatingCapacity}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Sleeping Capacity:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Sleeping Capacity:" />
                         <TextBlock Text="{Binding BusSleepingCapacity}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Toilet:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Toilet:" />
                         <TextBlock Text="{Binding Toilet}" />
                     </WrapPanel>
                 </StackPanel>
             </Panel>
-            <Panel
-                Name="TruckContainer"
-                Grid.Column="2"
-                IsVisible="{Binding ShowTruck}">
+            <Panel Name="TruckContainer"
+             Grid.Column="2"
+             IsVisible="{Binding ShowTruck}">
                 <StackPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Height:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Height:" />
                         <TextBlock Text="{Binding HeavyHeight}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Weight:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Weight:" />
                         <TextBlock Text="{Binding HeavyWeigth}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Length:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Length:" />
                         <TextBlock Text="{Binding HeavyLength}" />
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,8">
-                        <TextBlock
-                            Padding="0,0,5,0"
-                            FontWeight="Bold"
-                            Text="Loading Capacity:" />
+                        <TextBlock Padding="0,0,5,0"
+                         FontWeight="Bold"
+                         Text="Loading Capacity:" />
                         <TextBlock Text="{Binding TruckLoadCapacity}" />
                     </WrapPanel>
                 </StackPanel>

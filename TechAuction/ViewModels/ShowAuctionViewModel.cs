@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
-using System.Threading;
 using System.Threading.Tasks;
 using TechAuction.Utilities;
 
@@ -373,7 +372,7 @@ namespace TechAuction.ViewModels
             else
             {
                 CurrentBid = $"There is no bids...";
-                CurrentBidDecimal = 0;
+                CurrentBidDecimal = Auction.MinimumAmount;
                 NextBidStart = Auction.MinimumAmount;
             }
             Images = new ObservableCollection<Bitmap>(GetImages(Auction!.Vehicle!.VehicleImages!));

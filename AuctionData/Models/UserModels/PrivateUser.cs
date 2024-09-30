@@ -1,7 +1,4 @@
-﻿using AuctionData.Models.UserModels.Generators;
-using AuctionData.Models.UserModels.ValidationAttributes;
-
-namespace AuctionData.Models.UserModels;
+﻿namespace AuctionData.Models.UserModels;
 
 public class PrivateUser : User
 {
@@ -12,22 +9,5 @@ public class PrivateUser : User
     public PrivateUser()
     {
 
-    }
-
-    public PrivateUser(string cprNumber)
-    {
-        CPRNumber = string.Empty;
-        if (CprNumberValidation.IsValidCpr(cprNumber))
-        {
-            CPRNumber = cprNumber;
-        }
-        else
-        {
-            var cpr = CprGenerator.GenerateCPR();
-            if (CprNumberValidation.IsValidCpr(cpr))
-            {
-                CPRNumber = cpr;
-            }
-        }
     }
 }

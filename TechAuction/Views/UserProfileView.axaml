@@ -1,14 +1,14 @@
-<UserControl
-    x:Class="TechAuction.Views.UserProfileView"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:TechAuction.ViewModels"
-    d:DesignHeight="800"
-    d:DesignWidth="800"
-    x:DataType="vm:UserProfileViewModel"
-    mc:Ignorable="d">
+<UserControl x:Class="TechAuction.Views.UserProfileView"
+ xmlns="https://github.com/avaloniaui"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+ xmlns:local="clr-namespace:TechAuction.Utilities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:vm="using:TechAuction.ViewModels"
+ d:DesignHeight="800"
+ d:DesignWidth="800"
+ x:DataType="vm:UserProfileViewModel"
+ mc:Ignorable="d">
 
     <Design.DataContext>
         <vm:UserProfileViewModel />
@@ -20,345 +20,466 @@
 
     <Grid RowDefinitions="Auto Auto *">
 
-        <Grid Grid.Row="0" ColumnDefinitions="Auto *">
-            <Border
-                Grid.Column="0"
-                MaxWidth="90"
-                MaxHeight="90"
-                Margin="10"
-                BorderBrush="Black"
-                BorderThickness="1">
-                <Image Source="{Binding ProfileImage}" Stretch="UniformToFill" />
+        <Grid Grid.Row="0"
+         ColumnDefinitions="Auto *"
+         IsVisible="{Binding DataReady}">
+            <Border Grid.Column="0"
+             MaxWidth="90"
+             MaxHeight="90"
+             Margin="10"
+             BorderBrush="Black"
+             BorderThickness="1">
+                <Image Source="{Binding ProfileImage}"
+                 Stretch="UniformToFill" />
             </Border>
-            <TextBlock
-                Grid.Column="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                FontFamily="Verdana"
-                FontSize="22"
-                FontWeight="Bold"
-                LetterSpacing="5"
-                Text="{Binding TitleHeader}" />
+            <TextBlock Grid.Column="1"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Center"
+             FontFamily="Verdana"
+             FontSize="22"
+             FontWeight="Bold"
+             LetterSpacing="5"
+             Text="{Binding TitleHeader}" />
         </Grid>
 
         <Grid Grid.Row="1">
-            <Grid HorizontalAlignment="Stretch" ColumnDefinitions="* * * *">
-                <Button
-                    Grid.Column="0"
-                    Margin="10,0,10,0"
-                    HorizontalAlignment="Stretch"
-                    Classes="OrangeBtn"
-                    Command="{Binding ShowDetailsCmd}"
-                    Content="Details" />
-                <Button
-                    Grid.Column="1"
-                    Margin="0,0,10,0"
-                    HorizontalAlignment="Stretch"
-                    Classes="LightBlueBtn"
-                    Command="{Binding ShowAuctionsCmd}"
-                    Content="My Auctions" />
-                <Button
-                    Grid.Column="2"
-                    Margin="0,0,10,0"
-                    HorizontalAlignment="Stretch"
-                    Classes="GreenBtn"
-                    Command="{Binding ShowChangePasswordCmd}"
-                    Content="Change Password" />
-                <Button
-                    Grid.Column="3"
-                    Margin="0,0,10,0"
-                    HorizontalAlignment="Stretch"
-                    Classes="BlueBtn"
-                    Command="{Binding ShowUpdateProfileCmd}"
-                    Content="Update Profile" />
+            <Grid HorizontalAlignment="Stretch"
+             ColumnDefinitions="* * * *"
+             IsVisible="{Binding DataReady}">
+                <Button Grid.Column="0"
+                 Margin="10,0,10,0"
+                 HorizontalAlignment="Stretch"
+                 Classes="OrangeBtn"
+                 Command="{Binding ShowDetailsCmd}"
+                 Content="Details" />
+                <Button Grid.Column="1"
+                 Margin="0,0,10,0"
+                 HorizontalAlignment="Stretch"
+                 Classes="LightBlueBtn"
+                 Command="{Binding ShowAuctionsCmd}"
+                 Content="My Auctions" />
+                <Button Grid.Column="2"
+                 Margin="0,0,10,0"
+                 HorizontalAlignment="Stretch"
+                 Classes="GreenBtn"
+                 Command="{Binding ShowChangePasswordCmd}"
+                 Content="Change Password" />
+                <Button Grid.Column="3"
+                 Margin="0,0,10,0"
+                 HorizontalAlignment="Stretch"
+                 Classes="BlueBtn"
+                 Command="{Binding ShowUpdateProfileCmd}"
+                 Content="Update Profile" />
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2"
+         IsVisible="{Binding DataReady}">
 
-            <StackPanel Name="AuctionsPanel" IsVisible="{Binding ShowAuctions}">
-                <DataGrid
-                    MaxHeight="300"
-                    Margin="10,10,10,5"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding Auctions}"
-                    SelectionMode="Single"
-                    VerticalScrollBarVisibility="Auto">
+            <StackPanel Name="AuctionsPanel"
+             IsVisible="{Binding ShowAuctions}">
+
+                <DataGrid Name="AuctionsDataGrid"
+                 MaxHeight="130"
+                 Margin="10,10,10,5"
+                 BorderBrush="Black"
+                 BorderThickness="1"
+                 IsReadOnly="True"
+                 ItemsSource="{Binding Auctions}"
+                 SelectedItem="{Binding SelectedAuction}"
+                 SelectionMode="Single"
+                 VerticalScrollBarVisibility="Auto">
                     <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Vehicle.Maker}"
-                            Header="Maker" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Vehicle.Model}"
-                            Header="Model" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Vehicle.ModelYear}"
-                            Header="Year" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Vehicle.Mileage, StringFormat='{}{0:N0} Km'}"
-                            Header="Mileage" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding EndDate, StringFormat='{}{0:dd-MM-yyyy}'}"
-                            Header="Closing" />
+                        <DataGridTextColumn Width="*"
+                         Binding="{Binding Vehicle.Maker}"
+                         Header="Maker" />
+                        <DataGridTextColumn Width="*"
+                         Binding="{Binding Vehicle.Model}"
+                         Header="Model" />
+                        <DataGridTextColumn Width="*"
+                         Binding="{Binding Vehicle.ModelYear}"
+                         Header="Year" />
+                        <DataGridTextColumn Width="*"
+                         Binding="{Binding Vehicle.Mileage, StringFormat='{}{0:N0} Km'}"
+                         Header="Mileage" />
+                        <DataGridTextColumn Width="*"
+                         Binding="{Binding EndDate, StringFormat='{}{0:dd-MM-yyyy}'}"
+                         Header="Closing" />
                     </DataGrid.Columns>
                 </DataGrid>
-                <Border
-                    Margin="10,10,10,0"
-                    Background="AliceBlue"
-                    BorderBrush="Black"
-                    BorderThickness="1">
-                    <StackPanel
-                        Margin="10"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                        <TextBlock
-                            Margin="0,0,5,0"
-                            HorizontalAlignment="Center"
-                            FontFamily="Verdana"
-                            FontSize="18"
-                            FontWeight="Bold"
-                            Text="Current Winning Bid:" />
-                        <TextBlock
-                            Margin="0,0,0,15"
-                            HorizontalAlignment="Center"
-                            FontFamily="Verdana"
-                            FontSize="18"
-                            Text="120.000,- DKK" />
-                        <TextBlock
-                            Margin="0,0,5,0"
-                            HorizontalAlignment="Center"
-                            FontFamily="Verdana"
-                            FontSize="18"
-                            FontWeight="Bold"
-                            Text="Current Winner:" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            FontFamily="Verdana"
-                            FontSize="18"
-                            Text="Daniel Andersen" />
+
+                <Border Name="CurrentWinningBid"
+                 Margin="10,10,10,0"
+                 Background="AliceBlue"
+                 BorderBrush="Black"
+                 BorderThickness="1"
+                 IsVisible="{Binding ShowAuctionBid}">
+
+                    <StackPanel Margin="10"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center">
+
+                        <TextBlock Margin="0,0,5,0"
+                         HorizontalAlignment="Center"
+                         FontFamily="Verdana"
+                         FontSize="18"
+                         FontWeight="Bold"
+                         Text="Current Winning Bid:" />
+
+                        <TextBlock Margin="0,0,0,15"
+                         HorizontalAlignment="Center"
+                         FontFamily="Verdana"
+                         FontSize="18"
+                         Text="{Binding CurrentWinningBid}" />
+
+                        <TextBlock Margin="0,0,5,0"
+                         HorizontalAlignment="Center"
+                         FontFamily="Verdana"
+                         FontSize="18"
+                         FontWeight="Bold"
+                         Text="Current Winner:" />
+
+                        <TextBlock HorizontalAlignment="Center"
+                         FontFamily="Verdana"
+                         FontSize="18"
+                         Text="{Binding CurrentWinner}" />
+
                     </StackPanel>
+
+                </Border>
+
+                <Border Name="BidHistoryContainer"
+                 Margin="10,15,10,10"
+                 BorderBrush="Black"
+                 BorderThickness="1"
+                 IsVisible="{Binding ShowAuctionBid}">
+
+                    <StackPanel>
+                        <Border Padding="5"
+                         Background="DarkRed"
+                         BorderBrush="Black"
+                         BorderThickness="0,0,0,1">
+                            <TextBlock FontFamily="Verdana"
+                             FontSize="16"
+                             FontWeight="Bold"
+                             Foreground="White"
+                             LetterSpacing="2"
+                             Text="Bid History" />
+                        </Border>
+
+                        <DataGrid Name="AuctionBidsGrid"
+                         MaxHeight="170"
+                         IsReadOnly="True"
+                         ItemsSource="{Binding AuctionBids}"
+                         SelectionMode="Single"
+                         VerticalScrollBarVisibility="Auto">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="*"
+                                 Binding="{Binding Bidder.UserName}"
+                                 Header="Bidder" />
+                                <DataGridTextColumn Width="*"
+                                 Binding="{Binding CreatedAt, StringFormat='{}{0:dd-MM-yyyy}'}}"
+                                 Header="Bid Date" />
+                                <DataGridTextColumn Width="*"
+                                 Binding="{Binding BidAmount, StringFormat='{}{0:N2} DKK'}"
+                                 Header="Bid" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                    </StackPanel>
+
                 </Border>
             </StackPanel>
 
-            <StackPanel
-                Name="DetailsPanel"
-                Margin="10"
-                IsVisible="{Binding ShowDetails}">
+            <StackPanel Name="DetailsPanel"
+             Margin="10"
+             IsVisible="{Binding ShowDetails}">
+
                 <WrapPanel Margin="0,0,0,10">
-                    <TextBlock
-                        Margin="0,0,3,0"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Text="Username:" />
-                    <TextBlock
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        Text="{Binding Username}" />
+                    <TextBlock Margin="0,0,3,0"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold"
+                     Text="Username:" />
+
+                    <TextBlock FontFamily="Verdana"
+                     FontSize="12"
+                     Text="{Binding Username}" />
+
                 </WrapPanel>
+
                 <WrapPanel Margin="0,0,0,10">
-                    <TextBlock
-                        Margin="0,0,3,0"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Text="Postalcode:" />
-                    <TextBlock
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        Text="{Binding Postalcode}" />
+                    <TextBlock Margin="0,0,3,0"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold"
+                     Text="Postalcode:" />
+
+                    <TextBlock FontFamily="Verdana"
+                     FontSize="12"
+                     Text="{Binding Postalcode}" />
+
                 </WrapPanel>
-                <WrapPanel Margin="0,0,0,10" IsVisible="{Binding IsPrivateUser}">
-                    <TextBlock
-                        Margin="0,0,3,0"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Text="CPR Number:" />
-                    <TextBlock
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        Text="{Binding CPRNumber}" />
+
+                <WrapPanel Margin="0,0,0,10"
+                 IsVisible="{Binding IsPrivateUser}">
+                    <TextBlock Margin="0,0,3,0"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold"
+                     Text="CPR Number:" />
+
+                    <TextBlock FontFamily="Verdana"
+                     FontSize="12"
+                     Text="{Binding CPRNumber}" />
+
                 </WrapPanel>
-                <WrapPanel Margin="0,0,0,10" IsVisible="{Binding IsCorporateUser}">
-                    <TextBlock
-                        Margin="0,0,3,0"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Text="CVR Number:" />
-                    <TextBlock
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        Text="{Binding CVRNumber}" />
+
+                <WrapPanel Margin="0,0,0,10"
+                 IsVisible="{Binding IsCorporateUser}">
+                    <TextBlock Margin="0,0,3,0"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold"
+                     Text="CVR Number:" />
+
+                    <TextBlock FontFamily="Verdana"
+                     FontSize="12"
+                     Text="{Binding CVRNumber}" />
+
                 </WrapPanel>
-                <WrapPanel Margin="0,0,0,10" IsVisible="{Binding IsCorporateUser}">
-                    <TextBlock
-                        Margin="0,0,3,0"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Text="Credit:" />
-                    <TextBlock
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        Text="{Binding Credit}" />
+
+                <WrapPanel Margin="0,0,0,10"
+                 IsVisible="{Binding IsCorporateUser}">
+                    <TextBlock Margin="0,0,3,0"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold"
+                     Text="Credit:" />
+
+                    <TextBlock FontFamily="Verdana"
+                     FontSize="12"
+                     Text="{Binding Credit}" />
+
                 </WrapPanel>
             </StackPanel>
 
-            <StackPanel
-                Name="ChangePasswordPanel"
-                Width="400"
-                Margin="10,25,10,10"
-                IsVisible="{Binding ShowChangePassword}">
-                <WrapPanel Margin="0,0,0,10" HorizontalAlignment="Center">
-                    <Label
-                        Width="135"
-                        Margin="0,5,10,0"
-                        Content="Old Password:"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold" />
-                    <TextBox
-                        Name="OldPasswordField"
-                        Width="250"
-                        PasswordChar="•"
-                        TextAlignment="Center" />
+            <StackPanel Name="ChangePasswordPanel"
+             Width="400"
+             Margin="10,25,10,10"
+             IsVisible="{Binding ShowChangePassword}">
+
+                <WrapPanel Margin="0,0,0,10"
+                 HorizontalAlignment="Center">
+                    <Label Width="135"
+                     Margin="0,5,10,0"
+                     Content="Old Password:"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold" />
+
+                    <TextBox Name="OldPasswordField"
+                     Width="250"
+                     local:FocusBehavior.IsFocused="{Binding IsOldPasswordFocused}"
+                     PasswordChar="•"
+                     Text="{Binding OldPassword}"
+                     TextAlignment="Center" />
+
                 </WrapPanel>
-                <WrapPanel Margin="0,0,0,10" HorizontalAlignment="Center">
-                    <Label
-                        Width="135"
-                        Margin="0,5,10,0"
-                        Content="New Password:"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold" />
-                    <TextBox
-                        Name="NewPasswordField"
-                        Width="250"
-                        PasswordChar="•"
-                        TextAlignment="Center" />
+
+                <WrapPanel Margin="0,0,0,10"
+                 HorizontalAlignment="Center">
+
+                    <Label Width="135"
+                     Margin="0,5,10,0"
+                     Content="New Password:"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold" />
+
+                    <TextBox Name="NewPasswordField"
+                     Width="250"
+                     PasswordChar="•"
+                     Text="{Binding NewPassword}"
+                     TextAlignment="Center" />
+
                 </WrapPanel>
-                <WrapPanel Margin="0,0,0,15" HorizontalAlignment="Center">
-                    <Label
-                        Width="135"
-                        Margin="0,5,10,0"
-                        Content="Confirm Password:"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold" />
-                    <TextBox
-                        Name="ConfirmPasswordField"
-                        Width="250"
-                        PasswordChar="•"
-                        TextAlignment="Center" />
+
+                <WrapPanel Margin="0,0,0,15"
+                 HorizontalAlignment="Center">
+
+                    <Label Width="135"
+                     Margin="0,5,10,0"
+                     Content="Confirm Password:"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold" />
+
+                    <TextBox Name="ConfirmPasswordField"
+                     Width="250"
+                     PasswordChar="•"
+                     Text="{Binding ConfirmPassword}"
+                     TextAlignment="Center" />
+
                 </WrapPanel>
-                <Button
-                    Name="ChangePasswordBtn"
-                    HorizontalAlignment="Stretch"
-                    Classes="BlueBtn"
-                    Content="Change Password" />
+
+                <Button Name="ChangePasswordBtn"
+                 HorizontalAlignment="Stretch"
+                 Classes="BlueBtn"
+                 Command="{Binding ChangePasswordCmd}"
+                 Content="Change Password" />
+
+                <TextBlock Margin="0,10,0,0"
+                 HorizontalAlignment="Center"
+                 FontFamily="Verdana"
+                 FontSize="12"
+                 FontWeight="Bold"
+                 Foreground="{Binding PasswordChangedTextColor}"
+                 IsVisible="{Binding PasswordChanged}"
+                 Text="{Binding PasswordChangedText}" />
+
             </StackPanel>
 
-            <StackPanel
-                Name="UpdateProfilePanel"
-                Width="400"
-                Margin="10,25,10,10"
-                IsVisible="{Binding ShowUpdateProfile}">
-                <WrapPanel Margin="0,0,0,10" HorizontalAlignment="Center">
-                    <Label
-                        Width="135"
-                        Margin="0,5,10,0"
-                        Content="Postalcode:"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold" />
-                    <TextBox
-                        Name="PostalCodeField"
-                        Width="250"
-                        PasswordChar="•" />
+            <StackPanel Name="UpdateProfilePanel"
+             Width="400"
+             Margin="10,25,10,10"
+             IsVisible="{Binding ShowUpdateProfile}">
+
+                <WrapPanel Margin="0,0,0,10"
+                 HorizontalAlignment="Center">
+
+                    <Label Width="135"
+                     Margin="0,5,10,0"
+                     Content="Postalcode:"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold" />
+
+                    <TextBox Name="PostalCodeField"
+                     Width="250"
+                     local:FocusBehavior.IsFocused="{Binding IsPostalCodeFocused}"
+                     Text="{Binding Postalcode}" />
+
                 </WrapPanel>
-                <WrapPanel Margin="0,0,0,10" HorizontalAlignment="Center">
-                    <Label
-                        Width="135"
-                        Margin="0,5,10,0"
-                        Content="Change Image:"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold" />
-                    <Button
-                        Name="ChangeProfileImageBtn"
-                        Width="250"
-                        Classes="BlueBtn"
-                        Content="Select Image" />
+
+                <WrapPanel Margin="0,0,0,10"
+                 HorizontalAlignment="Center">
+                    <Label Width="135"
+                     Margin="0,5,10,0"
+                     Content="Change Image:"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold" />
+
+                    <Button Name="ChangeProfileImageBtn"
+                     Width="250"
+                     Classes="BlueBtn"
+                     Command="{Binding UploadProfileImageCommand}"
+                     Content="Select Image" />
+
                 </WrapPanel>
+
                 <StackPanel HorizontalAlignment="Center">
-                    <Label
-                        Margin="0,5,10,0"
-                        Content="Current Image:"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold" />
-                    <Border
-                        MaxWidth="90"
-                        MaxHeight="90"
-                        Margin="10"
-                        BorderBrush="Black"
-                        BorderThickness="1">
-                        <Image Source="{Binding ProfileImage}" Stretch="UniformToFill" />
+
+                    <Label Margin="0,5,10,0"
+                     Content="Current Image:"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold" />
+
+                    <Border MaxWidth="90"
+                     MaxHeight="90"
+                     Margin="10"
+                     BorderBrush="Black"
+                     BorderThickness="1">
+
+                        <Image Source="{Binding ProfileImage}"
+                         Stretch="UniformToFill" />
+
                     </Border>
                 </StackPanel>
-                <WrapPanel Margin="0,15,0,10" HorizontalAlignment="Center">
-                    <Label
-                        Width="135"
-                        Margin="0,5,10,0"
-                        Content="CPR Number:"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold" />
-                    <TextBox Name="CPRNumberField" Width="250" />
+
+                <WrapPanel Margin="0,15,0,10"
+                 HorizontalAlignment="Center"
+                 IsVisible="{Binding IsPrivateUser}">
+
+                    <Label Width="135"
+                     Margin="0,5,10,0"
+                     Content="CPR Number:"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold" />
+
+                    <TextBox Name="CPRNumberField"
+                     Width="250"
+                     Text="{Binding CPRNumber}" />
+
                 </WrapPanel>
-                <WrapPanel Margin="0,0,0,10" HorizontalAlignment="Center">
-                    <Label
-                        Width="135"
-                        Margin="0,5,10,0"
-                        Content="CVR Number:"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold" />
-                    <TextBox Name="CVRNumberField" Width="250" />
+
+                <WrapPanel Margin="0,0,0,10"
+                 HorizontalAlignment="Center"
+                 IsVisible="{Binding IsCorporateUser}">
+
+                    <Label Width="135"
+                     Margin="0,5,10,0"
+                     Content="CVR Number:"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold" />
+
+                    <TextBox Name="CVRNumberField"
+                     Width="250"
+                     Text="{Binding CVRNumber}" />
+
                 </WrapPanel>
-                <WrapPanel Margin="0,0,0,10" HorizontalAlignment="Center">
-                    <Label
-                        Width="135"
-                        Margin="0,5,10,0"
-                        Content="Credit:"
-                        FontFamily="Verdana"
-                        FontSize="12"
-                        FontWeight="Bold" />
-                    <NumericUpDown
-                        Name="CreditField"
-                        Width="250"
-                        FormatString="C2"
-                        Maximum="5000000"
-                        Minimum="0"
-                        Value="1" />
+
+                <WrapPanel Margin="0,0,0,10"
+                 HorizontalAlignment="Center"
+                 IsVisible="{Binding IsCorporateUser}">
+
+                    <Label Width="135"
+                     Margin="0,5,10,0"
+                     Content="Credit:"
+                     FontFamily="Verdana"
+                     FontSize="12"
+                     FontWeight="Bold" />
+
+                    <NumericUpDown Name="CreditField"
+                     Width="250"
+                     FormatString="C2"
+                     Maximum="5000000"
+                     Minimum="0"
+                     Value="{Binding CreditDecimal}" />
+
                 </WrapPanel>
-                <Button
-                    Name="UpdateProfileBtn"
-                    HorizontalAlignment="Stretch"
-                    Classes="GreenBtn"
-                    Content="Update Profile" />
+
+                <Button Name="UpdateProfileBtn"
+                 HorizontalAlignment="Stretch"
+                 Classes="GreenBtn"
+                 Command="{Binding UpdateProfileCommand}"
+                 Content="Update Profile" />
+
+                <TextBlock Margin="0,10,0,0"
+                 HorizontalAlignment="Center"
+                 Foreground="{Binding ProfileUpdatedTextColor}"
+                 IsVisible="{Binding ProfileUpdated}"
+                 Text="{Binding ProfileUpdatedText}" />
+
             </StackPanel>
 
         </Grid>
+
+        <StackPanel Grid.Row="2"
+         HorizontalAlignment="Center"
+         VerticalAlignment="Center"
+         IsVisible="{Binding LoadingData}">
+
+            <TextBlock FontFamily="Verdana"
+             FontSize="25"
+             FontWeight="Bold"
+             Text="Loading Data..." />
+
+        </StackPanel>
 
     </Grid>
 

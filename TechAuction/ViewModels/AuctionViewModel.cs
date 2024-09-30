@@ -99,7 +99,7 @@ namespace TechAuction.ViewModels
 
         private async Task LoadAuctionsAsync()
         {
-            if(!await _loadSemaphore.WaitAsync(0))
+            if (!await _loadSemaphore.WaitAsync(0))
             {
                 log.Info("LoadAuctionAsync is already in progress. Skipping this call.");
                 return;
@@ -111,24 +111,24 @@ namespace TechAuction.ViewModels
 
                 string? currentU = (string?)Application.Current!.Resources["CurrentUser"];
 
-                User currentUSer = await Task.Run(() => Database.User.GetUser(currentU));
+                User currentUser = await Task.Run(() => Database.User.GetUser(currentU));
 
-                List<Auction> userAuctions = await Task.Run(() => Database.Auction.GetAuctions(currentUSer.Id));
+                List<Auction> userAuctions = await Task.Run(() => Database.Auction.GetAuctions(currentUser.Id));
 
                 List<Auction> auctions = await Task.Run(() => Database.Auction.GetAuctions());
 
-                await Dispatcher.UIThread.InvokeAsync(() => 
+                await Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     YourAuctions.Clear();
                     YourAuctions.AddRange(userAuctions.DistinctBy(x => x.Id));
 
                     Auctions.Clear();
-                    Auctions.AddRange(auctions.DistinctBy(x => x.Id));
+                    Auctions.AddRange(auctions.Where(x => x.SellerId != currentUser.Id).DistinctBy(x => x.Id));
 
                     VisibleYourAuctions = YourAuctions.Count > 0;
                     VisibleAuctions = Auctions.Count > 0;
 
-                    if(VisibleYourAuctions)
+                    if (VisibleYourAuctions)
                     {
                         YourAuctionTextRowId = 0;
                         YourAuctionGridRowId = 1;

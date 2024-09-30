@@ -19,7 +19,7 @@ public partial class SplashScreen : Window
     const string LoadingText4 = "Updating the bid signs... Getting ready for excitement!";
     const string LoadingText5 = "Bringing out the gavel... The auction is about to start!";
 
-    const int DefaultTextDelay = 1500;
+    const int DefaultTextDelay = 500;
 
     public SplashScreen()
     {

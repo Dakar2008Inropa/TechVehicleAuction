@@ -10,101 +10,93 @@
   <Class Name="AuctionData.Models.AuctionModels.Auction">
     <Position X="2.5" Y="3.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAEAQAEAAAAEEAAAAAAAAAAgBAAEgQAAAAAAAAAACAA=</HashCode>
+      <HashCode>AAAAAAEAAQAEAAAAAAAAAAAgBAAAgQAACAAAAAAACAA=</HashCode>
       <FileName>Models\AuctionModels\Auction.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.AuctionModels.AuctionBids">
     <Position X="5" Y="3.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAgAAgAAAQAEAAAAAEAACAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAgAAAAAAQAEAAAAAAAAAAAAAAAAAAQACAAAAAAAAAA=</HashCode>
       <FileName>Models\AuctionModels\AuctionBids.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.UserModels.User">
     <Position X="8" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEIAAAAAAAAAAAAAACAQAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAIAAAAAAAGIAAAAAAAAAAAAAAACQAAAAAAAAA=</HashCode>
       <FileName>Models\UserModels\User.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="AuctionData.Models.VehicleModels.Vehicle">
     <Position X="11.75" Y="3.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAIAAEABAAAAABgMAAIAAAAAAAgAADAAGAgACAAQAIA=</HashCode>
+      <HashCode>AAIAAEAJAAAAABwMAAIAAAAAAAgAADAAGAgACAAQAIA=</HashCode>
       <FileName>Models\VehicleModels\Vehicle.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.VehicleModels.VehicleImage">
     <Position X="14.75" Y="3.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgBAAAAAAAAAAABAAAghAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAgBAAAAAAAAAAAAAAAghAACAAAAAAAAAA=</HashCode>
       <FileName>Models\VehicleModels\VehicleImage.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.UserModels.CorporateUser">
     <Position X="5" Y="6.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAFgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAABAAAAAAAAAAAFgAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\UserModels\CorporateUser.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.UserModels.PrivateUser">
     <Position X="8" Y="6.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>CAABAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\UserModels\PrivateUser.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.VehicleModels.HeavyVehicle">
     <Position X="8.75" Y="8.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAABAAAAAAMAAAAAABAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAABAAAAAAMAAAAAABABCAAgAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\VehicleModels\HeavyVehicle.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.VehicleModels.PassengerCar">
     <Position X="14.75" Y="8.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AABAAAAAAAAAIAEMAAAAAAgAgAAAAkAAAAAAAAAQAAA=</HashCode>
+      <HashCode>AABAAAAAAAAAIAEMAAAAAAgAgAAAgkAAAAAAAAAQAAA=</HashCode>
       <FileName>Models\VehicleModels\PassengerCar.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.VehicleModels.Bus">
     <Position X="7.5" Y="11.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAQAEAAIAAAAAAAAAAgAAAAAAAAAQAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAQAEAAIAAAAAAAAAAgAAAAAEAAAQAgA=</HashCode>
       <FileName>Models\VehicleModels\Bus.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.VehicleModels.Truck">
     <Position X="10" Y="11.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAQAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAQAAAAAAAAAAAAAAAAAEAAAQAgA=</HashCode>
       <FileName>Models\VehicleModels\Truck.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.VehicleModels.PrivatePassengerCar">
     <Position X="13" Y="12.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAIAAAAQA=</HashCode>
       <FileName>Models\VehicleModels\PrivatePassengerCar.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AuctionData.Models.VehicleModels.ProfessionalPassengerCar">
     <Position X="16.5" Y="12.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAQAAAACAAAAQAAAAAAEACAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAMAQAAAACAAAAQAAAAAAEACAAAAQA=</HashCode>
       <FileName>Models\VehicleModels\ProfessionalPassengerCar.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="AuctionData.Models.Interfaces.IUser">
-    <Position X="4" Y="0.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEIAAAAAAAAAAAAAACAQAAAAAAAAA=</HashCode>
-      <FileName>Models\Interfaces\IUser.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
   <Font Name="Verdana" Size="9" />
 </ClassDiagram>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using AuctionData.Models.UserModels;
+using Microsoft.Data.SqlClient;
 using System.Text;
 
 namespace AuctionData.Models.Database
@@ -145,7 +146,7 @@ namespace AuctionData.Models.Database
                                     {
                                         user = new UserModels.CorporateUser
                                         {
-                                            Credit = (long)reader[nameof(UserModels.CorporateUser.Credit)],
+                                            Credit = Convert.ToDecimal(reader[nameof(UserModels.CorporateUser.Credit)]),
                                             CvrNumber = reader[nameof(UserModels.CorporateUser.CvrNumber)].ToString()
                                         };
                                     }
@@ -217,7 +218,7 @@ namespace AuctionData.Models.Database
                                     {
                                         user = new UserModels.CorporateUser
                                         {
-                                            Credit = (long)reader[nameof(UserModels.CorporateUser.Credit)],
+                                            Credit = Convert.ToDecimal(reader[nameof(UserModels.CorporateUser.Credit)]),
                                             CvrNumber = reader[nameof(UserModels.CorporateUser.CvrNumber)].ToString()
                                         };
                                     }
@@ -230,6 +231,7 @@ namespace AuctionData.Models.Database
                                     user.UserName = reader[nameof(UserModels.User.UserName)].ToString();
                                     user.Discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
                                     user.BaseId = (int)reader[nameof(UserModels.User.BaseId)];
+                                    user.ProfileImage = reader[nameof(UserModels.User.ProfileImage)].ToString();
                                     user.CreatedAt = (DateTime)reader[nameof(Models.Base.CreatedAt)];
                                     user.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)];
                                     user.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)];
@@ -285,7 +287,7 @@ namespace AuctionData.Models.Database
                                 {
                                     user = new UserModels.CorporateUser
                                     {
-                                        Credit = (long)reader[nameof(UserModels.CorporateUser.Credit)],
+                                        Credit = Convert.ToDecimal(reader[nameof(UserModels.CorporateUser.Credit)]),
                                         CvrNumber = reader[nameof(UserModels.CorporateUser.CvrNumber)].ToString()
                                     };
                                 }
@@ -298,6 +300,7 @@ namespace AuctionData.Models.Database
                                 user.UserName = reader[nameof(UserModels.User.UserName)].ToString();
                                 user.Discriminator = reader[nameof(UserModels.User.Discriminator)].ToString();
                                 user.BaseId = (int)reader[nameof(UserModels.User.BaseId)];
+                                user.ProfileImage = reader[nameof(UserModels.User.ProfileImage)].ToString();
                                 user.CreatedAt = (DateTime)reader[nameof(Models.Base.CreatedAt)];
                                 user.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)];
                                 user.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)];
@@ -313,6 +316,124 @@ namespace AuctionData.Models.Database
                 {
                     log.Error("Could not retrieve user", ex);
                     return null;
+                }
+            }
+            #endregion
+
+            #region Update
+            public static bool UpdatePrivateUser(PrivateUser user)
+            {
+                using (SqlConnection con = OpenNewConnection())
+                {
+                    using (SqlTransaction trans = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            StringBuilder userQuery = new StringBuilder();
+                            userQuery.AppendLine($@"BEGIN ");
+                            userQuery.Append($@"UPDATE {DatabaseTables.PrivateUser} SET ");
+                            userQuery.Append($@"{nameof(UserModels.PrivateUser.CPRNumber)} = @{nameof(UserModels.PrivateUser.CPRNumber)}");
+                            userQuery.AppendLine($@" WHERE {nameof(UserModels.PrivateUser.UserId)} = @{nameof(UserModels.PrivateUser.UserId)}");
+                            userQuery.AppendLine($@" END ");
+                            userQuery.AppendLine($@"BEGIN ");
+                            userQuery.Append($@"UPDATE {DatabaseTables.Users} SET ");
+                            userQuery.Append($@"{nameof(UserModels.PrivateUser.ProfileImage)} = @{nameof(UserModels.PrivateUser.ProfileImage)}, ");
+                            userQuery.Append($@"{nameof(UserModels.PrivateUser.PostalCode)} = @{nameof(UserModels.PrivateUser.PostalCode)}");
+                            userQuery.AppendLine($@" WHERE {nameof(UserModels.PrivateUser.Id)} = @{nameof(UserModels.PrivateUser.Id)}");
+                            userQuery.Append($@" END");
+
+                            using (SqlCommand cmd = new SqlCommand(userQuery.ToString(), con, trans))
+                            {
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.PrivateUser.CPRNumber)}", user.CPRNumber);
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.User.Id)}", user.Id);
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.PrivateUser.PostalCode)}", user.PostalCode);
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.PrivateUser.ProfileImage)}", user.ProfileImage);
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.PrivateUser.UserId)}", user.UserId);
+
+                                cmd.ExecuteNonQuery();
+                            }
+                            trans.Commit();
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("Something went wrong when trying to update private user", ex);
+                            trans.Rollback();
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            public static bool UpdateCorporatedUser(CorporateUser user)
+            {
+                using (SqlConnection con = OpenNewConnection())
+                {
+                    using (SqlTransaction trans = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            StringBuilder userQuery = new StringBuilder();
+                            userQuery.AppendLine($@"BEGIN ");
+                            userQuery.Append($@"UPDATE {DatabaseTables.CorporateUser} SET ");
+                            userQuery.Append($@"{nameof(UserModels.CorporateUser.CvrNumber)} = @{nameof(UserModels.CorporateUser.CvrNumber)}");
+                            userQuery.Append($@" WHERE {nameof(UserModels.CorporateUser.UserId)} = @{nameof(UserModels.CorporateUser.UserId)}");
+                            userQuery.AppendLine($@" END ");
+                            userQuery.AppendLine($@"BEGIN ");
+                            userQuery.Append($@"UPDATE {DatabaseTables.Users} SET ");
+                            userQuery.Append($@"{nameof(UserModels.CorporateUser.ProfileImage)} = @{nameof(UserModels.CorporateUser.ProfileImage)}, ");
+                            userQuery.Append($@"{nameof(UserModels.CorporateUser.PostalCode)} = @{nameof(UserModels.CorporateUser.PostalCode)}");
+                            userQuery.AppendLine($@" WHERE {nameof(UserModels.User.Id)} = @{nameof(UserModels.User.Id)}");
+                            userQuery.Append($@" END");
+
+                            using (SqlCommand cmd = new SqlCommand(userQuery.ToString(), con, trans))
+                            {
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.CvrNumber)}", user.CvrNumber);
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.User.Id)}", user.Id);
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.PostalCode)}", user.PostalCode);
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.ProfileImage)}", user.ProfileImage);
+                                cmd.Parameters.AddWithValue($"@{nameof(UserModels.CorporateUser.UserId)}", user.UserId);
+
+                                cmd.ExecuteNonQuery();
+                            }
+                            trans.Commit();
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error("Something went wrong when trying to update corporated user", ex);
+                            trans.Rollback();
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            public static bool ChangePassword(string username, string password)
+            {
+                using (SqlConnection con = OpenNewConnection())
+                {
+                    using (SqlTransaction trans = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            StringBuilder query = new StringBuilder();
+                            query.Append($"ALTER LOGIN {username} WITH PASSWORD = '{password}'");
+
+                            using (SqlCommand cmd = new SqlCommand(query.ToString(), con, trans))
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                            trans.Commit();
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            log.Error("Something went wrong when trying to change password", ex);
+                            return false;
+                        }
+                    }
                 }
             }
             #endregion

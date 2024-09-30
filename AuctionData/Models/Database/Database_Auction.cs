@@ -344,18 +344,19 @@ namespace AuctionData.Models.Database
 
                             while (reader.Read())
                             {
-                                AuctionModels.AuctionBids bid = new AuctionModels.AuctionBids
-                                {
-                                    Id = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.Id))),
-                                    AuctionId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.AuctionId))),
-                                    BidAmount = reader.GetDecimal(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.BidAmount))),
-                                    BidderId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.BidderId))),
-                                    BaseId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.BaseId))),
-                                    CreatedAt = reader.GetDateTime(reader.GetOrdinal(nameof(Models.Base.CreatedAt))),
-                                    UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)],
-                                    DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)],
-                                    Status = (BaseStatus)reader.GetInt32(reader.GetOrdinal(nameof(Models.Base.Status)))
-                                };
+                                AuctionModels.AuctionBids bid = new AuctionModels.AuctionBids();
+
+                                bid.Id = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.Id)));
+                                bid.AuctionId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.AuctionId)));
+                                bid.BidAmount = reader.GetDecimal(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.BidAmount)));
+                                bid.BidderId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.BidderId)));
+                                bid.BaseId = reader.GetInt32(reader.GetOrdinal(nameof(AuctionModels.AuctionBids.BaseId)));
+                                bid.CreatedAt = reader.GetDateTime(reader.GetOrdinal(nameof(Models.Base.CreatedAt)));
+                                bid.UpdatedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.UpdatedAt))) ? null : (DateTime)reader[nameof(Models.Base.UpdatedAt)];
+                                bid.DeletedAt = reader.IsDBNull(reader.GetOrdinal(nameof(Models.Base.DeletedAt))) ? null : (DateTime)reader[nameof(Models.Base.DeletedAt)];
+                                bid.Status = (BaseStatus)reader.GetInt32(reader.GetOrdinal(nameof(Models.Base.Status)));
+
+                                bid.Bidder = User.GetUser(bid.BidderId);
 
                                 bids.Add(bid);
                             }
