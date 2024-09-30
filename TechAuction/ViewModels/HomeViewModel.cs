@@ -1,4 +1,10 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using FluentAvalonia.UI.Controls;
 using ReactiveUI;
+using System.Linq;
+using TechAuction.Views;
 
 namespace TechAuction.ViewModels
 {
@@ -46,6 +52,23 @@ namespace TechAuction.ViewModels
         public void ShowAuctions()
         {
             CurrentPage = new AuctionViewModel(this);
+        }
+
+        public void UpdateSelectedNavigationViewItem(int navIndex)
+        {
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainWindow = desktop.MainWindow;
+
+                if (mainWindow != null)
+                {
+                    if(mainWindow.Content is HomeView homeview)
+                    {
+                        log.Info("Updating selected navigation view item.");
+                        homeview.UpdateSelectedNavigationViewItem(navIndex);
+                    }
+                }
+            }
         }
     }
 }

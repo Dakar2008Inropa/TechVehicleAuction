@@ -59,12 +59,16 @@ namespace TechAuction.ViewModels
             _window.WindowStartupLocation = centerWindow ? WindowStartupLocation.CenterScreen : WindowStartupLocation.Manual;
         }
 
-        public string GetWindowSize()
+        public void SetLoginLayout()
         {
             if (_window == null)
-                return string.Empty;
+                return;
 
-            return $"Width: {_window.Width}, Height: {_window.Height}";
+            _window.ExtendClientAreaChromeHints = Avalonia.Platform.ExtendClientAreaChromeHints.NoChrome;
+            _window.ExtendClientAreaTitleBarHeightHint = 0;
+            _window.ExtendClientAreaToDecorationsHint = true;
+            _window.Topmost = true;
+            _window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
     }
 }

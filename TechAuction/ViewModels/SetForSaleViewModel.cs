@@ -2,11 +2,13 @@ using AuctionData.Models.Database;
 using AuctionData.Models.UserModels;
 using AuctionData.Models.VehicleModels;
 using Avalonia;
+using Avalonia.Threading;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using System.Threading.Tasks;
 using TechAuction.Views;
 
 namespace TechAuction.ViewModels
@@ -65,7 +67,12 @@ namespace TechAuction.ViewModels
         private string? _errorText;
         private List<VehicleImage> _vehicleImages = new List<VehicleImage>();
 
-        public HomeViewModel Parent { get; set; }
+        private bool _CreateAuctionBtnEnabled;
+        private string? _CreateAuctionBtnText;
+
+        private bool _MainGridEnabled;
+
+        public HomeViewModel? Parent { get; set; }
 
 
         public int SelectedVehicleTypeIndex
@@ -506,6 +513,33 @@ namespace TechAuction.ViewModels
             }
         }
 
+        public bool CreateAuctionBtnEnabled
+        {
+            get => _CreateAuctionBtnEnabled;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _CreateAuctionBtnEnabled, value);
+            }
+        }
+
+        public string? CreateAuctionBtnText
+        {
+            get => _CreateAuctionBtnText;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _CreateAuctionBtnText, value);
+            }
+        }
+
+        public bool MainGridEnabled
+        {
+            get => _MainGridEnabled;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _MainGridEnabled, value);
+            }
+        }
+
         public ReactiveCommand<Unit, Unit>? UploadImageCmd { get; }
 
         public ReactiveCommand<Unit, Unit>? CreateAuctionCmd { get; }
@@ -522,102 +556,155 @@ namespace TechAuction.ViewModels
             vehicleWindow.Show();
         }
 
-        public void CreateAuction()
+        public async void CreateAuctionAsync()
         {
-            if (Maker == null || Model == null || LicensePlate == null)
+            await CreateAuction();
+        }
+
+        public async Task CreateAuction()
+        {
+            try
             {
-                ShowErrorText = true;
-                ErrorText = "Please fill in all fields";
-                return;
+                CreateAuctionBtnEnabled = false;
+                CreateAuctionBtnText = "Creating Auction";
+                MainGridEnabled = false;
+
+                if (Maker == null || Model == null || LicensePlate == null)
+                {
+                    ShowErrorText = true;
+                    ErrorText = "Please fill in all fields";
+                    return;
+                }
+
+                Vehicle vehicle;
+
+                switch (SelectedVehicleTypeIndex)
+                {
+                    case 0:
+                        vehicle = new PrivatePassengerCar
+                        {
+                            TrunkHeight = TrunkHeight.GetValueOrDefault(),
+                            TrunkWidth = TrunkWidth.GetValueOrDefault(),
+                            TrunkLength = TrunkLength.GetValueOrDefault(),
+                            TrunkDimensions = PassengerCar.GetTrunkCapacity(TrunkWidth.GetValueOrDefault(), TrunkHeight.GetValueOrDefault(), TrunkLength.GetValueOrDefault()),
+                            SeatCapacity = PassengerCarSeatCapacity.GetValueOrDefault(),
+                            RequireCommercialLicense = RequireCommercialLicense,
+                            Discriminator = "PrivatePassengerCar",
+                            IsofixMounts = IsofixMounts
+                        };
+                        break;
+                    case 1:
+                        vehicle = new ProfessionalPassengerCar
+                        {
+                            TrunkHeight = TrunkHeight.GetValueOrDefault(),
+                            TrunkWidth = TrunkWidth.GetValueOrDefault(),
+                            TrunkLength = TrunkLength.GetValueOrDefault(),
+                            TrunkDimensions = PassengerCar.GetTrunkCapacity(TrunkWidth.GetValueOrDefault(), TrunkHeight.GetValueOrDefault(), TrunkLength.GetValueOrDefault()),
+                            SeatCapacity = PassengerCarSeatCapacity.GetValueOrDefault(),
+                            RequireCommercialLicense = RequireCommercialLicense,
+                            RollCage = RollCage,
+                            FireExtinguisher = FireExtinguisher,
+                            RacingSeat = RacingSeat,
+                            RacingHarness = RacingHarness,
+                            Discriminator = "ProfessionalPassengerCar",
+                            LoadCapacity = ProfessionalPassengerCarLoadCapacity.GetValueOrDefault()
+                        };
+                        break;
+                    case 2:
+                        vehicle = new Bus
+                        {
+                            Height = HeavyHeight.GetValueOrDefault(),
+                            Weight = HeavyWeight.GetValueOrDefault(),
+                            Length = HeavyLength.GetValueOrDefault(),
+                            SeatingCapacity = BusSeatCapacity.GetValueOrDefault(),
+                            SleepingCapacity = BusSleepCapacity.GetValueOrDefault(),
+                            Discriminator = "Bus",
+                            Toilet = BusToilet
+                        };
+                        break;
+                    case 3:
+                        vehicle = new Truck
+                        {
+                            Height = HeavyHeight.GetValueOrDefault(),
+                            Weight = HeavyWeight.GetValueOrDefault(),
+                            Length = HeavyLength.GetValueOrDefault(),
+                            Discriminator = "Truck",
+                            LoadCapacity = TruckLoadCapacity.GetValueOrDefault()
+                        };
+                        break;
+                    default:
+                        throw new InvalidOperationException("Unknown vehicle type");
+                }
+
+                vehicle.Maker = Maker;
+                vehicle.Model = Model;
+                vehicle.Mileage = Mileage.GetValueOrDefault();
+                vehicle.LicensePlate = LicensePlate;
+                vehicle.ModelYear = ModelYear.GetValueOrDefault();
+                vehicle.Towinghitch = TowingHitch;
+                vehicle.FuelType = FuelType;
+                vehicle.FuelEconomy = FuelEconomy.GetValueOrDefault();
+                vehicle.FuelCapacity = FuelCapacity.GetValueOrDefault();
+                vehicle.EngineSize = EngineSize;
+
+                vehicle.VehicleImages = VehicleImages;
+
+                AuctionData.Models.AuctionModels.Auction auction = new AuctionData.Models.AuctionModels.Auction();
+
+                auction.MinimumAmount = MinimumAmount;
+                auction.EndDate = EndDateOffset.DateTime;
+
+                await Task.Run(() => Database.Vehicle.CreateVehicleAndAuction(vehicle, auction, GetCurrentUserId()));
+
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    Parent!.UpdateSelectedNavigationViewItem(0);
+                    Parent!.CurrentPage = new AuctionViewModel(Parent);
+                });
             }
-
-            Vehicle vehicle;
-
-            switch (SelectedVehicleTypeIndex)
+            finally
             {
-                case 0:
-                    vehicle = new PrivatePassengerCar
-                    {
-                        TrunkHeight = TrunkHeight.GetValueOrDefault(),
-                        TrunkWidth = TrunkWidth.GetValueOrDefault(),
-                        TrunkLength = TrunkLength.GetValueOrDefault(),
-                        SeatCapacity = PassengerCarSeatCapacity.GetValueOrDefault(),
-                        RequireCommercialLicense = RequireCommercialLicense,
-                        Discriminator = "PrivatePassengerCar",
-                        IsofixMounts = IsofixMounts
-                    };
-                    break;
-                case 1:
-                    vehicle = new ProfessionalPassengerCar
-                    {
-                        TrunkHeight = TrunkHeight.GetValueOrDefault(),
-                        TrunkWidth = TrunkWidth.GetValueOrDefault(),
-                        TrunkLength = TrunkLength.GetValueOrDefault(),
-                        SeatCapacity = PassengerCarSeatCapacity.GetValueOrDefault(),
-                        RequireCommercialLicense = RequireCommercialLicense,
-                        RollCage = RollCage,
-                        FireExtinguisher = FireExtinguisher,
-                        RacingSeat = RacingSeat,
-                        RacingHarness = RacingHarness,
-                        Discriminator = "ProfessionalPassengerCar",
-                        LoadCapacity = ProfessionalPassengerCarLoadCapacity.GetValueOrDefault()
-                    };
-                    break;
-                case 2:
-                    vehicle = new Bus
-                    {
-                        Height = HeavyHeight.GetValueOrDefault(),
-                        Weight = HeavyWeight.GetValueOrDefault(),
-                        Length = HeavyLength.GetValueOrDefault(),
-                        SeatingCapacity = BusSeatCapacity.GetValueOrDefault(),
-                        SleepingCapacity = BusSleepCapacity.GetValueOrDefault(),
-                        Discriminator = "Bus",
-                        Toilet = BusToilet
-                    };
-                    break;
-                case 3:
-                    vehicle = new Truck
-                    {
-                        Height = HeavyHeight.GetValueOrDefault(),
-                        Weight = HeavyWeight.GetValueOrDefault(),
-                        Length = HeavyLength.GetValueOrDefault(),
-                        Discriminator = "Truck",
-                        LoadCapacity = TruckLoadCapacity.GetValueOrDefault()
-                    };
-                    break;
-                default:
-                    throw new InvalidOperationException("Unknown vehicle type");
+                MainGridEnabled = true;
+                CreateAuctionBtnEnabled = true;
+                CreateAuctionBtnText = "Create Auction";
             }
-
-            vehicle.Maker = Maker;
-            vehicle.Model = Model;
-            vehicle.Mileage = Mileage.GetValueOrDefault();
-            vehicle.LicensePlate = LicensePlate;
-            vehicle.ModelYear = ModelYear.GetValueOrDefault();
-            vehicle.Towinghitch = TowingHitch;
-            vehicle.FuelType = FuelType;
-            vehicle.FuelEconomy = FuelEconomy.GetValueOrDefault();
-            vehicle.FuelCapacity = FuelCapacity.GetValueOrDefault();
-            vehicle.EngineSize = EngineSize;
-
-            vehicle.VehicleImages = VehicleImages;
-
-            foreach (VehicleImage image in vehicle.VehicleImages)
-            {
-                log.Info($"image.Image: {image.Image}");
-            }
-
-            AuctionData.Models.AuctionModels.Auction auction = new AuctionData.Models.AuctionModels.Auction();
-
-            auction.MinimumAmount = MinimumAmount;
-            auction.EndDate = EndDateOffset.DateTime;
-
-            Database.Vehicle.CreateVehicleAndAuction(vehicle, auction, GetCurrentUserId());
-
-            Parent.CurrentPage = new AuctionViewModel(Parent);
         }
 
         public List<FuelType> FuelTypes { get; }
+
+        public SetForSaleViewModel()
+        {
+            SelectedVehicleTypeIndex = 0;
+            IsHeavyVehicleGroupVisible = false;
+            IsBusGroupVisible = false;
+            IsTruckGroupVisible = false;
+            IsPassengerCarGroupVisible = true;
+            IsPrivatePassengerCarGroupVisible = true;
+            IsProfessionalPassengerCarGroupVisible = false;
+            Mileage = 1;
+            HeavyWeight = 1;
+            ShowErrorText = false;
+            BusSeatCapacity = 1;
+            BusSleepCapacity = 1;
+            ModelYear = 1885;
+            MinimumAmount = 1;
+            EndDateOffset = new DateTimeOffset(DateTime.Now);
+            FuelEconomy = 1;
+            FuelCapacity = 1;
+            HeavyHeight = 1;
+            HeavyLength = 1;
+            PassengerCarSeatCapacity = 1;
+            ProfessionalPassengerCarLoadCapacity = 1;
+            EngineSize = 0.7;
+            CreateAuctionBtnText = "Create Auction";
+            CreateAuctionBtnEnabled = true;
+            MainGridEnabled = true;
+            FuelTypes = Enum.GetValues(typeof(FuelType)).Cast<FuelType>().ToList();
+
+            UploadImageCmd = ReactiveCommand.Create(UploadVehicleImage);
+
+            CreateAuctionCmd = ReactiveCommand.Create(CreateAuctionAsync);
+        }
 
         public SetForSaleViewModel(HomeViewModel parent)
         {
@@ -643,11 +730,14 @@ namespace TechAuction.ViewModels
             PassengerCarSeatCapacity = 1;
             ProfessionalPassengerCarLoadCapacity = 1;
             EngineSize = 0.7;
+            CreateAuctionBtnText = "Create Auction";
+            MainGridEnabled = true;
+            CreateAuctionBtnEnabled = true;
             FuelTypes = Enum.GetValues(typeof(FuelType)).Cast<FuelType>().ToList();
 
             UploadImageCmd = ReactiveCommand.Create(UploadVehicleImage);
 
-            CreateAuctionCmd = ReactiveCommand.Create(CreateAuction);
+            CreateAuctionCmd = ReactiveCommand.Create(CreateAuctionAsync);
             Parent = parent;
         }
 

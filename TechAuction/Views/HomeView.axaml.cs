@@ -1,7 +1,11 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using FluentAvalonia.Core;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Windowing;
+using log4net;
+using Logging;
 using System;
 using TechAuction.ViewModels;
 
@@ -9,6 +13,8 @@ namespace TechAuction.Views;
 
 public partial class HomeView : UserControl
 {
+    public static readonly ILog log = Logger.GetLogger(typeof(SetForSaleViewModel));
+
     public HomeView()
     {
         InitializeComponent();
@@ -52,7 +58,17 @@ public partial class HomeView : UserControl
 
                 if (result.ToString() == "Yes")
                 {
-                    ownerWindow!.Close();
+                    if(Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                    {
+                        var mainWindow = desktop.MainWindow;
+
+                        if(mainWindow != null)
+                        {
+                            MainWindowViewModel vm = (MainWindowViewModel)mainWindow.DataContext!;
+
+                            vm.CurrentPage = new LoginViewModel(vm);
+                        }
+                    }
                 }
 
                 if (result.ToString() == "No")
@@ -103,5 +119,11 @@ public partial class HomeView : UserControl
                 }
             }
         }
+    }
+
+    public void UpdateSelectedNavigationViewItem(int navIndex)
+    {
+        log.Info("Updating selected navigation view item.");
+        TopMenu.SelectedItem = TopMenu.MenuItems.ElementAt(navIndex);
     }
 }

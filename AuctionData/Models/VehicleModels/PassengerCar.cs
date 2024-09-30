@@ -14,12 +14,7 @@
 
         protected PassengerCar()
         {
-            TrunkWidth = 1;
-            TrunkHeight = 1;
-            TrunkLength = 1;
-
             LicenseType = GetLicenseType();
-            TrunkDimensions = GetTrunkCapacity();
         }
 
         public new LicenseType GetLicenseType()
@@ -38,9 +33,9 @@
             throw new ArgumentOutOfRangeException(EngineSize.ToString(), "Engine size must be between 0.7 and 10.0 Litre");
         }
 
-        public double GetTrunkCapacity()
+        public static double GetTrunkCapacity(double trunkWidth, double trunkHeight, double trunkLength)
         {
-            double volumeCubicCm = TrunkWidth * TrunkHeight * TrunkLength;
+            double volumeCubicCm = trunkWidth * trunkHeight * trunkLength;
 
             double capacityLiters = volumeCubicCm / 1000;
 

@@ -9,7 +9,6 @@
         public PrivatePassengerCar()
         {
             LicenseType = GetLicenseType();
-            TrunkDimensions = GetTrunkCapacity();
             EnergyClass = (EnergyClass)GetEnergyClass();
         }
 

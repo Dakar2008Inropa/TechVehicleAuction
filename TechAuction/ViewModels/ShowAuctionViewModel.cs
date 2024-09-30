@@ -421,7 +421,7 @@ namespace TechAuction.ViewModels
                     SeatCapacity = $"{ppc.SeatCapacity} Seats";
                 }
                 RequireCommercialLicense = ppc.RequireCommercialLicense ? "Yes" : "No";
-                TrunkDimensions = $"{ppc.TrunkDimensions} m³";
+                TrunkDimensions = $"{ppc.TrunkDimensions} Litre";
                 IsoFixMount = ppc.IsofixMounts ? "Yes" : "No";
             }
             else if (Auction.Vehicle is ProfessionalPassengerCar prpc)
@@ -436,7 +436,7 @@ namespace TechAuction.ViewModels
                     SeatCapacity = $"{prpc.SeatCapacity} Seats";
                 }
                 RequireCommercialLicense = prpc.RequireCommercialLicense ? "Yes" : "No";
-                TrunkDimensions = $"{prpc.TrunkDimensions} m³";
+                TrunkDimensions = $"{prpc.TrunkDimensions} Litre";
 
                 Rollcage = prpc.RollCage ? "Yes" : "No";
                 FireExtinguisher = prpc.FireExtinguisher ? "Yes" : "No";

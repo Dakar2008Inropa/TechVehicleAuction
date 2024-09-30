@@ -27,6 +27,8 @@ namespace TechAuction.ViewModels
         {
             _mainWindowViewModel = main;
             _mainWindowViewModel.CenterizeWindow(true);
+            _mainWindowViewModel.SetWindowMinSize(600, 600);
+            _mainWindowViewModel.SetWindowSize(600, 600);
             CreateUserCmd = ReactiveCommand.Create(NavigateToCreateUser);
             HomePageCmd = ReactiveCommand.Create(NavigateToHome);
             ErrorText = false;

@@ -1,14 +1,15 @@
-<UserControl x:Class="TechAuction.Views.SetForSaleView"
- xmlns="https://github.com/avaloniaui"
- xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
- xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
- xmlns:utility="clr-namespace:TechAuction.Utilities.NumberConvert"
- xmlns:vm="using:TechAuction.ViewModels"
- d:DesignHeight="650"
- d:DesignWidth="950"
- x:DataType="vm:SetForSaleViewModel"
- mc:Ignorable="d">
+<UserControl
+    x:Class="TechAuction.Views.SetForSaleView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utility="clr-namespace:TechAuction.Utilities.NumberConvert"
+    xmlns:vm="using:TechAuction.ViewModels"
+    d:DesignHeight="650"
+    d:DesignWidth="950"
+    x:DataType="vm:SetForSaleViewModel"
+    mc:Ignorable="d">
 
     <Design.DataContext>
         <vm:SetForSaleViewModel />
@@ -22,137 +23,153 @@
         <StyleInclude Source="/Assets/SetForSaleStyle.axaml" />
     </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto * Auto">
+    <Grid IsEnabled="{Binding MainGridEnabled}" RowDefinitions="Auto * Auto">
 
-        <Grid Name="TitleRow"
-         Grid.Row="0"
-         ColumnDefinitions="*">
+        <Grid
+            Name="TitleRow"
+            Grid.Row="0"
+            ColumnDefinitions="*">
 
-            <TextBlock Padding="15"
-             Classes="Headline"
-             Text="Set for sale" />
+            <TextBlock
+                Padding="15"
+                Classes="Headline"
+                Text="Set for sale" />
 
         </Grid>
 
-        <Grid Name="FieldsRow"
-         Grid.Row="1"
-         Margin="10"
-         ColumnDefinitions="Auto *">
+        <Grid
+            Name="FieldsRow"
+            Grid.Row="1"
+            Margin="10"
+            ColumnDefinitions="Auto *">
 
-            <StackPanel Grid.Column="0"
-             Margin="0,0,55,0">
+            <StackPanel Grid.Column="0" Margin="0,0,55,0">
 
                 <WrapPanel Margin="0,0,0,10">
 
-                    <Label Margin="0,2,0,0"
-                     Classes="Mainlabel"
-                     Content="Maker" />
-                    <TextBox Name="MakerField"
-                     AttachedToVisualTree="Maker_AttachedToVisualTree"
-                     Classes="Mainbox"
-                     Text="{Binding Maker}"
-                     Watermark="Maker" />
+                    <Label
+                        Margin="0,2,0,0"
+                        Classes="Mainlabel"
+                        Content="Maker" />
+                    <TextBox
+                        Name="MakerField"
+                        AttachedToVisualTree="Maker_AttachedToVisualTree"
+                        Classes="Mainbox"
+                        Text="{Binding Maker}"
+                        Watermark="Maker" />
 
                 </WrapPanel>
 
                 <WrapPanel Margin="0,0,0,10">
 
-                    <Label Margin="0,2,0,0"
-                     Classes="Mainlabel"
-                     Content="Model" />
-                    <TextBox Name="ModelField"
-                     Classes="Mainbox"
-                     Text="{Binding Model}"
-                     Watermark="Model" />
+                    <Label
+                        Margin="0,2,0,0"
+                        Classes="Mainlabel"
+                        Content="Model" />
+                    <TextBox
+                        Name="ModelField"
+                        Classes="Mainbox"
+                        Text="{Binding Model}"
+                        Watermark="Model" />
 
                 </WrapPanel>
 
                 <WrapPanel Margin="0,0,0,10">
 
-                    <Label Margin="0,2,0,0"
-                     Classes="Mainlabel"
-                     Content="Mileage" />
-                    <NumericUpDown Name="MileageField"
-                     Classes="Mainnumber"
-                     Increment="1"
-                     Maximum="10000000"
-                     Minimum="0"
-                     Value="{Binding Mileage, Converter={StaticResource NumberFormatter}, ConverterParameter='Km'}" />
+                    <Label
+                        Margin="0,2,0,0"
+                        Classes="Mainlabel"
+                        Content="Mileage" />
+                    <NumericUpDown
+                        Name="MileageField"
+                        Classes="Mainnumber"
+                        Increment="1"
+                        Maximum="10000000"
+                        Minimum="0"
+                        Value="{Binding Mileage, Converter={StaticResource NumberFormatter}, ConverterParameter='Km'}" />
 
                 </WrapPanel>
 
                 <WrapPanel Margin="0,0,0,10">
 
-                    <Label Margin="0,2,0,0"
-                     Classes="Mainlabel"
-                     Content="License Plate" />
-                    <TextBox Name="LicensePlateField"
-                     Classes="Mainbox"
-                     Text="{Binding LicensePlate}"
-                     Watermark="License Plate" />
+                    <Label
+                        Margin="0,2,0,0"
+                        Classes="Mainlabel"
+                        Content="License Plate" />
+                    <TextBox
+                        Name="LicensePlateField"
+                        Classes="Mainbox"
+                        Text="{Binding LicensePlate}"
+                        Watermark="License Plate" />
 
                 </WrapPanel>
 
                 <WrapPanel Margin="0,0,0,15">
-                    <Label Margin="0,2,0,0"
-                     Classes="Mainlabel"
-                     Content="Model Year" />
-                    <NumericUpDown Name="ModelYearField"
-                     Classes="Mainnumber"
-                     FormatString="0"
-                     Increment="1"
-                     Maximum="5000"
-                     Minimum="1885"
-                     Value="{Binding ModelYear}" />
+                    <Label
+                        Margin="0,2,0,0"
+                        Classes="Mainlabel"
+                        Content="Model Year" />
+                    <NumericUpDown
+                        Name="ModelYearField"
+                        Classes="Mainnumber"
+                        FormatString="0"
+                        Increment="1"
+                        Maximum="5000"
+                        Minimum="1885"
+                        Value="{Binding ModelYear}" />
                 </WrapPanel>
 
                 <WrapPanel Margin="0,0,0,10">
-                    <Label Margin="0,2,0,0"
-                     Classes="Mainlabel"
-                     Content="Towing Hitch" />
-                    <ToggleSwitch Name="TowingHitchField"
-                     Margin="0,-8,0,0"
-                     IsChecked="{Binding TowingHitch}"
-                     OffContent="No"
-                     OnContent="Yes" />
+                    <Label
+                        Margin="0,2,0,0"
+                        Classes="Mainlabel"
+                        Content="Towing Hitch" />
+                    <ToggleSwitch
+                        Name="TowingHitchField"
+                        Margin="0,-8,0,0"
+                        IsChecked="{Binding TowingHitch}"
+                        OffContent="No"
+                        OnContent="Yes" />
                 </WrapPanel>
 
                 <WrapPanel Margin="0,0,0,15">
-                    <Label Margin="0,2,0,0"
-                     Classes="Mainlabel"
-                     Content="Starting Bid" />
-                    <NumericUpDown Name="StartingBidField"
-                     Classes="Mainnumber"
-                     FormatString="C2"
-                     Increment="1"
-                     Maximum="10000000"
-                     Minimum="1"
-                     Value="{Binding MinimumAmount}" />
+                    <Label
+                        Margin="0,2,0,0"
+                        Classes="Mainlabel"
+                        Content="Starting Bid" />
+                    <NumericUpDown
+                        Name="StartingBidField"
+                        Classes="Mainnumber"
+                        FormatString="C2"
+                        Increment="1"
+                        Maximum="10000000"
+                        Minimum="1"
+                        Value="{Binding MinimumAmount}" />
                 </WrapPanel>
 
                 <WrapPanel Margin="0,0,0,15">
-                    <Label Margin="0,2,0,0"
-                     Classes="Mainlabel"
-                     Content="Close Auction" />
-                    <DatePicker Width="300"
-                     SelectedDate="{Binding EndDateOffset}" />
+                    <Label
+                        Margin="0,2,0,0"
+                        Classes="Mainlabel"
+                        Content="Close Auction" />
+                    <DatePicker Width="300" SelectedDate="{Binding EndDateOffset}" />
                 </WrapPanel>
 
                 <WrapPanel>
 
-                    <Label Classes="Mainlabel"
-                     Content="Images" />
+                    <Label Classes="Mainlabel" Content="Images" />
 
                     <StackPanel>
 
-                        <ListBox Name="VehicleImagesList"
-                         Width="300"
-                         MinHeight="125"
-                         MaxHeight="125"
-                         Margin="0,0,0,5"
-                         BorderBrush="Black"
-                         BorderThickness="1"
-                         ItemsSource="{Binding VehicleImages}">
+                        <ListBox
+                            Name="VehicleImagesList"
+                            Width="300"
+                            MinHeight="125"
+                            MaxHeight="125"
+                            Margin="0,0,0,5"
+                            BorderBrush="Black"
+                            BorderThickness="1"
+                            ItemsSource="{Binding VehicleImages}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Image}" />
@@ -160,10 +177,11 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
 
-                        <Button HorizontalAlignment="Stretch"
-                         Classes="BlueBtn"
-                         Command="{Binding UploadImageCmd}"
-                         Content="Upload Image" />
+                        <Button
+                            HorizontalAlignment="Stretch"
+                            Classes="BlueBtn"
+                            Command="{Binding UploadImageCmd}"
+                            Content="Upload Image" />
 
                     </StackPanel>
 
@@ -171,18 +189,20 @@
 
             </StackPanel>
 
-            <Border Grid.Column="1"
-             Padding="5"
-             BorderBrush="Black"
-             BorderThickness="1">
+            <Border
+                Grid.Column="1"
+                Padding="5"
+                BorderBrush="Black"
+                BorderThickness="1">
                 <Grid RowDefinitions="Auto Auto Auto *">
 
                     <StackPanel Grid.Row="0">
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,2,0,0"
-                             Classes="Mainlabel"
-                             Content="Vehicle type" />
+                            <Label
+                                Margin="0,2,0,0"
+                                Classes="Mainlabel"
+                                Content="Vehicle type" />
                             <ComboBox SelectedIndex="{Binding SelectedVehicleTypeIndex}">
                                 <ComboBoxItem Content="Private Passenger Car" />
                                 <ComboBoxItem Content="Professional Passenger Car" />
@@ -193,283 +213,325 @@
 
                     </StackPanel>
 
-                    <StackPanel Name="SharedVehicleGroup"
-                     Grid.Row="1">
+                    <StackPanel Name="SharedVehicleGroup" Grid.Row="1">
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,2,0,0"
-                             Classes="Mainlabel"
-                             Content="Fuel Type" />
-                            <ComboBox Name="FuelTypeField"
-                             ItemsSource="{Binding FuelTypes}"
-                             SelectedItem="{Binding FuelType}">
-                            </ComboBox>
+                            <Label
+                                Margin="0,2,0,0"
+                                Classes="Mainlabel"
+                                Content="Fuel Type" />
+                            <ComboBox
+                                Name="FuelTypeField"
+                                ItemsSource="{Binding FuelTypes}"
+                                SelectedItem="{Binding FuelType}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,2,0,0"
-                             Classes="Mainlabel"
-                             Content="Fuel Economy" />
-                            <NumericUpDown Name="FuelEconomyField"
-                             Classes="Mainnumber"
-                             FormatString="0 Km/L"
-                             Increment="1"
-                             Maximum="200"
-                             Minimum="1"
-                             Value="{Binding FuelEconomy}" />
+                            <Label
+                                Margin="0,2,0,0"
+                                Classes="Mainlabel"
+                                Content="Fuel Economy" />
+                            <NumericUpDown
+                                Name="FuelEconomyField"
+                                Classes="Mainnumber"
+                                FormatString="0 Km/L"
+                                Increment="1"
+                                Maximum="200"
+                                Minimum="1"
+                                Value="{Binding FuelEconomy}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,2,0,0"
-                             Classes="Mainlabel"
-                             Content="Fuel Capacity" />
-                            <NumericUpDown Name="FuelCapacityField"
-                             Classes="Mainnumber"
-                             FormatString="0 Litre"
-                             Increment="1"
-                             Maximum="200"
-                             Minimum="1"
-                             Value="{Binding FuelCapacity}" />
+                            <Label
+                                Margin="0,2,0,0"
+                                Classes="Mainlabel"
+                                Content="Fuel Capacity" />
+                            <NumericUpDown
+                                Name="FuelCapacityField"
+                                Classes="Mainnumber"
+                                FormatString="0 Litre"
+                                Increment="1"
+                                Maximum="200"
+                                Minimum="1"
+                                Value="{Binding FuelCapacity}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,2,0,0"
-                             Classes="Mainlabel"
-                             Content="Engine Size" />
-                            <NumericUpDown Name="PrivatePassengerCarEngineSizeField"
-                             Classes="Mainnumber"
-                             FormatString="0.0 Litre"
-                             Increment="1"
-                             Maximum="{Binding MaxEngineSize}"
-                             Minimum="{Binding MinEngineSize}"
-                             Value="{Binding EngineSize}" />
-                        </WrapPanel>
-
-                    </StackPanel>
-
-                    <StackPanel Name="PassengerCarGroup"
-                     Grid.Row="2"
-                     IsVisible="{Binding IsPassengerCarGroupVisible}">
-
-                        <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,2,0,0"
-                             Classes="Mainlabel"
-                             Content="Trunk Size" />
-                            <TextBox Name="TrunkWidthField"
-                             Classes="Smallbox"
-                             Text="{Binding TrunkWidth}"
-                             Watermark="Width (Cm)" />
-                            <TextBox Name="TrunkHeightField"
-                             Classes="Smallbox"
-                             Text="{Binding TrunkHeight}"
-                             Watermark="Height (Cm)" />
-                            <TextBox Name="TrunkLengthField"
-                             Classes="Smallbox"
-                             Text="{Binding TrunkLength}"
-                             Watermark="Length (Cm)" />
-                        </WrapPanel>
-
-                        <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,2,0,0"
-                             Classes="Mainlabel"
-                             Content="Seat Capacity" />
-                            <NumericUpDown Name="PrivatePassengerCarSeatCapacity"
-                             Classes="Mainnumber"
-                             Maximum="8"
-                             Minimum="1"
-                             Value="{Binding PassengerCarSeatCapacity}" />
-                        </WrapPanel>
-
-                        <WrapPanel Margin="0,0,0,10">
-                            <Label Width="200"
-                             Margin="0,2,0,0"
-                             Content="Require Commercial License" />
-                            <ToggleSwitch Name="RequireCommercialLicenseField"
-                             Margin="0,-8,0,0"
-                             IsChecked="{Binding RequireCommercialLicense}"
-                             OffContent="No"
-                             OnContent="Yes" />
+                            <Label
+                                Margin="0,2,0,0"
+                                Classes="Mainlabel"
+                                Content="Engine Size" />
+                            <NumericUpDown
+                                Name="PrivatePassengerCarEngineSizeField"
+                                Classes="Mainnumber"
+                                FormatString="0.0 Litre"
+                                Increment="1"
+                                Maximum="{Binding MaxEngineSize}"
+                                Minimum="{Binding MinEngineSize}"
+                                Value="{Binding EngineSize}" />
                         </WrapPanel>
 
                     </StackPanel>
 
-                    <StackPanel Name="PrivatePassengerCarGroup"
-                     Grid.Row="3"
-                     IsVisible="{Binding IsPrivatePassengerCarGroupVisible}">
+                    <StackPanel
+                        Name="PassengerCarGroup"
+                        Grid.Row="2"
+                        IsVisible="{Binding IsPassengerCarGroupVisible}">
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Width="200"
-                             Margin="0,2,0,0"
-                             Classes="Mainlabel"
-                             Content="Iso Fix Mounts" />
-                            <ToggleSwitch Name="IsoFixMountsField"
-                             Margin="0,-8,0,0"
-                             IsChecked="{Binding IsofixMounts}"
-                             OffContent="No"
-                             OnContent="Yes" />
+                            <Label
+                                Margin="0,2,0,0"
+                                Classes="Mainlabel"
+                                Content="Trunk Size" />
+                            <TextBox
+                                Name="TrunkWidthField"
+                                Classes="Smallbox"
+                                Text="{Binding TrunkWidth}"
+                                Watermark="Width (Cm)" />
+                            <TextBox
+                                Name="TrunkHeightField"
+                                Classes="Smallbox"
+                                Text="{Binding TrunkHeight}"
+                                Watermark="Height (Cm)" />
+                            <TextBox
+                                Name="TrunkLengthField"
+                                Classes="Smallbox"
+                                Text="{Binding TrunkLength}"
+                                Watermark="Length (Cm)" />
+                        </WrapPanel>
+
+                        <WrapPanel Margin="0,0,0,10">
+                            <Label
+                                Margin="0,2,0,0"
+                                Classes="Mainlabel"
+                                Content="Seat Capacity" />
+                            <NumericUpDown
+                                Name="PrivatePassengerCarSeatCapacity"
+                                Classes="Mainnumber"
+                                Maximum="8"
+                                Minimum="1"
+                                Value="{Binding PassengerCarSeatCapacity}" />
+                        </WrapPanel>
+
+                        <WrapPanel Margin="0,0,0,10">
+                            <Label
+                                Width="200"
+                                Margin="0,2,0,0"
+                                Content="Require Commercial License" />
+                            <ToggleSwitch
+                                Name="RequireCommercialLicenseField"
+                                Margin="0,-8,0,0"
+                                IsChecked="{Binding RequireCommercialLicense}"
+                                OffContent="No"
+                                OnContent="Yes" />
                         </WrapPanel>
 
                     </StackPanel>
 
-                    <StackPanel Name="ProfessionalPassengerCarGroup"
-                     Grid.Row="3"
-                     IsVisible="{Binding IsProfessionalPassengerCarGroupVisible}">
+                    <StackPanel
+                        Name="PrivatePassengerCarGroup"
+                        Grid.Row="3"
+                        IsVisible="{Binding IsPrivatePassengerCarGroupVisible}">
+
+                        <WrapPanel Margin="0,0,0,10">
+                            <Label
+                                Width="200"
+                                Margin="0,2,0,0"
+                                Classes="Mainlabel"
+                                Content="Iso Fix Mounts" />
+                            <ToggleSwitch
+                                Name="IsoFixMountsField"
+                                Margin="0,-8,0,0"
+                                IsChecked="{Binding IsofixMounts}"
+                                OffContent="No"
+                                OnContent="Yes" />
+                        </WrapPanel>
+
+                    </StackPanel>
+
+                    <StackPanel
+                        Name="ProfessionalPassengerCarGroup"
+                        Grid.Row="3"
+                        IsVisible="{Binding IsProfessionalPassengerCarGroupVisible}">
 
                         <WrapPanel Margin="0,10,0,10">
-                            <Label Width="100"
-                             Content="Rollcage" />
-                            <ToggleSwitch Name="RollCageField"
-                             Margin="0,-9,30,0"
-                             IsChecked="{Binding RollCage}"
-                             OffContent="No"
-                             OnContent="Yes" />
-                            <Label Width="115"
-                             Margin="0,2,0,0"
-                             Content="Fire Extinguisher" />
-                            <ToggleSwitch Name="FireExtinguisherField"
-                             Margin="0,-9,10,0"
-                             IsChecked="{Binding FireExtinguisher}"
-                             OffContent="No"
-                             OnContent="Yes" />
+                            <Label Width="100" Content="Rollcage" />
+                            <ToggleSwitch
+                                Name="RollCageField"
+                                Margin="0,-9,30,0"
+                                IsChecked="{Binding RollCage}"
+                                OffContent="No"
+                                OnContent="Yes" />
+                            <Label
+                                Width="115"
+                                Margin="0,2,0,0"
+                                Content="Fire Extinguisher" />
+                            <ToggleSwitch
+                                Name="FireExtinguisherField"
+                                Margin="0,-9,10,0"
+                                IsChecked="{Binding FireExtinguisher}"
+                                OffContent="No"
+                                OnContent="Yes" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,10,0,10">
-                            <Label Width="100"
-                             Content="Racing Seat" />
-                            <ToggleSwitch Name="RacingSeatField"
-                             Margin="0,-9,30,0"
-                             IsChecked="{Binding RacingSeat}"
-                             OffContent="No"
-                             OnContent="Yes" />
-                            <Label Width="115"
-                             Margin="0,2,0,0"
-                             Content="Racing Harness" />
-                            <ToggleSwitch Name="RacingHarnessField"
-                             Margin="0,-9,10,0"
-                             IsChecked="{Binding RacingHarness}"
-                             OffContent="No"
-                             OnContent="Yes" />
+                            <Label Width="100" Content="Racing Seat" />
+                            <ToggleSwitch
+                                Name="RacingSeatField"
+                                Margin="0,-9,30,0"
+                                IsChecked="{Binding RacingSeat}"
+                                OffContent="No"
+                                OnContent="Yes" />
+                            <Label
+                                Width="115"
+                                Margin="0,2,0,0"
+                                Content="Racing Harness" />
+                            <ToggleSwitch
+                                Name="RacingHarnessField"
+                                Margin="0,-9,10,0"
+                                IsChecked="{Binding RacingHarness}"
+                                OffContent="No"
+                                OnContent="Yes" />
                         </WrapPanel>
 
                         <WrapPanel>
-                            <Label Width="125"
-                             Margin="0,2,0,0"
-                             Content="Loading Capacity" />
-                            <NumericUpDown Name="ProfessionalPassengerCarLoadCapacityField"
-                             Width="280"
-                             Classes="Mainnumber"
-                             Maximum="3000"
-                             Minimum="1"
-                             Value="{Binding ProfessionalPassengerCarLoadCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}}" />
+                            <Label
+                                Width="125"
+                                Margin="0,2,0,0"
+                                Content="Loading Capacity" />
+                            <NumericUpDown
+                                Name="ProfessionalPassengerCarLoadCapacityField"
+                                Width="280"
+                                Classes="Mainnumber"
+                                Maximum="3000"
+                                Minimum="1"
+                                Value="{Binding ProfessionalPassengerCarLoadCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}}" />
                         </WrapPanel>
 
                     </StackPanel>
 
-                    <StackPanel Name="HeavyVehicleGroup"
-                     Grid.Row="2"
-                     IsVisible="{Binding IsHeavyVehicleGroupVisible}">
+                    <StackPanel
+                        Name="HeavyVehicleGroup"
+                        Grid.Row="2"
+                        IsVisible="{Binding IsHeavyVehicleGroupVisible}">
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,3,0,0"
-                             Classes="Mainlabel"
-                             Content="Height in CM" />
-                            <NumericUpDown Name="HeavyVehicleHeightField"
-                             Classes="Mainnumber"
-                             FormatString="0 CM"
-                             Increment="1"
-                             Maximum="10000"
-                             Minimum="1"
-                             Value="{Binding HeavyHeight, Converter={StaticResource NumberFormatter}, ConverterParameter='Cm'}}" />
+                            <Label
+                                Margin="0,3,0,0"
+                                Classes="Mainlabel"
+                                Content="Height in CM" />
+                            <NumericUpDown
+                                Name="HeavyVehicleHeightField"
+                                Classes="Mainnumber"
+                                FormatString="0 CM"
+                                Increment="1"
+                                Maximum="10000"
+                                Minimum="1"
+                                Value="{Binding HeavyHeight, Converter={StaticResource NumberFormatter}, ConverterParameter='Cm'}}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,3,0,0"
-                             Classes="Mainlabel"
-                             Content="Length in CM" />
-                            <NumericUpDown Name="HeavyVehicleLengthField"
-                             Classes="Mainnumber"
-                             FormatString="0 CM"
-                             Increment="1"
-                             Maximum="10000"
-                             Minimum="1"
-                             Value="{Binding HeavyLength, Converter={StaticResource NumberFormatter}, ConverterParameter='Cm'}}" />
+                            <Label
+                                Margin="0,3,0,0"
+                                Classes="Mainlabel"
+                                Content="Length in CM" />
+                            <NumericUpDown
+                                Name="HeavyVehicleLengthField"
+                                Classes="Mainnumber"
+                                FormatString="0 CM"
+                                Increment="1"
+                                Maximum="10000"
+                                Minimum="1"
+                                Value="{Binding HeavyLength, Converter={StaticResource NumberFormatter}, ConverterParameter='Cm'}}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Margin="0,3,0,0"
-                             Classes="Mainlabel"
-                             Content="Weight" />
-                            <NumericUpDown Name="HeavyVehicleWidthField"
-                             Classes="Mainnumber"
-                             FormatString="0 Kg"
-                             Increment="1"
-                             Maximum="100000"
-                             Minimum="1"
-                             Value="{Binding HeavyWeight, Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}}" />
+                            <Label
+                                Margin="0,3,0,0"
+                                Classes="Mainlabel"
+                                Content="Weight" />
+                            <NumericUpDown
+                                Name="HeavyVehicleWidthField"
+                                Classes="Mainnumber"
+                                FormatString="0 Kg"
+                                Increment="1"
+                                Maximum="100000"
+                                Minimum="1"
+                                Value="{Binding HeavyWeight, Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}}" />
                         </WrapPanel>
 
                     </StackPanel>
 
-                    <StackPanel Name="BusGroup"
-                     Grid.Row="3"
-                     IsVisible="{Binding IsBusGroupVisible}">
+                    <StackPanel
+                        Name="BusGroup"
+                        Grid.Row="3"
+                        IsVisible="{Binding IsBusGroupVisible}">
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Width="125"
-                             Margin="0,3,0,0"
-                             Classes="Mainlabel"
-                             Content="Seating Capacity" />
-                            <NumericUpDown Name="BusSeatingCapacityField"
-                             Width="285"
-                             Classes="Mainnumber"
-                             Increment="1"
-                             Maximum="500"
-                             Minimum="1"
-                             Value="{Binding BusSeatCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter=';Seat;Seats'}" />
+                            <Label
+                                Width="125"
+                                Margin="0,3,0,0"
+                                Classes="Mainlabel"
+                                Content="Seating Capacity" />
+                            <NumericUpDown
+                                Name="BusSeatingCapacityField"
+                                Width="285"
+                                Classes="Mainnumber"
+                                Increment="1"
+                                Maximum="500"
+                                Minimum="1"
+                                Value="{Binding BusSeatCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter=';Seat;Seats'}" />
                         </WrapPanel>
 
                         <WrapPanel Margin="0,0,0,10">
-                            <Label Width="125"
-                             Margin="0,3,0,0"
-                             Classes="Mainlabel"
-                             Content="Sleeping Capacity" />
-                            <NumericUpDown Name="BusSleepingCapacity"
-                             Width="285"
-                             Classes="Mainnumber"
-                             Increment="1"
-                             Maximum="250"
-                             Minimum="1"
-                             Value="{Binding BusSleepCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter=';Bed;Beds'}" />
+                            <Label
+                                Width="125"
+                                Margin="0,3,0,0"
+                                Classes="Mainlabel"
+                                Content="Sleeping Capacity" />
+                            <NumericUpDown
+                                Name="BusSleepingCapacity"
+                                Width="285"
+                                Classes="Mainnumber"
+                                Increment="1"
+                                Maximum="250"
+                                Minimum="1"
+                                Value="{Binding BusSleepCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter=';Bed;Beds'}" />
                         </WrapPanel>
 
                         <WrapPanel>
-                            <Label Width="125"
-                             Margin="0,2,0,0"
-                             Classes="Mainlabel"
-                             Content="Toilet" />
-                            <ToggleSwitch Name="BusToiletField"
-                             Margin="0,-8,0,0"
-                             IsChecked="{Binding BusToilet}"
-                             OffContent="No"
-                             OnContent="Yes" />
+                            <Label
+                                Width="125"
+                                Margin="0,2,0,0"
+                                Classes="Mainlabel"
+                                Content="Toilet" />
+                            <ToggleSwitch
+                                Name="BusToiletField"
+                                Margin="0,-8,0,0"
+                                IsChecked="{Binding BusToilet}"
+                                OffContent="No"
+                                OnContent="Yes" />
                         </WrapPanel>
 
                     </StackPanel>
 
-                    <StackPanel Name="TruckGroup"
-                     Grid.Row="3"
-                     IsVisible="{Binding IsTruckGroupVisible}">
+                    <StackPanel
+                        Name="TruckGroup"
+                        Grid.Row="3"
+                        IsVisible="{Binding IsTruckGroupVisible}">
 
                         <WrapPanel>
-                            <Label Width="125"
-                             Margin="0,2,0,0"
-                             Content="Loading Capacity" />
-                            <NumericUpDown Name="TruckLoadCapacityField"
-                             Width="285"
-                             Classes="Mainnumber"
-                             Maximum="80000"
-                             Minimum="1"
-                             Value="{Binding TruckLoadCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}" />
+                            <Label
+                                Width="125"
+                                Margin="0,2,0,0"
+                                Content="Loading Capacity" />
+                            <NumericUpDown
+                                Name="TruckLoadCapacityField"
+                                Width="285"
+                                Classes="Mainnumber"
+                                Maximum="80000"
+                                Minimum="1"
+                                Value="{Binding TruckLoadCapacity, Converter={StaticResource NumberFormatter}, ConverterParameter='Kg'}" />
                         </WrapPanel>
 
                     </StackPanel>
@@ -480,23 +542,23 @@
 
         </Grid>
 
-        <Grid Name="ButtonsRow"
-         Grid.Row="2">
+        <Grid Name="ButtonsRow" Grid.Row="2">
 
             <Grid ColumnDefinitions="*">
 
-                <Panel Grid.Column="0"
-                 Margin="10">
-                    <WrapPanel Grid.Column="1"
-                     HorizontalAlignment="Right">
-                        <TextBlock Margin="0,5,8,0"
-                         FontWeight="Bold"
-                         Foreground="Red"
-                         IsVisible="{Binding ShowErrorText}"
-                         Text="{Binding ErrorText}" />
-                        <Button Classes="GreenBtn"
-                         Command="{Binding CreateAuctionCmd}"
-                         Content="Create auction" />
+                <Panel Grid.Column="0" Margin="10">
+                    <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                        <TextBlock
+                            Margin="0,5,8,0"
+                            FontWeight="Bold"
+                            Foreground="Red"
+                            IsVisible="{Binding ShowErrorText}"
+                            Text="{Binding ErrorText}" />
+                        <Button
+                            Classes="GreenBtn"
+                            Command="{Binding CreateAuctionCmd}"
+                            Content="{Binding CreateAuctionBtnText}"
+                            IsEnabled="{Binding CreateAuctionBtnEnabled}" />
                     </WrapPanel>
                 </Panel>
 
